@@ -1,5 +1,5 @@
 {
-  "name": "frontend_l4_chat_project",
+  "name": "like-slack",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -18,9 +18,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:hexlet/frontend_l4_chat_project.git"
+    "url": ""
   },
-  "author": "Kirill Mokevnin",
+  "author": "mPut",
   "license": "ISC",
   "bugs": {
     "url": ""
