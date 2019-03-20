@@ -100,10 +100,9 @@ export default (router, io) => {
       ctx.body = data;
       io.emit('newMessage', data);
     });
-
   return router
     .get('root', '/', (ctx) => {
-      ctx.render('index', { gon: state });
+      ctx.render('index', { gon: state, title: 'LikeSlack' });
     })
     .use('/api/v1', apiRouter.routes(), apiRouter.allowedMethods());
 };

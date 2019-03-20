@@ -9,4 +9,5 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-ReactDOM.render(<ChatApp />, document.getElementById('chatApp'));
+const { channels } = window.gon;
+ReactDOM.render(<ChatApp channels={channels} />, document.getElementById('chatApp'));
