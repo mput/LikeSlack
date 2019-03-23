@@ -16,4 +16,11 @@ const messages = handleActions(
   { byId: {}, allId: [] },
 );
 
-export default combineReducers({ channels, messages });
+const activeChannelId = handleActions(
+  {
+    [actions.setActiveCahnnel]: state => ({ state }),
+  },
+  1,
+);
+
+export default combineReducers({ channels, messages, activeChannelId });
