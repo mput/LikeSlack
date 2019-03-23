@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Container } from 'react-bootstrap';
 import ChannelsPanel from './ChannelsPanel';
 import MessagesPanel from './MessagesPanel';
+import Context from './contexts';
 
-const ChatContext = React.createContext();
 
-const ChatApp = ({ channels, name }) => (
-  <ChatContext.Provider value={{ name }}>
-    <Container className="d-flex py-4 vh-100">
-      <ChannelsPanel channels={channels} />
-      <MessagesPanel />
-    </Container>
-  </ChatContext.Provider>
-);
+const ChatApp = (props) => {
+  const { userName } = props;
+  return (
+    <Context.Provider value={{ userName }}>
+      <Container className="d-flex py-4 vh-100">
+        <ChannelsPanel />
+        <MessagesPanel />
+      </Container>
+    </Context.Provider>
+  );
+};
 
 export default ChatApp;
