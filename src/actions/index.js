@@ -12,7 +12,7 @@ export const addMessage = createAction('ADD_MESSAGE');
 export const setActiveCahnnel = createAction('SET_ACTIVE_CHANNEL');
 
 
-export const sendMessageRequest = (message, author, channelId) => async () => {
+export const sendMessageRequest = (message, author, channelId) => async (dispatch) => {
   const url = routes.messagesUrl(channelId);
   const data = {
     attributes: {
@@ -20,6 +20,7 @@ export const sendMessageRequest = (message, author, channelId) => async () => {
     },
   };
   log('Sending message to %s', url);
-  const { data: newMessage } = await axios.post(url, { data });
-  log('Message was sent, received data is %o', newMessage);
+  const { data: { data: { attributes } } } = await axios.post(url, { data });
+  log('Message was sent, received data is %o', attributes);
+  dispatch(addMessage(attributes));
 };

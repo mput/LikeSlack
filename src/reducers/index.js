@@ -12,7 +12,16 @@ const channels = handleActions(
 
 const messages = handleActions(
   {
-    [actions.addMessage]: state => ({ state }),
+    [actions.addMessage]: (state, { payload: newMessage }) => {
+      const newMessageId = newMessage.id;
+      if (state[newMessageId]) {
+        return state;
+      }
+      return {
+        byId: { ...state.byId, [newMessageId]: newMessage },
+        allIds: [...state.allIds, newMessageId],
+      };
+    },
   },
   { byId: {}, allId: [] },
 );

@@ -30,6 +30,7 @@ const MsgTextArea = ({ placeholder, input }) => (
 );
 
 class MessageForm extends Component {
+  // TODO: move context to upper component.
   static contextType = Contexts;
 
   onSubmit = ({ msgText }) => {
