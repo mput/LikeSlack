@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Card } from 'react-bootstrap';
+import ScrollableFeed from 'react-scrollable-feed';
 import Message from './Message';
 import MessageForm from './MessageForm';
 import { activeChannelMessages } from '../selectors';
@@ -17,14 +18,16 @@ const MessagesPanel = ({ messages }) =>{
         <strong>#general</strong>
       </Card.Header>
       <Card.Body className="d-flex flex-column px-4 py-0 overflow-auto">
-        {messages.map(({ message, author, id }, index) => (
-          <Message
-            message={message}
-            author={author}
-            first={index === 0}
-            key={id}
-          />
-        ))}
+        <ScrollableFeed>
+          {messages.map(({ message, author, id }, index) => (
+            <Message
+              message={message}
+              author={author}
+              first={index === 0}
+              key={id}
+            />
+          ))}
+        </ScrollableFeed>
       </Card.Body>
       <MessageForm />
     </Card>
