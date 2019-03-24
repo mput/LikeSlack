@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import {
   Form,
@@ -18,6 +18,7 @@ const MsgTextArea = ({
   input,
   disabled,
   isInvalid,
+  inputRef,
 }) => (
   <FormControl
     as="input"
@@ -28,6 +29,7 @@ const MsgTextArea = ({
     onChange={input.onChange}
     disabled={disabled}
     style={{ resize: 'none' }}
+    ref={inputRef}
     autoFocus
   />
 );
@@ -36,11 +38,17 @@ class MessageForm extends Component {
   // TODO: move context to upper component.
   static contextType = Contexts;
 
+  constructor(props) {
+    super(props);
+    this.msgInput = React.createRef();
+  }
+
   onSubmit = async ({ msgText }) => {
     const { userName } = this.context;
     const { activeChannelId, sendMessageRequest, reset } = this.props;
     await sendMessageRequest(msgText, userName, activeChannelId);
     reset();
+    this.msgInput.current.focus();
   };
 
   render() {
@@ -59,6 +67,7 @@ class MessageForm extends Component {
             isInvalid={submitFailed}
             component={MsgTextArea}
             disabled={submitting}
+            inputRef={this.msgInput}
           />
           <InputGroup.Append>
             <Button type="submit" variant="outline-secondary" disabled={pristine}>

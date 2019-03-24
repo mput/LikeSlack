@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import gon from 'gon';
 import Cookies from 'js-cookie';
 import faker from 'faker';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import _ from 'lodash';
@@ -38,8 +39,6 @@ const prepareData = entrys => ({
 });
 
 const { channels, messages } = gon;
-// eslint-disable-next-line no-underscore-dangle
-const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 
 const store = createStore(
   reducers,
@@ -47,7 +46,7 @@ const store = createStore(
     channels: prepareData(channels),
     messages: prepareData(messages),
   },
-  compose(applyMiddleware(thunk), reduxDevTools),
+  composeWithDevTools(applyMiddleware(thunk)),
 );
 const userName = getOrGenerateName();
 
