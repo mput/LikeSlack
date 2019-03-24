@@ -1,10 +1,12 @@
+import '@babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import gon from 'gon';
 import Cookies from 'js-cookie';
 import faker from 'faker';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import _ from 'lodash';
 
 import reducers from './reducers';
@@ -38,13 +40,14 @@ const prepareData = entrys => ({
 const { channels, messages } = gon;
 // eslint-disable-next-line no-underscore-dangle
 const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+
 const store = createStore(
   reducers,
   {
     channels: prepareData(channels),
     messages: prepareData(messages),
   },
-  reduxDevTools,
+  compose(applyMiddleware(thunk), reduxDevTools),
 );
 const userName = getOrGenerateName();
 
