@@ -4,7 +4,7 @@ import { Media } from 'react-bootstrap';
 
 
 const Message = ({ message, author, first }) => (
-  <Media className={classNames('text-muted', 'flex-shrink-0', { 'mt-auto': first })}>
+  <Media className={classNames('text-muted', 'flex-shrink-0', 'text-break', { 'mt-auto': first })}>
     <Media.Body>
       <strong className="mb-1">{`@${author}`}</strong>
       <p>

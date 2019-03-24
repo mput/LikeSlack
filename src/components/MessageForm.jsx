@@ -13,14 +13,22 @@ import Contexts from './contexts';
 
 const getRowsAmount = input => input.split('\n').length;
 
-const MsgTextArea = ({ placeholder, input }) => (
+const MsgTextArea = ({
+  placeholder,
+  input,
+  disabled,
+  isInvalid,
+}) => (
   <FormControl
-    as="textarea"
+    as="input"
     rows={getRowsAmount(input.value)}
+    isInvalid={isInvalid}
     placeholder={placeholder}
     value={input.value}
     onChange={input.onChange}
+    disabled={disabled}
     style={{ resize: 'none' }}
+    autoFocus
   />
 );
 
@@ -28,23 +36,38 @@ class MessageForm extends Component {
   // TODO: move context to upper component.
   static contextType = Contexts;
 
-  onSubmit = ({ msgText }) => {
+  onSubmit = async ({ msgText }) => {
     const { userName } = this.context;
-    const { activeChannelId, sendMessageRequest } = this.props;
-    sendMessageRequest(msgText, userName, activeChannelId);
+    const { activeChannelId, sendMessageRequest, reset } = this.props;
+    await sendMessageRequest(msgText, userName, activeChannelId);
+    reset();
   };
 
   render() {
-    const { handleSubmit, msgText } = this.props;
+    const {
+      handleSubmit,
+      pristine,
+      submitting,
+      submitFailed,
+    } = this.props;
     return (
       <Form onSubmit={handleSubmit(this.onSubmit)} className="px-4 pb-4 pt-1 flex-shrink-0">
         <InputGroup>
-          <Field name="msgText" component={MsgTextArea} placeholder="message" />
+          <Field
+            name="msgText"
+            placeholder="message"
+            isInvalid={submitFailed}
+            component={MsgTextArea}
+            disabled={submitting}
+          />
           <InputGroup.Append>
-            <Button type="submit" variant="outline-secondary" disabled={!msgText}>
+            <Button type="submit" variant="outline-secondary" disabled={pristine}>
               send
             </Button>
           </InputGroup.Append>
+          <Form.Control.Feedback type="invalid">
+            Something wrong happened, try again please!
+          </Form.Control.Feedback>
         </InputGroup>
       </Form>
     );
@@ -52,11 +75,8 @@ class MessageForm extends Component {
 }
 
 const formName = 'sendMessage';
-const selector = formValueSelector(formName);
-
 const mapStateToProps = state => ({
   activeChannelId: state.activeChannelId,
-  msgText: selector(state, 'msgText'),
 });
 
 const actionCreators = { sendMessageRequest: actions.sendMessageRequest };
