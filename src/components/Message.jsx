@@ -3,13 +3,12 @@ import classNames from 'classnames';
 import { Media } from 'react-bootstrap';
 
 
-const Message = ({ n, first }) => (
+const Message = ({ message, author, first }) => (
   <Media className={classNames('text-muted', 'flex-shrink-0', { 'mt-auto': first })}>
     <Media.Body>
-      <strong className="mb-1">@userName</strong>
+      <strong className="mb-1">{`@${author}`}</strong>
       <p>
-        Its place for message here.
-        {n}
+        {message}
       </p>
     </Media.Body>
   </Media>
