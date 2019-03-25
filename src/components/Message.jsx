@@ -3,10 +3,17 @@ import classNames from 'classnames';
 import { Media } from 'react-bootstrap';
 
 
-const Message = ({ message, author, first }) => (
-  <Media className={classNames('text-muted', 'flex-shrink-0', 'text-break', { 'mt-auto': first })}>
+const Message = ({
+  message,
+  author,
+  ownMessage,
+  first,
+}) => (
+  <Media
+    className={classNames('text-muted', 'flex-shrink-0', 'text-break', { 'mt-auto': first })}
+  >
     <Media.Body>
-      <strong className="mb-1">{`@${author}`}</strong>
+      <strong className={classNames('mb-1', { 'text-warning': ownMessage })}>{`@${author}`}</strong>
       <p>
         {message}
       </p>

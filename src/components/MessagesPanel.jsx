@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card } from 'react-bootstrap';
 import Message from './Message';
 import MessageForm from './MessageForm';
+import Contexts from './contexts';
 import connect from '../connect';
 import { activeChannelMessages } from '../selectors';
 
@@ -11,6 +12,8 @@ const mapStateToProps = state => ({
 
 @connect(mapStateToProps)
 class MessagesPanel extends Component {
+  static contextType = Contexts;
+
   constructor(props) {
     super(props);
     this.scrolTo = React.createRef();
@@ -26,6 +29,7 @@ class MessagesPanel extends Component {
 
   render() {
     const { messages } = this.props;
+    const { userName } = this.context;
     return (
       <Card className="flex-fill h-100 overflow-auto">
         <Card.Header>
@@ -36,6 +40,7 @@ class MessagesPanel extends Component {
             <Message
               message={message}
               author={author}
+              ownMessage={author === userName}
               first={index === 0}
               key={id}
             />
