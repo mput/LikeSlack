@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Card } from 'react-bootstrap';
 import Message from './Message';
 import MessageForm from './MessageForm';
+import connect from '../connect';
 import { activeChannelMessages } from '../selectors';
 
 const mapStateToProps = state => ({
   messages: activeChannelMessages(state),
 });
 
-// eslint-disable-next-line
+@connect(mapStateToProps)
 class MessagesPanel extends Component {
   constructor(props) {
     super(props);
@@ -48,4 +48,4 @@ class MessagesPanel extends Component {
   }
 }
 
-export default connect(mapStateToProps)(MessagesPanel);
+export default MessagesPanel;

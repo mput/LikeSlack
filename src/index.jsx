@@ -56,7 +56,7 @@ const socket = io();
 Object.keys(messageTypesActions).forEach((type) => {
   const action = messageTypesActions[type];
   socket.on(type, (payload) => {
-    log('New messages on socker: %o', payload);
+    log('New messages on socket: %o', payload);
     store.dispatch(action(payload));
   });
 });

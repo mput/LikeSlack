@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'react-bootstrap';
 import ChannelsPanel from './ChannelsPanel';
 import MessagesPanel from './MessagesPanel';

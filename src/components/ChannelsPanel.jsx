@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Card, ListGroup } from 'react-bootstrap';
 import Contexts from './contexts';
+import connect from '../connect';
 import { channelsSelector } from '../selectors';
 
 const mapStateToProps = state => ({
@@ -15,6 +15,7 @@ const ChannelItem = ({ name, active }) => (
   </ListGroup.Item>
 );
 
+@connect(mapStateToProps)
 class ChannelsPanel extends Component {
   static contextType = Contexts;
 
@@ -39,4 +40,4 @@ class ChannelsPanel extends Component {
   }
 }
 
-export default connect(mapStateToProps)(ChannelsPanel);
+export default ChannelsPanel;

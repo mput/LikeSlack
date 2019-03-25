@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
 import {
   Form,
   InputGroup,
   FormControl,
   Button,
 } from 'react-bootstrap';
-import * as actions from '../actions';
+import connect from '../connect';
 import Contexts from './contexts';
 
 
@@ -34,6 +33,13 @@ const MsgTextArea = ({
   />
 );
 
+const mapStateToProps = state => ({
+  activeChannelId: state.activeChannelId,
+});
+
+
+@reduxForm({ form: 'sendMessage' })
+@connect(mapStateToProps)
 class MessageForm extends Component {
   // TODO: move context to upper component.
   static contextType = Contexts;
@@ -83,15 +89,4 @@ class MessageForm extends Component {
   }
 }
 
-const formName = 'sendMessage';
-const mapStateToProps = state => ({
-  activeChannelId: state.activeChannelId,
-});
-
-const actionCreators = { sendMessageRequest: actions.sendMessageRequest };
-
-const ConnectedMessageForm = connect(mapStateToProps, actionCreators)(MessageForm);
-
-export default reduxForm({
-  form: formName,
-})(ConnectedMessageForm);
+export default MessageForm;
