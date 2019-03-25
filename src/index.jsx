@@ -1,6 +1,7 @@
 import '@babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import io from 'socket.io-client';
 import gon from 'gon';
 import Cookies from 'js-cookie';
 import faker from 'faker';
@@ -11,8 +12,9 @@ import thunk from 'redux-thunk';
 import _ from 'lodash';
 
 import reducers from './reducers';
-import logger from '../lib/logger';
 import ChatApp from './components/ChatApp';
+import messageTypesActions from './messageTypesActions';
+import logger from '../lib/logger';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/application.css';
@@ -48,8 +50,18 @@ const store = createStore(
   },
   composeWithDevTools(applyMiddleware(thunk)),
 );
-const userName = getOrGenerateName();
 
+const socket = io();
+
+Object.keys(messageTypesActions).forEach((type) => {
+  const action = messageTypesActions[type];
+  socket.on(type, (payload) => {
+    log('New messages on socker: %o', payload);
+    store.dispatch(action(payload));
+  });
+});
+
+const userName = getOrGenerateName();
 ReactDOM.render(
   <Provider store={store}>
     <ChatApp userName={userName} />

@@ -12,9 +12,10 @@ const channels = handleActions(
 
 const messages = handleActions(
   {
-    [actions.addMessage]: (state, { payload: newMessage }) => {
+    [actions.addMessage]: (state, { payload }) => {
+      const { data: { attributes: newMessage } } = payload;
       const newMessageId = newMessage.id;
-      if (state[newMessageId]) {
+      if (state.byId[newMessageId]) {
         return state;
       }
       return {

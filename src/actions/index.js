@@ -20,7 +20,7 @@ export const sendMessageRequest = (message, author, channelId) => async (dispatc
     },
   };
   log('Sending message to %s', url);
-  const { data: { data: { attributes } } } = await axios.post(url, { data });
-  log('Message was sent, received data is %o', attributes);
-  dispatch(addMessage(attributes));
+  const { data: response } = await axios.post(url, { data });
+  log('Message was sent, received data is %o', response);
+  dispatch(addMessage(response));
 };
