@@ -5,13 +5,9 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import FormControlWrapper from './FormControlWrapper';
 import connect from '../connect';
 
-const mapStateToProps = state => ({
-  activeChannelId: state.activeChannelId,
-});
-
 
 @reduxForm({ form: 'sendMessage' })
-@connect(mapStateToProps)
+@connect()
 class MessageForm extends Component {
   constructor(props) {
     super(props);
@@ -19,9 +15,13 @@ class MessageForm extends Component {
   }
 
   onSubmit = async ({ msgText }) => {
-    const { userName } = this.props;
-    const { activeChannelId, sendMessageRequest, reset } = this.props;
-    await sendMessageRequest(msgText, userName, activeChannelId);
+    const {
+      userName,
+      channelId,
+      sendMessageRequest,
+      reset,
+    } = this.props;
+    await sendMessageRequest(msgText, userName, channelId);
     reset();
     this.msgInput.current.focus();
   };

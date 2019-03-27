@@ -35,9 +35,9 @@ class MessagesPanel extends Component {
     const { userName } = this.context;
     return (
       <div className="bg-light flex-fill h-100 p-0 d-flex flex-column">
-        <div className="p-3 border-bottom d-flex">
-          <h2 className="m-0 h4">{`#${channel.name}`}</h2>
-          <p className="ml-auto">
+        <div className="border-bottom d-flex align-items-center">
+          <h2 className="my-3 h4">{`#${channel.name}`}</h2>
+          <p className="ml-auto my-3">
             <FontAwesomeIcon icon={faUser} />
             <span className="ml-1 font-weight-bold">
               {`${userName}`}
@@ -56,7 +56,7 @@ class MessagesPanel extends Component {
           ))}
           <div ref={this.scrolTo} />
         </div>
-        <MessageForm userName={userName} />
+        <MessageForm userName={userName} channelId={channel.id} />
       </div>
     );
   }
