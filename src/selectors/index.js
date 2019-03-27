@@ -19,3 +19,8 @@ export const activeChannelMessages = createSelector(
     .map(id => byId[id])
     .filter(message => message.channelId === activeId),
 );
+
+export const activeChannel = createSelector(
+  [channelsById, activeChannelId],
+  (byId, id) => byId[id],
+);

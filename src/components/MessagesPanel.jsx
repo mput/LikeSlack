@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
 import Message from './Message';
 import MessageForm from './MessageForm';
 import Contexts from './contexts';
 import connect from '../connect';
-import { activeChannelMessages } from '../selectors';
+import { activeChannelMessages, activeChannel } from '../selectors';
 
 const mapStateToProps = state => ({
   messages: activeChannelMessages(state),
+  channel: activeChannel(state),
 });
 
 @connect(mapStateToProps)
@@ -28,14 +31,20 @@ class MessagesPanel extends Component {
   }
 
   render() {
-    const { messages } = this.props;
+    const { messages, channel } = this.props;
     const { userName } = this.context;
     return (
-      <Card className="flex-fill h-100 overflow-auto">
-        <Card.Header>
-          <strong>#general</strong>
-        </Card.Header>
-        <Card.Body className="d-flex flex-column px-4 py-0 overflow-auto">
+      <div className="bg-light flex-fill h-100 p-0 d-flex flex-column">
+        <div className="p-3 border-bottom d-flex">
+          <h2 className="m-0 h4">{`#${channel.name}`}</h2>
+          <p className="ml-auto">
+            <FontAwesomeIcon icon={faUser} />
+            <span className="ml-1 font-weight-bold">
+              {`${userName}`}
+            </span>
+          </p>
+        </div>
+        <div className="d-flex flex-column flex-fill px-4 overflow-auto">
           {messages.map(({ message, author, id }, index) => (
             <Message
               message={message}
@@ -46,9 +55,9 @@ class MessagesPanel extends Component {
             />
           ))}
           <div ref={this.scrolTo} />
-        </Card.Body>
-        <MessageForm />
-      </Card>
+        </div>
+        <MessageForm userName={userName} />
+      </div>
     );
   }
 }

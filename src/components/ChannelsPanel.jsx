@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Card, ListGroup } from 'react-bootstrap';
-import Contexts from './contexts';
+import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+
 import connect from '../connect';
 import { channelsSelector } from '../selectors';
 
@@ -9,33 +11,59 @@ const mapStateToProps = state => ({
   activeChannelId: state.activeChannelId,
 });
 
-const ChannelItem = ({ name, active }) => (
-  <ListGroup.Item action as="button" className="border-0 py-1" active={active}>
-    <strong>{`#${name}`}</strong>
-  </ListGroup.Item>
-);
 
 @connect(mapStateToProps)
 class ChannelsPanel extends Component {
-  static contextType = Contexts;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      inAddingChannelState: false,
+    };
+  }
+
+  handleChannelChange = id => () => {
+    const { setActiveCahnnel } = this.props;
+    setActiveCahnnel(id);
+  }
+
+  toggleAddingChannelState = () => {
+    this.setState(state => ({ inAddingChannelState: !state.inAddingChannelState }));
+  }
 
   render() {
-    const { userName } = this.context;
     const { channels, activeChannelId } = this.props;
+    const { inAddingChannelState } = this.state;
+    const channelsButtons = channels.map(({ name, id }) => (
+      <Button
+        block
+        key={id}
+        variant="dark"
+        className="rounded-0 m-0 pl-3 text-left text-white"
+        active={id === activeChannelId}
+        onClick={this.handleChannelChange(id)}
+      >
+        <strong>{`#${name}`}</strong>
+      </Button>
+    ));
 
     return (
-      <Card className="mr-4 pb-2 align-self-start" style={{ minWidth: '12em' }}>
-        <Card.Header>
-          <h5 className="text-muted">LikeSlack</h5>
-          <h6 className="mb-0">{`@${userName}`}</h6>
-        </Card.Header>
-        <strong className="pl-3 mt-3 mb-1 text-muted">Channels</strong>
-        <ListGroup variant="flush">
-          {channels.map(({ name, id }) => (
-            <ChannelItem name={name} active={id === activeChannelId} key={id} />
-          ))}
-        </ListGroup>
-      </Card>
+      <div className="px-0 bg-dark" style={{ minWidth: '12em' }}>
+        <h2 className="py-3 h4 pl-3 border-bottom border-secondary text-light font-weight-light">LikeSlack</h2>
+        <h2 className="pl-3 mt-3 h6 text-white-50 text-uppercase ">Channels:</h2>
+        <div>
+          {channelsButtons.length && channelsButtons}
+        </div>
+        <Button
+          block
+          variant="light"
+          className="w-75 mx-auto mt-2 p-0 "
+          disabled={inAddingChannelState}
+          onClick={this.toggleAddingChannelState}
+        >
+          <FontAwesomeIcon icon={faPlusCircle} />
+        </Button>
+      </div>
     );
   }
 }

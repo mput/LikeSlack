@@ -1,37 +1,9 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import {
-  Form,
-  InputGroup,
-  FormControl,
-  Button,
-} from 'react-bootstrap';
+import { Form, InputGroup, Button } from 'react-bootstrap';
+
+import FormControlWrapper from './FormControlWrapper';
 import connect from '../connect';
-import Contexts from './contexts';
-
-
-const getRowsAmount = input => input.split('\n').length;
-
-const MsgTextArea = ({
-  placeholder,
-  input,
-  disabled,
-  isInvalid,
-  inputRef,
-}) => (
-  <FormControl
-    as="input"
-    rows={getRowsAmount(input.value)}
-    isInvalid={isInvalid}
-    placeholder={placeholder}
-    value={input.value}
-    onChange={input.onChange}
-    disabled={disabled}
-    style={{ resize: 'none' }}
-    ref={inputRef}
-    autoFocus
-  />
-);
 
 const mapStateToProps = state => ({
   activeChannelId: state.activeChannelId,
@@ -41,16 +13,13 @@ const mapStateToProps = state => ({
 @reduxForm({ form: 'sendMessage' })
 @connect(mapStateToProps)
 class MessageForm extends Component {
-  // TODO: move context to upper component.
-  static contextType = Contexts;
-
   constructor(props) {
     super(props);
     this.msgInput = React.createRef();
   }
 
   onSubmit = async ({ msgText }) => {
-    const { userName } = this.context;
+    const { userName } = this.props;
     const { activeChannelId, sendMessageRequest, reset } = this.props;
     await sendMessageRequest(msgText, userName, activeChannelId);
     reset();
@@ -65,13 +34,14 @@ class MessageForm extends Component {
       submitFailed,
     } = this.props;
     return (
-      <Form onSubmit={handleSubmit(this.onSubmit)} className="px-4 pb-4 pt-1 flex-shrink-0">
+      <Form onSubmit={handleSubmit(this.onSubmit)} className="p-3 mx-3 mb-3 rounded shadow flex-shrink-0 bg-white">
         <InputGroup>
           <Field
             name="msgText"
+            as="input"
             placeholder="message"
             isInvalid={submitFailed}
-            component={MsgTextArea}
+            component={FormControlWrapper}
             disabled={submitting}
             inputRef={this.msgInput}
           />

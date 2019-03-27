@@ -29,7 +29,7 @@ const messages = handleActions(
 
 const activeChannelId = handleActions(
   {
-    [actions.setActiveCahnnel]: state => ({ state }),
+    [actions.setActiveCahnnel]: (_state, { payload: channelId }) => (channelId),
   },
   1,
 );
