@@ -3,6 +3,7 @@ import { FormControl } from 'react-bootstrap';
 
 const FormControlWrapper = ({
   input,
+  meta,
   onChange,
   inputRef,
   ...rest

@@ -39,6 +39,7 @@ class MessageForm extends Component {
           <Field
             name="msgText"
             as="input"
+            autoFocus
             placeholder="message"
             isInvalid={submitFailed}
             component={FormControlWrapper}

@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 import connect from '../connect';
 import { channelsSelector } from '../selectors';
+import AddChannelForm from './AddChannelForm';
 
 const mapStateToProps = state => ({
   channels: channelsSelector(state),
@@ -14,26 +13,13 @@ const mapStateToProps = state => ({
 
 @connect(mapStateToProps)
 class ChannelsPanel extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      inAddingChannelState: false,
-    };
-  }
-
   handleChannelChange = id => () => {
     const { setActiveCahnnel } = this.props;
     setActiveCahnnel(id);
   }
 
-  toggleAddingChannelState = () => {
-    this.setState(state => ({ inAddingChannelState: !state.inAddingChannelState }));
-  }
-
   render() {
     const { channels, activeChannelId } = this.props;
-    const { inAddingChannelState } = this.state;
     const channelsButtons = channels.map(({ name, id }) => (
       <Button
         block
@@ -48,7 +34,7 @@ class ChannelsPanel extends Component {
     ));
 
     return (
-      <div className="px-0 bg-dark" style={{ minWidth: '12em' }}>
+      <div className="px-0 bg-dark" style={{ width: '12em' }}>
         <div className="d-flex justify-content-center align-items-center border-bottom border-secondary" style={{ height: '60px' }}>
           <h2 className="m-0 h4 text-light font-weight-light">LikeSlack</h2>
         </div>
@@ -56,15 +42,7 @@ class ChannelsPanel extends Component {
         <div>
           {channelsButtons.length && channelsButtons}
         </div>
-        <Button
-          block
-          variant="light"
-          className="w-75 mx-auto mt-2 p-0 "
-          disabled={inAddingChannelState}
-          onClick={this.toggleAddingChannelState}
-        >
-          <FontAwesomeIcon icon={faPlusCircle} />
-        </Button>
+        <AddChannelForm />
       </div>
     );
   }
