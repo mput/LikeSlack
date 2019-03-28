@@ -35,9 +35,9 @@ class MessagesPanel extends Component {
     const { userName } = this.context;
     return (
       <div className="bg-light flex-fill h-100 p-0 d-flex flex-column">
-        <div className="border-bottom d-flex align-items-center">
-          <h2 className="my-3 h4">{`#${channel.name}`}</h2>
-          <p className="ml-auto my-3">
+        <div className="border-bottom d-flex align-items-center" style={{ minHeight: '60px' }}>
+          <h2 className="ml-3 my-0 h4">{`#${channel.name}`}</h2>
+          <p className="ml-auto mr-4 my-0">
             <FontAwesomeIcon icon={faUser} />
             <span className="ml-1 font-weight-bold">
               {`${userName}`}

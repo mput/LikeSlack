@@ -49,8 +49,10 @@ class ChannelsPanel extends Component {
 
     return (
       <div className="px-0 bg-dark" style={{ minWidth: '12em' }}>
-        <h2 className="py-3 h4 pl-3 border-bottom border-secondary text-light font-weight-light">LikeSlack</h2>
-        <h2 className="pl-3 mt-3 h6 text-white-50 text-uppercase ">Channels:</h2>
+        <div className="d-flex justify-content-center align-items-center border-bottom border-secondary" style={{ height: '60px' }}>
+          <h2 className="m-0 h4 text-light font-weight-light">LikeSlack</h2>
+        </div>
+        <h2 className="pl-3 mt-4 h6 text-white-50 text-uppercase ">Channels:</h2>
         <div>
           {channelsButtons.length && channelsButtons}
         </div>
