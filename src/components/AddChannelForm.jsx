@@ -49,6 +49,7 @@ class AddChannelForm extends Component {
             name="channelName"
             as="input"
             autoFocus
+            className="rounded-0"
             placeholder="Channel name:"
             isInvalid={submitFailed}
             component={FormControlWrapper}

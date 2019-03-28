@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { Alert } from 'react-bootstrap';
 
-import Message from './Message';
 import MessageForm from './MessageForm';
 import Contexts from '../contexts';
 import connect from '../connect';
 import { activeChannelMessages, activeChannel } from '../selectors';
+
+const Message = ({ message, author, ownMessage }) => (
+  <Alert
+    variant={ownMessage ? 'warning' : 'info'}
+    className="mt-0 mb-4 px-3 shadow-sm"
+  >
+    <h3 className="h6 mb-1 alert-heading font-weight-bold">{`@${author}`}</h3>
+    <p className="h5 mb-0">{message}</p>
+  </Alert>
+);
 
 const mapStateToProps = state => ({
   messages: activeChannelMessages(state),
@@ -33,6 +43,7 @@ class MessagesPanel extends Component {
   render() {
     const { messages, channel } = this.props;
     const { userName } = this.context;
+
     return (
       <div className="bg-light flex-fill h-100 p-0 d-flex flex-column">
         <div className="border-bottom d-flex align-items-center" style={{ minHeight: '60px' }}>
@@ -44,7 +55,7 @@ class MessagesPanel extends Component {
             </span>
           </p>
         </div>
-        <div className="d-flex flex-column flex-fill px-4 overflow-auto">
+        <div className="flex-column mt-auto px-4 overflow-auto">
           {messages.map(({ message, author, id }, index) => (
             <Message
               message={message}
