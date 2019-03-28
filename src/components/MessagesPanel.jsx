@@ -14,7 +14,7 @@ const Message = ({ message, author, ownMessage }) => (
     className="mt-0 mb-4 px-3 shadow-sm"
   >
     <h3 className="h6 mb-1 alert-heading font-weight-bold">{`@${author}`}</h3>
-    <p className="h5 mb-0">{message}</p>
+    <p className="h5 font-weight-normal mb-0">{message}</p>
   </Alert>
 );
 
