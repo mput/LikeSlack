@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faTimesCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 import FormControlWrapper from './FormControlWrapper';
 
@@ -37,7 +37,7 @@ class AddChannelForm extends Component {
 
     const form = (
       <Form onSubmit={handleSubmit} className="mt-0 mb-2 bg-light">
-        <InputGroup size="sm">
+        <InputGroup>
           <Field
             name="channelName"
             as="input"
@@ -49,8 +49,8 @@ class AddChannelForm extends Component {
             inputRef={this.msgInput}
           />
           <InputGroup.Append>
-            <Button type="submit" variant="outline-success" disabled={pristine}>
-              add
+            <Button type="submit" variant="success" disabled={pristine}>
+              <FontAwesomeIcon icon={faCheckCircle} />
             </Button>
           </InputGroup.Append>
           <Form.Control.Feedback type="invalid">
@@ -66,7 +66,7 @@ class AddChannelForm extends Component {
         <Button
           block
           variant={inAddingChannelState ? 'danger' : 'light'}
-          className="w-75 mx-auto mt-3 p-0 "
+          className="w-75 mx-auto mt-3 p-0"
           onClick={this.toggleAddingChannelState}
         >
           {inAddingChannelState

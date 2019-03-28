@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Form, InputGroup, Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCommentMedical } from '@fortawesome/free-solid-svg-icons';
 
 import FormControlWrapper from './FormControlWrapper';
 import connect from '../connect';
@@ -48,7 +50,7 @@ class MessageForm extends Component {
           />
           <InputGroup.Append>
             <Button type="submit" variant="outline-secondary" disabled={pristine}>
-              send
+              <FontAwesomeIcon icon={faCommentMedical} />
             </Button>
           </InputGroup.Append>
           <Form.Control.Feedback type="invalid">
