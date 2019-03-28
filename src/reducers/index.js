@@ -5,7 +5,17 @@ import * as actions from '../actions';
 
 const channels = handleActions(
   {
-    [actions.addChannel]: state => ({ state }),
+    [actions.addChannel]: (state, { payload }) => {
+      const { data: { attributes: newChannel } } = payload;
+      const newChannelId = newChannel.id;
+      if (state.byId[newChannelId]) {
+        return state;
+      }
+      return {
+        byId: { ...state.byId, [newChannelId]: newChannel },
+        allIds: [...state.allIds, newChannelId],
+      };
+    },
   },
   { byId: {}, allId: [] },
 );

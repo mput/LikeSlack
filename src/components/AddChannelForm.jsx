@@ -4,14 +4,15 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faTimesCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
+import connect from '../connect';
 import FormControlWrapper from './FormControlWrapper';
 
 
 @reduxForm({ form: 'addChannel' })
+@connect()
 class AddChannelForm extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       inAddingChannelState: false,
     };
@@ -26,6 +27,12 @@ class AddChannelForm extends Component {
     this.setState({ inAddingChannelState: !inAddingChannelState });
   }
 
+  onSubmit = async ({ channelName }) => {
+    const { addChannelRequset } = this.props;
+    await addChannelRequset(channelName);
+    this.toggleAddingChannelState();
+  }
+
   render() {
     const {
       handleSubmit,
@@ -36,7 +43,7 @@ class AddChannelForm extends Component {
     const { inAddingChannelState } = this.state;
 
     const form = (
-      <Form onSubmit={handleSubmit} className="mt-0 mb-2 bg-light">
+      <Form onSubmit={handleSubmit(this.onSubmit)} className="mt-0 mb-2 bg-light">
         <InputGroup>
           <Field
             name="channelName"
@@ -46,7 +53,6 @@ class AddChannelForm extends Component {
             isInvalid={submitFailed}
             component={FormControlWrapper}
             disabled={submitting}
-            inputRef={this.msgInput}
           />
           <InputGroup.Append>
             <Button type="submit" variant="success" disabled={pristine}>
