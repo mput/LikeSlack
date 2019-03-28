@@ -4,7 +4,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 import Message from './Message';
 import MessageForm from './MessageForm';
-import Contexts from './contexts';
+import Contexts from '../contexts';
 import connect from '../connect';
 import { activeChannelMessages, activeChannel } from '../selectors';
 
@@ -40,7 +40,7 @@ class MessagesPanel extends Component {
           <p className="ml-auto mr-4 my-0">
             <FontAwesomeIcon icon={faUser} />
             <span className="ml-1 font-weight-bold">
-              {`${userName}`}
+              {userName}
             </span>
           </p>
         </div>

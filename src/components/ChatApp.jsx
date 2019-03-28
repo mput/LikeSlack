@@ -1,7 +1,7 @@
 import React from 'react';
 import ChannelsPanel from './ChannelsPanel';
 import MessagesPanel from './MessagesPanel';
-import Context from './contexts';
+import Context from '../contexts';
 
 
 const ChatApp = (props) => {
