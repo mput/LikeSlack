@@ -7,8 +7,15 @@ import { faPlusCircle, faTimesCircle, faCheckCircle } from '@fortawesome/free-so
 import connect from '../connect';
 import FormControlWrapper from './FormControlWrapper';
 
+const channelNameNormolize = (value) => {
+  const strippedValue = value.replace(/[^a-zA-Z\d]/g, '');
+  return `#${strippedValue}`;
+};
 
-@reduxForm({ form: 'addChannel' })
+@reduxForm({
+  form: 'addChannel',
+  initialValues: { channelName: '#' },
+})
 @connect()
 class AddChannelForm extends Component {
   constructor(props) {
@@ -29,7 +36,7 @@ class AddChannelForm extends Component {
 
   onSubmit = async ({ channelName }) => {
     const { addChannelRequset } = this.props;
-    await addChannelRequset(channelName);
+    await addChannelRequset(channelName.slice(1));
     this.toggleAddingChannelState();
   }
 
@@ -54,6 +61,7 @@ class AddChannelForm extends Component {
             isInvalid={submitFailed}
             component={FormControlWrapper}
             disabled={submitting}
+            normalize={channelNameNormolize}
           />
           <InputGroup.Append>
             <Button type="submit" variant="success" disabled={pristine}>
@@ -68,7 +76,7 @@ class AddChannelForm extends Component {
     );
 
     return (
-      <div>
+      <div className="mb-4">
         {inAddingChannelState && form}
         <Button
           block

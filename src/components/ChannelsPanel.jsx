@@ -34,12 +34,12 @@ class ChannelsPanel extends Component {
     ));
 
     return (
-      <div className="px-0 bg-dark" style={{ width: '12em' }}>
-        <div className="d-flex justify-content-center align-items-center border-bottom border-secondary" style={{ height: '60px' }}>
+      <div className="d-flex flex-column px-0 bg-dark" style={{ width: '12em' }}>
+        <div className="d-flex flex-shrink-0 justify-content-center align-items-center border-bottom border-secondary" style={{ height: '60px' }}>
           <h2 className="m-0 h4 text-light font-weight-light">LikeSlack</h2>
         </div>
         <h2 className="pl-3 mt-4 h6 text-white-50 text-uppercase ">Channels:</h2>
-        <div>
+        <div className="overflow-auto">
           {channelsButtons.length && channelsButtons}
         </div>
         <AddChannelForm />
