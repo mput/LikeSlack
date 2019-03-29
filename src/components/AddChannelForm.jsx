@@ -33,7 +33,7 @@ class AddChannelForm extends Component {
 
   onSubmit = async ({ channelName }) => {
     const { addChannelRequset } = this.props;
-    await addChannelRequset(channelName.slice(1));
+    await addChannelRequset(channelName.slice(1), true);
     this.toggleAddingChannelState();
   }
 

@@ -64,8 +64,7 @@ const activeChannelId = handleActions(
 const removeChannelModalDefaultState = {
   modalShown: false,
   channelId: null,
-  requested: false,
-  failure: false,
+  status: 'none',
 };
 const removeChannelModal = handleActions(
   {
@@ -75,6 +74,8 @@ const removeChannelModal = handleActions(
       channelId,
     }),
     [actions.hideRemoveChannelModal]: () => (removeChannelModalDefaultState),
+    [actions.removeChannelRequest]: state => ({ ...state, status: 'requested' }),
+    [actions.removeChannelFailed]: state => ({ ...state, status: 'failed' }),
   },
   removeChannelModalDefaultState,
 );

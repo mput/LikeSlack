@@ -24,11 +24,15 @@ class Modals extends Component {
 
   render() {
     const { removeChannelModal, channels } = this.props;
-    const getModalBody = (channelId) => {
+    const { modalShown, status, channelId } = removeChannelModal;
+    const requested = status === 'requested';
+    const failed = status === 'failed';
+
+    const getModalBody = () => {
       const channelToDelete = channels.byId[channelId];
       return (
         <>
-          <Modal.Header closeButton>
+          <Modal.Header closeButton={!requested}>
             <Modal.Title id="change-channel-modal">
               Delete channel
             </Modal.Title>
@@ -39,12 +43,14 @@ class Modals extends Component {
               {channelView(channelToDelete.name)}
             </strong>
             ?
+            {failed
+              && <h4 className="text-warning mt-2">Error, try again please!</h4>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger" onClick={this.handleDeleteChannel(channelId)}>
+            <Button variant="danger" onClick={this.handleDeleteChannel(channelId)} disabled={requested}>
               <FontAwesomeIcon icon={faTrash} />
             </Button>
-            <Button variant="secondary" onClick={this.handleHideRemoveChannelModal}>
+            <Button variant="secondary" onClick={this.handleHideRemoveChannelModal} disabled={requested}>
               Close
             </Button>
           </Modal.Footer>
@@ -52,17 +58,17 @@ class Modals extends Component {
       );
     };
 
-    const channelRemovingModal = (
+    return (
       <Modal
         show={removeChannelModal.modalShown}
         onHide={this.handleHideRemoveChannelModal}
         aria-labelledby="change-channel-modal"
+        backdrop={!requested}
       >
-        {removeChannelModal.modalShown && getModalBody(removeChannelModal.channelId)}
+        {modalShown && getModalBody()}
       </Modal>
 
     );
-    return channelRemovingModal;
   }
 }
 
