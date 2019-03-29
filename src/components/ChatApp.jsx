@@ -1,6 +1,7 @@
 import React from 'react';
 import ChannelsPanel from './ChannelsPanel';
 import MessagesPanel from './MessagesPanel';
+import RemoveChannelModal from './RemoveChannelModal';
 import Context from '../contexts';
 
 
@@ -12,6 +13,7 @@ const ChatApp = (props) => {
         <ChannelsPanel />
         <MessagesPanel />
       </div>
+      <RemoveChannelModal />
     </Context.Provider>
   );
 };

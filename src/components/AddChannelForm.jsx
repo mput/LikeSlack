@@ -6,11 +6,8 @@ import { faPlusCircle, faTimesCircle, faCheckCircle } from '@fortawesome/free-so
 
 import connect from '../connect';
 import FormControlWrapper from './FormControlWrapper';
+import channelNameNormolize from '../lib/normilizers';
 
-const channelNameNormolize = (value) => {
-  const strippedValue = value.replace(/[^a-zA-Z\d]/g, '');
-  return `#${strippedValue}`;
-};
 
 @reduxForm({
   form: 'addChannel',
@@ -51,7 +48,7 @@ class AddChannelForm extends Component {
 
     const form = (
       <Form onSubmit={handleSubmit(this.onSubmit)} className="mt-0 mb-2 bg-light">
-        <InputGroup>
+        <InputGroup size="sm">
           <Field
             name="channelName"
             as="input"
