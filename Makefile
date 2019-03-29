@@ -4,7 +4,7 @@ start:
 	npx nodemon --exec npx babel-node server/bin/slack.js
 
 run:
-	NODE_ENV=prodaction node dist/bin/slack.js
+	node dist/bin/slack.js
 
 install-deps:
 	npm install
