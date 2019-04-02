@@ -5,17 +5,17 @@ import logger from '../../lib/logger';
 
 const log = logger('actions');
 
-export const addChannel = createAction('ADD_CHANNEL');
-export const removeChannel = createAction('REMOVE_CHANNEL');
-export const removeChannelRequest = createAction('REMOVE_CHANNEL_REQUEST');
-export const removeChannelFailed = createAction('REMOVE_CHANNEL_FAILED');
+export const addChannel = createAction('CHANNEL_ADD');
+export const removeChannel = createAction('CHANNEL_REMOVE');
+export const removeChannelRequest = createAction('CHANNEL_REMOVE_REQUEST');
+export const removeChannelFailure = createAction('CHANNEL_REMOVE_FAILURE');
 
 export const addMessage = createAction('ADD_MESSAGE');
 
-export const setActiveCahnnel = createAction('SET_ACTIVE_CHANNEL');
+export const setActiveCahnnel = createAction('ACTIVE_CHANNEL_SET');
 
-export const showRemoveChannelModal = createAction('SHOW_REMOVE_CHANNEL_MODAL');
-export const hideRemoveChannelModal = createAction('HIDE_REMOVE_CHANNEL_MODAL');
+export const showModal = createAction('MODAL_SHOW');
+export const hideModal = createAction('MODAL_HIDE');
 
 
 export const sendMessageRequest = (message, author, channelId) => async (dispatch) => {
@@ -56,8 +56,8 @@ export const deleteChannelRequst = channelId => async (dispatch) => {
     await axios.delete(url);
     const data = { id: channelId };
     dispatch(removeChannel({ data }));
-    dispatch(hideRemoveChannelModal());
-  } catch {
-    dispatch(removeChannelFailed());
+  } catch (err) {
+    dispatch(removeChannelFailure());
+    throw err;
   }
 };

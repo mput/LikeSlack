@@ -61,29 +61,35 @@ const activeChannelId = handleActions(
   defaultChannelId,
 );
 
-const removeChannelModalDefaultState = {
-  modalShown: false,
-  channelId: null,
+const modalDefault = {
+  isShown: false,
+  type: 'none',
   status: 'none',
+  data: {},
 };
-const removeChannelModal = handleActions(
+const modal = handleActions(
   {
-    [actions.showRemoveChannelModal]: (state, { payload: channelId }) => ({
-      ...state,
-      modalShown: true,
-      channelId,
-    }),
-    [actions.hideRemoveChannelModal]: () => (removeChannelModalDefaultState),
+    [actions.showModal]: (state, { payload }) => {
+      const { type, data } = payload;
+      return {
+        ...state,
+        isShown: true,
+        type,
+        data,
+      };
+    },
+    [actions.hideModal]: () => (modalDefault),
+    [actions.removeChannel]: () => (modalDefault),
     [actions.removeChannelRequest]: state => ({ ...state, status: 'requested' }),
-    [actions.removeChannelFailed]: state => ({ ...state, status: 'failed' }),
+    [actions.removeChannelFailure]: state => ({ ...state, status: 'failed' }),
   },
-  removeChannelModalDefaultState,
+  modalDefault,
 );
 
 export default combineReducers({
   channels,
   messages,
   activeChannelId,
-  removeChannelModal,
+  modal,
   form: formReducer,
 });

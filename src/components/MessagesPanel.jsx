@@ -9,6 +9,7 @@ import Contexts from '../contexts';
 import connect from '../connect';
 import { activeChannelMessages, activeChannel } from '../selectors';
 
+
 const Message = ({ message, author, ownMessage }) => (
   <Alert
     variant={ownMessage ? 'warning' : 'info'}
@@ -42,9 +43,12 @@ class MessagesPanel extends Component {
     this.scrolTo.current.scrollIntoView();
   }
 
-  handleShowRemoveChannelModal = channelId => () => {
-    const { showRemoveChannelModal } = this.props;
-    showRemoveChannelModal(channelId);
+  handleShowRemoveChannelModal = () => {
+    const { showModal, channel } = this.props;
+    showModal({
+      type: 'ChannelRename',
+      data: { channel },
+    });
   }
 
   render() {
@@ -56,7 +60,7 @@ class MessagesPanel extends Component {
         variant="outline-dark"
         size="sm"
         className="border-0 px-1 py-0 mr-1"
-        onClick={this.handleShowRemoveChannelModal(channel.id)}
+        onClick={this.handleShowRemoveChannelModal}
         disabled={!channel.removable}
       >
         <FontAwesomeIcon icon={faTrash} />
