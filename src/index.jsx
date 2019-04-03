@@ -24,6 +24,7 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
+
 const getOrGenerateName = () => {
   const exitsingUserName = Cookies.get('userName');
   if (exitsingUserName) {
@@ -56,7 +57,7 @@ const socket = io();
 Object.keys(messageTypesActions).forEach((type) => {
   const action = messageTypesActions[type];
   socket.on(type, (payload) => {
-    log('New messages on socket: %o', payload);
+    log('New event (%s) on socket: %o', type, payload);
     store.dispatch(action(payload));
   });
 });

@@ -72,6 +72,8 @@ class AddChannelForm extends Component {
       </Form>
     );
 
+    const btnIcon = inAddingChannelState ? faTimesCircle : faPlusCircle;
+
     return (
       <div className="mb-4">
         {inAddingChannelState && form}
@@ -81,9 +83,7 @@ class AddChannelForm extends Component {
           className="w-75 mx-auto mt-3 p-0"
           onClick={this.toggleAddingChannelState}
         >
-          {inAddingChannelState
-            ? <FontAwesomeIcon icon={faTimesCircle} />
-            : <FontAwesomeIcon icon={faPlusCircle} />}
+          <FontAwesomeIcon icon={btnIcon} />
         </Button>
       </div>
     );

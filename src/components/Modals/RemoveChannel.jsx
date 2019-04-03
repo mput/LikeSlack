@@ -8,9 +8,9 @@ import { channelView } from '../../lib/valuesView';
 
 @connect()
 class RemoveChannel extends Component {
-  handleDeleteChannel = () => {
-    const { deleteChannelRequst, data: { channel } } = this.props;
-    deleteChannelRequst(channel.id);
+  handleRemoveChannel = () => {
+    const { removeChannelRequest, data: { channel } } = this.props;
+    removeChannelRequest(channel.id);
   }
 
   render() {
@@ -40,7 +40,7 @@ class RemoveChannel extends Component {
           {failed && errMsg}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={this.handleDeleteChannel} disabled={requested}>
+          <Button variant="danger" onClick={this.handleRemoveChannel} disabled={requested}>
             <FontAwesomeIcon icon={faTrash} />
           </Button>
           <Button variant="secondary" onClick={handleHideModal} disabled={requested}>

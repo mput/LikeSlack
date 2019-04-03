@@ -9,9 +9,6 @@ const channels = handleActions(
     [actions.addChannel]: (state, { payload }) => {
       const { data: { attributes: newChannel } } = payload;
       const newChannelId = newChannel.id;
-      if (state.byId[newChannelId]) {
-        return state;
-      }
       return {
         byId: { ...state.byId, [newChannelId]: newChannel },
         allIds: [...state.allIds, newChannelId],
@@ -20,13 +17,19 @@ const channels = handleActions(
     [actions.removeChannel]: (state, { payload }) => {
       const { data: { id } } = payload;
       const { byId, allIds } = state;
-      if (byId[id] && byId[id].removable) {
-        return {
-          byId: _.omitBy(byId, id),
-          allIds: allIds.filter(currentId => currentId !== id),
-        };
-      }
-      return state;
+      return {
+        byId: _.omitBy(byId, id),
+        allIds: allIds.filter(currentId => currentId !== id),
+      };
+    },
+    [actions.renameChannel]: (state, { payload }) => {
+      const { byId, allIds } = state;
+      const { data: { attributes: { id, name } } } = payload;
+      const changedChannel = { ...byId[id], name };
+      return {
+        byId: { ...byId, [id]: changedChannel },
+        allIds,
+      };
     },
   },
   { byId: {}, allId: [] },
@@ -37,9 +40,6 @@ const messages = handleActions(
     [actions.addMessage]: (state, { payload }) => {
       const { data: { attributes: newMessage } } = payload;
       const newMessageId = newMessage.id;
-      if (state.byId[newMessageId]) {
-        return state;
-      }
       return {
         byId: { ...state.byId, [newMessageId]: newMessage },
         allIds: [...state.allIds, newMessageId],
@@ -79,9 +79,8 @@ const modal = handleActions(
       };
     },
     [actions.hideModal]: () => (modalDefault),
-    [actions.removeChannel]: () => (modalDefault),
-    [actions.removeChannelRequest]: state => ({ ...state, status: 'requested' }),
-    [actions.removeChannelFailure]: state => ({ ...state, status: 'failed' }),
+    [actions.modalActionRequest]: state => ({ ...state, status: 'requested' }),
+    [actions.modalActionFailure]: state => ({ ...state, status: 'failed' }),
   },
   modalDefault,
 );

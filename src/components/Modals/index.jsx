@@ -3,10 +3,11 @@ import { Modal } from 'react-bootstrap';
 
 import connect from '../../connect';
 import RemoveChannel from './RemoveChannel';
+import RenameChannel from './RenameChannel';
 
 const typesToBodyComponents = {
-  ChannelRename: RemoveChannel,
-  ChannelRemove: null,
+  RemoveChannel,
+  RenameChannel,
 };
 
 const mapStateToProps = state => ({
@@ -26,7 +27,7 @@ class Modals extends Component {
     const requested = modal.status === 'requested';
     const failed = modal.status === 'failed';
     const BodyComponent = typesToBodyComponents[modal.type];
-    const modalBody = (
+    const getModalBody = () => (
       <BodyComponent
         handleHideModal={this.handleHideModal}
         requested={requested}
@@ -41,7 +42,7 @@ class Modals extends Component {
         onHide={this.handleHideModal}
         backdrop={!requested}
       >
-        {modal.isShown && modalBody}
+        {modal.isShown && getModalBody()}
       </Modal>
 
     );

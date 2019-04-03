@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Alert, Button } from 'react-bootstrap';
 import { channelView, userNameView } from '../lib/valuesView';
 
@@ -46,7 +46,15 @@ class MessagesPanel extends Component {
   handleShowRemoveChannelModal = () => {
     const { showModal, channel } = this.props;
     showModal({
-      type: 'ChannelRename',
+      type: 'RemoveChannel',
+      data: { channel },
+    });
+  }
+
+  handleShowRenameChannelModal = () => {
+    const { showModal, channel } = this.props;
+    showModal({
+      type: 'RenameChannel',
       data: { channel },
     });
   }
@@ -55,7 +63,7 @@ class MessagesPanel extends Component {
     const { messages, channel } = this.props;
     const { userName } = this.context;
 
-    const showRemoveChannelModalBtn = (
+    const removeChannelModalBtn = (
       <Button
         variant="outline-dark"
         size="sm"
@@ -67,13 +75,26 @@ class MessagesPanel extends Component {
       </Button>
     );
 
+    const renameChannelModalBtn = (
+      <Button
+        variant="outline-dark"
+        size="sm"
+        className="border-0 px-1 py-0"
+        onClick={this.handleShowRenameChannelModal}
+        disabled={!channel.removable}
+      >
+        <FontAwesomeIcon icon={faEdit} />
+      </Button>
+    );
+
     return (
       <div className="bg-light flex-fill h-100 p-0 d-flex flex-column">
         <div className="border-bottom d-flex align-items-center" style={{ minHeight: '60px' }}>
           <div className="ml-3 d-flex flex-column">
             <h2 className="my-0 h5 font-weight-bold">{channelView(channel.name)}</h2>
             <div className="ml-n1">
-              {showRemoveChannelModalBtn}
+              {removeChannelModalBtn}
+              {renameChannelModalBtn}
             </div>
           </div>
           <p className="ml-auto mr-4 my-0">

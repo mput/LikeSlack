@@ -5,20 +5,8 @@ import logger from '../../lib/logger';
 
 const log = logger('actions');
 
-export const addChannel = createAction('CHANNEL_ADD');
-export const removeChannel = createAction('CHANNEL_REMOVE');
-export const removeChannelRequest = createAction('CHANNEL_REMOVE_REQUEST');
-export const removeChannelFailure = createAction('CHANNEL_REMOVE_FAILURE');
-
 export const addMessage = createAction('ADD_MESSAGE');
-
-export const setActiveCahnnel = createAction('ACTIVE_CHANNEL_SET');
-
-export const showModal = createAction('MODAL_SHOW');
-export const hideModal = createAction('MODAL_HIDE');
-
-
-export const sendMessageRequest = (message, author, channelId) => async (dispatch) => {
+export const sendMessageRequest = (message, author, channelId) => async () => {
   const url = routes.messages(channelId);
   const data = {
     attributes: {
@@ -26,12 +14,13 @@ export const sendMessageRequest = (message, author, channelId) => async (dispatc
     },
   };
   log('Sending message to %s', url);
-  const { data: response } = await axios.post(url, { data });
-  log('Message was sent, received data is %o', response);
-  dispatch(addMessage(response));
+  await axios.post(url, { data });
 };
 
-export const addChannelRequset = (name, activate) => async (dispatch) => {
+export const setActiveCahnnel = createAction('ACTIVE_CHANNEL_SET');
+
+export const addChannel = createAction('CHANNEL_ADD');
+export const addChannelRequset = name => async () => {
   const url = routes.channels();
   const data = {
     attributes: {
@@ -39,25 +28,47 @@ export const addChannelRequset = (name, activate) => async (dispatch) => {
     },
   };
   log('Sending new channel name to %s', url);
-  const { data: response } = await axios.post(url, { data });
-  log('Channel was sent, received data is %o', response);
-  dispatch(addChannel(response));
-  if (activate) {
-    const { data: { attributes: { id } } } = response;
-    dispatch(setActiveCahnnel(id));
+  await axios.post(url, { data });
+};
+
+
+export const showModal = createAction('MODAL_SHOW');
+export const hideModal = createAction('MODAL_HIDE');
+export const modalActionRequest = createAction('MODAL_REQUEST');
+export const modalActionFailure = createAction('MODAL_FAILURE');
+
+export const removeChannel = createAction('CHANNEL_REMOVE');
+export const removeChannelRequest = channelId => async (dispatch) => {
+  const url = routes.channel(channelId);
+  dispatch(modalActionRequest());
+  try {
+    log('Sending delete channel request to %s', url);
+    await axios.delete(url);
+    dispatch(hideModal());
+  } catch (err) {
+    dispatch(modalActionFailure());
+    throw err;
   }
 };
 
-export const deleteChannelRequst = channelId => async (dispatch) => {
-  const url = routes.channel(channelId);
-  log('Sending delete channel request to %s', url);
-  dispatch(removeChannelRequest());
+
+export const renameChannel = createAction('CHANNEL_RENAME');
+export const renameChannelRequest = (id, name) => async (dispatch) => {
+  const url = routes.channel(id);
+  const data = {
+    data: {
+      attributes: {
+        name,
+      },
+    },
+  };
+  dispatch(modalActionRequest());
   try {
-    await axios.delete(url);
-    const data = { id: channelId };
-    dispatch(removeChannel({ data }));
+    log('Sending rename channel request to %s', url);
+    await axios.patch(url, data);
+    dispatch(hideModal());
   } catch (err) {
-    dispatch(removeChannelFailure());
+    dispatch(modalActionFailure());
     throw err;
   }
 };
