@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Button, Modal, Form, InputGroup } from 'react-bootstrap';
-
+import {
+  Button,
+  Modal,
+  Form,
+  InputGroup,
+} from 'react-bootstrap';
 import FormControlWrapper from '../FormControlWrapper';
 import connect from '../../connect';
 import channelNameNormolize from '../../lib/normilizers';

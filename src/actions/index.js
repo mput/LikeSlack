@@ -75,5 +75,3 @@ export const renameChannelRequest = (id, name) => async (dispatch) => {
     throw err;
   }
 };
-
-

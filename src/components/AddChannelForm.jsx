@@ -69,7 +69,6 @@ class AddChannelForm extends Component {
 
     const toggleBtnIcon = isAddChannelFormShown ? faTimesCircle : faPlusCircle;
     const toggleBtnVariant = isAddChannelFormShown ? 'warning' : 'light';
-    console.log(isAddChannelFormShown);
     return (
       <div className="mb-4">
         {isAddChannelFormShown && form}
