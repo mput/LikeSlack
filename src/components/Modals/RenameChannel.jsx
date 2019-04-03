@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal, Form, InputGroup } from 'react-bootstrap';
 
 import FormControlWrapper from '../FormControlWrapper';
 import connect from '../../connect';
@@ -9,7 +9,7 @@ import { channelView } from '../../lib/valuesView';
 
 @connect((_state, ownProps) => {
   const channelName = ownProps.data.channel.name;
-  return { initialValues: { channelName: channelView(channelName) } };
+  return { initialValues: { channelName } };
 })
 @reduxForm({
   form: 'renameChannel',
@@ -20,7 +20,7 @@ class RenameChannel extends Component {
       renameChannelRequest,
       data: { channel: { id } },
     } = this.props;
-    await renameChannelRequest(id, channelName.slice(1));
+    await renameChannelRequest(id, channelName);
   }
 
   render() {
@@ -45,20 +45,25 @@ class RenameChannel extends Component {
         </Modal.Header>
         <Modal.Body className="px-4">
           <Form.Label>New name:</Form.Label>
-          <Field
-            name="channelName"
-            as="input"
-            autoFocus
-            className="rounded-0"
-            placeholder="Channel name:"
-            isInvalid={failed}
-            component={FormControlWrapper}
-            disabled={requested}
-            normalize={channelNameNormolize}
-          />
-          <Form.Control.Feedback type="invalid">
-            Something wrong happened, try again please!
-          </Form.Control.Feedback>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text>#</InputGroup.Text>
+            </InputGroup.Prepend>
+            <Field
+              name="channelName"
+              as="input"
+              autoFocus
+              className="rounded-0"
+              placeholder="Channel name:"
+              isInvalid={failed}
+              component={FormControlWrapper}
+              disabled={requested}
+              normalize={channelNameNormolize}
+            />
+            <Form.Control.Feedback type="invalid">
+              Something wrong happened, try again please!
+            </Form.Control.Feedback>
+          </InputGroup>
         </Modal.Body>
         <Modal.Footer>
           <Button type="submit" variant="danger" disabled={requested || pristine}>

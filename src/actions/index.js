@@ -19,8 +19,10 @@ export const sendMessageRequest = (message, author, channelId) => async () => {
 
 export const setActiveCahnnel = createAction('ACTIVE_CHANNEL_SET');
 
+export const toggleAddChannelFormVisibility = createAction('ADD_CHANNEL_TOGGLE_VISIBILITY');
+
 export const addChannel = createAction('CHANNEL_ADD');
-export const addChannelRequset = name => async () => {
+export const addChannelRequset = name => async (dispatch) => {
   const url = routes.channels();
   const data = {
     attributes: {
@@ -29,6 +31,7 @@ export const addChannelRequset = name => async () => {
   };
   log('Sending new channel name to %s', url);
   await axios.post(url, { data });
+  dispatch(toggleAddChannelFormVisibility());
 };
 
 
@@ -72,3 +75,5 @@ export const renameChannelRequest = (id, name) => async (dispatch) => {
     throw err;
   }
 };
+
+

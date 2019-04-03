@@ -11,30 +11,23 @@ import channelNameNormolize from '../lib/normilizers';
 
 @reduxForm({
   form: 'addChannel',
-  initialValues: { channelName: '#' },
 })
-@connect()
+@connect(state => ({
+  isAddChannelFormShown: state.isAddChannelFormShown,
+}))
 class AddChannelForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inAddingChannelState: false,
-    };
-  }
-
-  toggleAddingChannelState = () => {
-    const { inAddingChannelState } = this.state;
-    const { reset } = this.props;
-    if (inAddingChannelState) {
+  handleFormVisibility = () => {
+    const { reset, isAddChannelFormShown, toggleAddChannelFormVisibility } = this.props;
+    if (isAddChannelFormShown) {
       reset();
     }
-    this.setState({ inAddingChannelState: !inAddingChannelState });
+    toggleAddChannelFormVisibility();
   }
 
   onSubmit = async ({ channelName }) => {
-    const { addChannelRequset } = this.props;
-    await addChannelRequset(channelName.slice(1), true);
-    this.toggleAddingChannelState();
+    const { addChannelRequset, reset } = this.props;
+    await addChannelRequset(channelName, true);
+    reset();
   }
 
   render() {
@@ -44,16 +37,18 @@ class AddChannelForm extends Component {
       submitting,
       submitFailed,
     } = this.props;
-    const { inAddingChannelState } = this.state;
+    const { isAddChannelFormShown } = this.props;
 
     const form = (
-      <Form onSubmit={handleSubmit(this.onSubmit)} className="mt-0 mb-2 bg-light">
+      <Form onSubmit={handleSubmit(this.onSubmit)} className="mt-0 mb-2  mx-2 bg-dark">
         <InputGroup size="sm">
+          <InputGroup.Prepend>
+            <InputGroup.Text>#</InputGroup.Text>
+          </InputGroup.Prepend>
           <Field
             name="channelName"
             as="input"
             autoFocus
-            className="rounded-0"
             placeholder="Channel name:"
             isInvalid={submitFailed}
             component={FormControlWrapper}
@@ -72,18 +67,19 @@ class AddChannelForm extends Component {
       </Form>
     );
 
-    const btnIcon = inAddingChannelState ? faTimesCircle : faPlusCircle;
-
+    const toggleBtnIcon = isAddChannelFormShown ? faTimesCircle : faPlusCircle;
+    const toggleBtnVariant = isAddChannelFormShown ? 'warning' : 'light';
+    console.log(isAddChannelFormShown);
     return (
       <div className="mb-4">
-        {inAddingChannelState && form}
+        {isAddChannelFormShown && form}
         <Button
           block
-          variant={inAddingChannelState ? 'danger' : 'light'}
+          variant={toggleBtnVariant}
           className="w-75 mx-auto mt-3 p-0"
-          onClick={this.toggleAddingChannelState}
+          onClick={this.handleFormVisibility}
         >
-          <FontAwesomeIcon icon={btnIcon} />
+          <FontAwesomeIcon icon={toggleBtnIcon} />
         </Button>
       </div>
     );

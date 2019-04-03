@@ -85,10 +85,18 @@ const modal = handleActions(
   modalDefault,
 );
 
+const isAddChannelFormShown = handleActions(
+  {
+    [actions.toggleAddChannelFormVisibility]: state => !state,
+  },
+  false,
+);
+
 export default combineReducers({
   channels,
   messages,
   activeChannelId,
   modal,
+  isAddChannelFormShown,
   form: formReducer,
 });
