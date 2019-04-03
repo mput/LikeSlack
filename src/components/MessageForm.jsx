@@ -49,7 +49,7 @@ class MessageForm extends Component {
             inputRef={this.msgInput}
           />
           <InputGroup.Append>
-            <Button type="submit" variant="outline-secondary" disabled={pristine}>
+            <Button type="submit" variant="outline-secondary" disabled={pristine || submitting}>
               <FontAwesomeIcon icon={faCommentMedical} />
             </Button>
           </InputGroup.Append>
