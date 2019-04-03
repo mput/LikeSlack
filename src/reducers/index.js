@@ -79,8 +79,8 @@ const modal = handleActions(
       };
     },
     [actions.hideModal]: () => (modalDefault),
-    [actions.modalActionRequest]: state => ({ ...state, status: 'requested' }),
-    [actions.modalActionFailure]: state => ({ ...state, status: 'failed' }),
+    [actions.requestModalAction]: state => ({ ...state, status: 'requested' }),
+    [actions.failureModalAction]: state => ({ ...state, status: 'failed' }),
   },
   modalDefault,
 );
