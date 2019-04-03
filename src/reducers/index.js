@@ -45,6 +45,16 @@ const messages = handleActions(
         allIds: [...state.allIds, newMessageId],
       };
     },
+    [actions.removeChannel]: (state, { payload }) => {
+      const { data: { id: removedChannelId } } = payload;
+      const { byId, allIds } = state;
+      const filteredById = _.omitBy(byId, message => message.channelId === removedChannelId);
+      const filteredAllIds = allIds.filter(messageId => filteredById[messageId]);
+      return {
+        byId: filteredById,
+        allIds: filteredAllIds,
+      };
+    },
   },
   { byId: {}, allId: [] },
 );
