@@ -57,7 +57,6 @@ class RenameChannel extends Component {
               name="channelName"
               as="input"
               autoFocus
-              className="rounded-0"
               placeholder="Channel name:"
               isInvalid={failed}
               component={FormControlWrapper}
