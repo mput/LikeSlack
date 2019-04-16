@@ -17,8 +17,8 @@ import addRoutes from './routes';
 
 import webpackConfig from '../webpack.config';
 
-const isProduction = process.env.NODE_ENV === 'production';
-const isDevelopment = !isProduction;
+// const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 export default () => {
   const app = new Koa();

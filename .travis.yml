@@ -3,6 +3,7 @@ node_js:
   - stable
 script:
   - make lint
+  - make test
   - make build
 deploy:
   provider: heroku
