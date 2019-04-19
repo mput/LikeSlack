@@ -11,7 +11,7 @@ beforeEach((done) => {
   app = getApp().listen(0, () => {
     const httpServerAddr = app.address();
     socket = io(
-      `http://[${httpServerAddr.address}]:${httpServerAddr.port}`,
+      `[${httpServerAddr.address}]:${httpServerAddr.port}`,
       { forceNew: true, reconnect: false },
     );
     socket.on('ping', () => {
