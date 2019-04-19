@@ -35,9 +35,11 @@ describe('Get root page', () => {
 });
 
 describe('Channels CRUD', () => {
+  const getChannelsUrl = () => `${apiUrl}/channels`;
+  const getChannelUrl = id => `${apiUrl}/channels/${id}`;
+
   test('Create', async (done) => {
-    const channelsUrl = `${apiUrl}/channels`;
-    const dataSample = {
+    const dataFromClient = {
       data: {
         attributes: {
           name: 'ChannelName',
@@ -60,8 +62,148 @@ describe('Channels CRUD', () => {
       expect(payload).toMatchObject(expectedResponse);
       done();
     });
-    const { statusCode, body } = await request(app).post(channelsUrl).send(dataSample);
+    const { statusCode, body } = await request(app).post(getChannelsUrl()).send(dataFromClient);
     expect(statusCode).toBe(201);
     expect(body).toMatchObject(expectedResponse);
+  });
+
+  test('Delete', async (done) => {
+    const newChannelData = {
+      data: {
+        attributes: {
+          name: 'ChannelName',
+        },
+      },
+    };
+    const {
+      body: {
+        data: { id: channelId },
+      },
+    } = await request(app).post(getChannelsUrl()).send(newChannelData);
+
+    const expectedResponse = {
+      data: {
+        type: 'channels',
+        id: channelId,
+      },
+    };
+    socket.on('removeChannel', (payload) => {
+      expect(payload).toMatchObject(expectedResponse);
+      done();
+    });
+    await request(app).delete(getChannelUrl(channelId)).expect(204);
+  });
+
+
+  test('Update', async (done) => {
+    const newChannelData = {
+      data: {
+        attributes: {
+          name: 'ChannelName',
+        },
+      },
+    };
+    const renameChannelData = {
+      data: {
+        attributes: {
+          name: 'NewChannelName',
+        },
+      },
+    };
+    const {
+      body: {
+        data: { id: channelId },
+      },
+    } = await request(app).post(getChannelsUrl()).send(newChannelData);
+
+    const expectedResponse = {
+      data: {
+        type: 'channels',
+        id: channelId,
+        attributes: {
+          id: channelId,
+          name: 'NewChannelName',
+        },
+      },
+    };
+    socket.on('renameChannel', (payload) => {
+      expect(payload).toMatchObject(expectedResponse);
+      done();
+    });
+    await request(app).patch(getChannelUrl(channelId)).send(renameChannelData).expect(204);
+  });
+});
+
+
+describe('Messages CRUD', () => {
+  const getMessagesUrl = (channelId) => `${apiUrl}/channels/${channelId}/messages`;
+  let channelId;
+
+  beforeEach(async () => {
+    const getChannelsUrl = () => `${apiUrl}/channels`;
+    const newChannelData = {
+      data: {
+        attributes: {
+          name: 'ChannelName',
+        },
+      },
+    };
+    const {
+      body: {
+        data: { id },
+      },
+    } = await request(app).post(getChannelsUrl()).send(newChannelData);
+    channelId = id;
+  });
+
+  test('Create', async (done) => {
+    const dataFromClient = {
+      data: {
+        attributes: {
+          message: 'oh my message',
+          author: 'UserOne',
+        },
+      },
+    };
+
+    const expectedResponse = {
+      data: {
+        type: 'messages',
+        id: expect.any(Number),
+        attributes: {
+          message: 'oh my message',
+          author: 'UserOne',
+          id: expect.any(Number),
+        },
+      },
+    };
+    socket.on('newMessage', (payload) => {
+      expect(payload).toMatchObject(expectedResponse);
+      done();
+    });
+
+    const { statusCode, body } = await request(app)
+      .post(getMessagesUrl(channelId)).send(dataFromClient);
+    expect(statusCode).toBe(201);
+    expect(body).toMatchObject(expectedResponse);
+  });
+
+  test('Get', async() => {
+    const dataFromClient = {
+      data: {
+        attributes: {
+          message: 'oh my message',
+          author: 'UserOne',
+        },
+      },
+    };
+    await request(app)
+      .post(getMessagesUrl(channelId)).send(dataFromClient);
+    await request(app)
+      .post(getMessagesUrl(channelId)).send(dataFromClient);
+    const { statusCode, body } = await request(app)
+      .get(getMessagesUrl(channelId));
+    expect(statusCode).toBe(200);
+    expect(body.length).toBe(2);
   });
 });
