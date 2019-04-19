@@ -136,7 +136,7 @@ describe('Channels CRUD', () => {
 
 
 describe('Messages CRUD', () => {
-  const getMessagesUrl = (channelId) => `${apiUrl}/channels/${channelId}/messages`;
+  const getMessagesUrl = channelId => `${apiUrl}/channels/${channelId}/messages`;
   let channelId;
 
   beforeEach(async () => {
@@ -188,7 +188,7 @@ describe('Messages CRUD', () => {
     expect(body).toMatchObject(expectedResponse);
   });
 
-  test('Get', async() => {
+  test('Get', async () => {
     const dataFromClient = {
       data: {
         attributes: {
