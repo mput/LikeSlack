@@ -10,8 +10,9 @@ let socket;
 beforeEach((done) => {
   app = getApp().listen(0, () => {
     const httpServerAddr = app.address();
+    console.log(`${httpServerAddr.address}:${httpServerAddr.port}`);
     socket = io(
-      `[${httpServerAddr.address}]:${httpServerAddr.port}`,
+      `${httpServerAddr.address}:${httpServerAddr.port}`,
       { forceNew: true, reconnect: false },
     );
     socket.on('ping', () => {
