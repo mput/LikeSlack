@@ -19,6 +19,7 @@ import webpackConfig from '../webpack.config';
 
 // const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
+const isTest = process.env.NODE_ENV === 'test';
 
 export default () => {
   const app = new Koa();
@@ -41,7 +42,10 @@ export default () => {
 
   const router = new Router();
 
-  app.use(koaLogger());
+  if (!isTest) {
+    app.use(koaLogger());
+  }
+
   const pug = new Pug({
     viewPath: path.join(__dirname, '..', 'views'),
     debug: true,
@@ -59,6 +63,10 @@ export default () => {
 
   const server = http.createServer(app.callback());
   const io = socket(server);
+
+  io.on('connection', () => {
+    io.emit('ping'); // can't stop server in tests while no events emited.
+  });
 
   addRoutes(router, io);
   app.use(router.allowedMethods());
