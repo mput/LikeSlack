@@ -1,5 +1,3 @@
-// @flow
-
 import path from 'path';
 import Koa from 'koa';
 import Pug from 'koa-pug';

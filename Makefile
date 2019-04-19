@@ -1,7 +1,7 @@
 install: install-deps install-flow-typed
 
 start:
-	npx nodemon --exec npx babel-node server/bin/slack.js
+	NODE_ENV='development' npx nodemon --exec npx babel-node server/bin/slack.js
 
 run:
 	node dist/bin/slack.js
@@ -14,7 +14,10 @@ build:
 	npm run build
 
 test:
-	npm test
+	npx jest
+
+test-coverage:
+	npx jest --coverage
 
 check-types:
 	npx flow

@@ -3,7 +3,7 @@ module.exports = {
   devtool: 'source-map',
   entry: [
     'babel-polyfill',
-    `${__dirname}/src/index.jsx`,
+    `${__dirname}/client/index.jsx`,
   ],
   externals: {
     gon: 'gon',
