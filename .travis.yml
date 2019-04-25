@@ -1,10 +1,10 @@
-language: node_js
+language: c
 services:
   - docker
 env:
   global:
     - CC_TEST_REPORTER_ID=69fa3a5b79de6f474867fd8a3e9987c93d8f8a58df998a31b0ef089204f6884e
-    - DOCKER_COMPOSE_VERSION=1.4.2
+    - DOCKER_COMPOSE_VERSION=1.24.0
 
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
