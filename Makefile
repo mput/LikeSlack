@@ -61,10 +61,7 @@ compose-build:
 compose-logs:
 	docker-compose logs --tail=20 -f
 
-compose-prepare:
-	compose-install
-	compose-migrate
-	compose-seed
+compose-prepare: compose-install compose-migrate compose-seed
 
 
 .PHONY: test
