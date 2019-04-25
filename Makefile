@@ -40,6 +40,9 @@ compose-down:
 compose-install:
 	docker-compose run web make install
 
+compose-test-prepare:
+	COMPOSE_PROJECT_NAME=lstest docker-compose -f ./docker-compose-test.yml run --rm web_test npm install
+
 compose-test-coverage:
 	COMPOSE_PROJECT_NAME=lstest docker-compose -f ./docker-compose-test.yml run --rm web_test make test-coverage
 

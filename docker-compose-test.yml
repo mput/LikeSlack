@@ -3,7 +3,7 @@ version: '3.7'
 services:
   web_test:
     build: .
-    command: make start
+    command: make test-coverage
     depends_on:
       - db_test
     tty: true

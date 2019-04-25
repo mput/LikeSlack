@@ -1,7 +1,8 @@
 module.exports = {
   collectCoverageFrom: [
-    '**/server/*.{js,jsx}',
+    'server/*.{js,jsx}',
     '!**/client/**',
+    '!**/dist/**',
     '!**/node_modules/**',
     '!**/client/**',
     '!**/postgres-data/**',
@@ -10,5 +11,9 @@ module.exports = {
     '!coverage/**',
     '!gulpfile**',
     '!*config**',
+  ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/dist/',
   ],
 };
