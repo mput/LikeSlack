@@ -1,6 +1,11 @@
 language: node_js
 node_js:
   - docker
+before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 env:
   global:
     - CC_TEST_REPORTER_ID=69fa3a5b79de6f474867fd8a3e9987c93d8f8a58df998a31b0ef089204f6884e
