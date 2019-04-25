@@ -1,7 +1,8 @@
 module.exports = {
   collectCoverageFrom: [
-    'server/*.{js,jsx}',
+    'server/*/*.{js,jsx}',
     '!**/client/**',
+    '!**/bin/**',
     '!**/dist/**',
     '!**/node_modules/**',
     '!**/client/**',

@@ -173,100 +173,129 @@ describe('Channels CRUD', () => {
     expect(body).toMatchObject(expectedResponse);
   });
 
+  test('Update', async (done) => {
+    const newChannelData = {
+      data: {
+        type: 'channel',
+        attributes: {
+          name: 'ChannelName',
+        },
+      },
+    };
+    const renameChannelData = {
+      data: {
+        attributes: {
+          name: 'NewChannelName17830',
+        },
+      },
+    };
+    const {
+      body: {
+        data: { id: channelId },
+      },
+    } = await request(app).post(getChannelsUrl()).send(newChannelData);
+    const expectedResponse = {
+      data: {
+        type: 'channels',
+        id: channelId,
+        attributes: {
+          name: 'NewChannelName17830',
+        },
+      },
+    };
+    socket.on('renameChannel', (payload) => {
+      if (payload.data.attributes.name === expectedResponse.data.attributes.name) {
+        expect(payload).toMatchObject(expectedResponse);
+        done();
+      }
+    });
+    await request(app).patch(getChannelUrl(channelId)).send(renameChannelData).expect(204);
+  });
 
-  // test('Update', async (done) => {
-  //   const newChannelData = {
-  //     data: {
-  //       type: 'channel',
-  //       attributes: {
-  //         name: 'ChannelName',
-  //       },
-  //     },
-  //   };
-  //   const renameChannelData = {
-  //     data: {
-  //       attributes: {
-  //         name: 'NewChannelName',
-  //       },
-  //     },
-  //   };
-  //   const {
-  //     body: {
-  //       data: { id: channelId },
-  //     },
-  //   } = await request(app).post(getChannelsUrl()).send(newChannelData);
+  test('Update w/ not existing id', async () => {
+    const renameChannelData = {
+      data: {
+        attributes: {
+          name: 'NewChannelName17830',
+        },
+      },
+    };
 
-  //   const expectedResponse = {
-  //     data: {
-  //       type: 'channels',
-  //       id: channelId,
-  //       attributes: {
-  //         id: channelId,
-  //         name: 'NewChannelName',
-  //       },
-  //     },
-  //   };
-  //   socket.on('renameChannel', (payload) => {
-  //     expect(payload).toMatchObject(expectedResponse);
-  //     done();
-  //   });
-  //   await request(app).patch(getChannelUrl(channelId)).send(renameChannelData).expect(204);
-  // });
+    const expectedResponse = {
+      errors: [
+        {
+          status: '422',
+          source: {
+            pointer: 'id',
+          },
+          title: 'ValidationError',
+          detail: 'id doesn\'t exist',
+        },
+      ],
+    };
+    const { statusCode, body } = await request(app)
+      .patch(getChannelUrl(1912)).send(renameChannelData);
+    expect(statusCode).toBe(422);
+    expect(body).toMatchObject(expectedResponse);
+  });
 });
 
 
-// describe('Messages CRUD', () => {
-//   const getMessagesUrl = channelId => `${apiUrl}/channels/${channelId}/messages`;
-//   let channelId;
+describe('Messages CRUD', () => {
+  const getMessagesUrl = channelId => `${apiUrl}/channels/${channelId}/messages`;
+  let channelId;
 
-//   beforeEach(async () => {
-//     const getChannelsUrl = () => `${apiUrl}/channels`;
-//     const newChannelData = {
-//       data: {
-//         attributes: {
-//           name: 'ChannelName',
-//         },
-//       },
-//     };
-//     const {
-//       body: {
-//         data: { id },
-//       },
-//     } = await request(app).post(getChannelsUrl()).send(newChannelData);
-//     channelId = id;
-//   });
+  beforeEach(async () => {
+    const getChannelsUrl = () => `${apiUrl}/channels`;
+    const newChannelData = {
+      data: {
+        attributes: {
+          name: 'ChannelName',
+        },
+      },
+    };
+    const {
+      body: {
+        data: { id },
+      },
+    } = await request(app).post(getChannelsUrl()).send(newChannelData);
+    channelId = id;
+  });
 
-//   test('Create', async (done) => {
-//     const dataFromClient = {
-//       data: {
-//         attributes: {
-//           message: 'oh my message',
-//           author: 'UserOne',
-//         },
-//       },
-//     };
+  test('Create', async (done) => {
+    const dataFromClient = {
+      data: {
+        attributes: {
+          message: 'oh my message',
+          author: 'UserOne',
+          channelId,
+        },
+      },
+    };
 
-//     const expectedResponse = {
-//       data: {
-//         type: 'messages',
-//         id: expect.any(String),
-//         attributes: {
-//           message: 'oh my message',
-//           author: 'UserOne',
-//           id: expect.any(String),
-//         },
-//       },
-//     };
-//     socket.on('newMessage', (payload) => {
-//       expect(payload).toMatchObject(expectedResponse);
-//       done();
-//     });
+    const expectedResponse = {
+      data: {
+        type: 'messages',
+        id: expect.any(String),
+        attributes: {
+          message: 'oh my message',
+          author: 'UserOne',
+          channelId,
+        },
+      },
+    };
+    socket.on('newMessage', (payload) => {
+      if (payload.data.attributes.message === expectedResponse.data.attributes.message) {
+        expect(payload).toMatchObject(expectedResponse);
+        done();
+      }
+    });
 
-//     const { statusCode, body } = await request(app)
-//       .post(getMessagesUrl(channelId)).send(dataFromClient);
-//     expect(statusCode).toBe(201);
-//     expect(body).toMatchObject(expectedResponse);
-//   });
+    const { statusCode, body } = await request(app)
+      .post(getMessagesUrl(channelId)).send(dataFromClient);
+    expect(body).toMatchObject(expectedResponse);
+    expect(statusCode).toBe(201);
+  });
 
 //   test('Get', async () => {
 //     const dataFromClient = {
@@ -286,4 +315,4 @@ describe('Channels CRUD', () => {
 //     expect(statusCode).toBe(200);
 //     expect(body.length).toBe(2);
 //   });
-// });
+});

@@ -10,7 +10,11 @@ exports.up = knex => (
       table.increments('id');
       table.text('message');
       table.string('author').notNullable();
-      table.integer('channelId').references('id').inTable('channels').onDelete('CASCADE');
+      table.integer('channelId')
+        .notNullable()
+        .references('id')
+        .inTable('channels')
+        .onDelete('CASCADE');
       table.timestamps(true, true);
     })
 );

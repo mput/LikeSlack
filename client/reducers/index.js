@@ -23,7 +23,7 @@ const channels = handleActions(
     },
     [actions.renameChannel]: (state, { payload }) => {
       const { byId, allIds } = state;
-      const { data: { attributes: { id, name } } } = payload;
+      const { data: { id, attributes: { name } } } = payload;
       const changedChannel = { ...byId[id], name };
       return {
         byId: { ...byId, [id]: changedChannel },
@@ -37,11 +37,10 @@ const channels = handleActions(
 const messages = handleActions(
   {
     [actions.addMessage]: (state, { payload }) => {
-      const { data: { attributes: newMessage } } = payload;
-      const newMessageId = newMessage.id;
+      const { data: { id, attributes: newMessage } } = payload;
       return {
-        byId: { ...state.byId, [newMessageId]: newMessage },
-        allIds: [...state.allIds, newMessageId],
+        byId: { ...state.byId, [id]: newMessage },
+        allIds: [...state.allIds, id],
       };
     },
     [actions.removeChannel]: (state, { payload }) => {

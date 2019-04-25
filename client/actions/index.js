@@ -9,9 +9,7 @@ export const addMessage = createAction('MESSAGE_ADD');
 export const sendMessageRequest = (message, author, channelId) => async () => {
   const url = routes.messages(channelId);
   const data = {
-    attributes: {
-      message, author,
-    },
+    attributes: { message, author, channelId },
   };
   log('Sending message to %s', url);
   await axios.post(url, { data });

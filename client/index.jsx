@@ -47,7 +47,8 @@ const store = createStore(
   {
     channels: prepareData(channels
       .map(ch => ({ ...ch, id: String(ch.id) }))),
-    messages: prepareData(messages),
+    messages: prepareData(messages
+      .map(msg => ({ ...msg, id: String(msg.id), channelId: String(msg.channelId) }))),
     activeChannelId: { activeId: String(channels[0].id), defaultActiveId: String(channels[0].id) },
   },
   composeWithDevTools(applyMiddleware(thunk)),
