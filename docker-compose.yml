@@ -1,0 +1,28 @@
+---
+version: '3.7'
+services:
+  web:
+    build: .
+    command: make start
+    depends_on:
+      - db
+    tty: true
+    ports:
+      - "5656:5656"
+    expose:
+      - "5656"
+    volumes:
+      - .:/code
+      - .bash_history:/root/.bash_history
+    container_name: ls
+
+  db:
+    image: postgres:latest
+    tty: true
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    container_name: db

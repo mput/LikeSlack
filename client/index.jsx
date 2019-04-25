@@ -45,8 +45,10 @@ const { channels, messages } = gon;
 const store = createStore(
   reducers,
   {
-    channels: prepareData(channels),
+    channels: prepareData(channels
+      .map(ch => ({ ...ch, id: String(ch.id) }))),
     messages: prepareData(messages),
+    activeChannelId: { activeId: String(channels[0].id), defaultActiveId: String(channels[0].id) },
   },
   composeWithDevTools(applyMiddleware(thunk)),
 );

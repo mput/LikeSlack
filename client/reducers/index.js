@@ -7,11 +7,10 @@ import * as actions from '../actions';
 const channels = handleActions(
   {
     [actions.addChannel]: (state, { payload }) => {
-      const { data: { attributes: newChannel } } = payload;
-      const newChannelId = newChannel.id;
+      const { data: { id, attributes } } = payload;
       return {
-        byId: { ...state.byId, [newChannelId]: newChannel },
-        allIds: [...state.allIds, newChannelId],
+        byId: { ...state.byId, [id]: { ...attributes, id } },
+        allIds: [...state.allIds, id],
       };
     },
     [actions.removeChannel]: (state, { payload }) => {
@@ -59,16 +58,17 @@ const messages = handleActions(
   { byId: {}, allId: [] },
 );
 
-const defaultChannelId = 1;
 const activeChannelId = handleActions(
   {
-    [actions.setActiveCahnnel]: (_state, { payload: channelId }) => (channelId),
+    [actions.setActiveCahnnel]: (state, { payload: newActiveId }) => (
+      { ...state, activeId: newActiveId }
+    ),
     [actions.removeChannel]: (state, { payload }) => {
       const { data: { id } } = payload;
-      return state === id ? defaultChannelId : state;
+      return state.activeId === id ? { activeId: state.defaultActiveId } : state;
     },
   },
-  defaultChannelId,
+  { activeId: null, defaultActiveId: null },
 );
 
 const modalDefault = {

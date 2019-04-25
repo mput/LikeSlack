@@ -2,7 +2,6 @@ module.exports = {
   mode: process.env.NODE_ENV || 'development',
   devtool: 'source-map',
   entry: [
-    'babel-polyfill',
     `${__dirname}/client/index.jsx`,
   ],
   externals: {
@@ -20,7 +19,13 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            cacheCompression: false,
+          },
+        },
       },
       {
         test: /\.css$/,

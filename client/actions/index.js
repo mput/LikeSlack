@@ -25,6 +25,7 @@ export const addChannel = createAction('CHANNEL_ADD');
 export const addChannelRequset = name => async (dispatch) => {
   const url = routes.channels();
   const data = {
+    type: 'channel',
     attributes: {
       name,
     },

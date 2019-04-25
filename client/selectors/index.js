@@ -11,16 +11,16 @@ export const channelsSelector = createSelector(
 
 const allMessagesIds = state => state.messages.allIds;
 const messagesById = state => state.messages.byId;
-const activeChannelId = state => state.activeChannelId;
+export const activeChannelIdSelector = state => state.activeChannelId.activeId;
 
 export const activeChannelMessages = createSelector(
-  [allMessagesIds, messagesById, activeChannelId],
+  [allMessagesIds, messagesById, activeChannelIdSelector],
   (ids, byId, activeId) => ids
     .map(id => byId[id])
     .filter(message => message.channelId === activeId),
 );
 
 export const activeChannel = createSelector(
-  [channelsById, activeChannelId],
+  [channelsById, activeChannelIdSelector],
   (byId, id) => byId[id],
 );

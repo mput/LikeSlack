@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 
 import connect from '../connect';
-import { channelsSelector } from '../selectors';
+import { channelsSelector, activeChannelIdSelector } from '../selectors';
 import AddChannelForm from './AddChannelForm';
 
 const mapStateToProps = state => ({
   channels: channelsSelector(state),
-  activeChannelId: state.activeChannelId,
+  activeChannelId: activeChannelIdSelector(state),
 });
 
 
