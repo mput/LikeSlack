@@ -52,10 +52,10 @@ module.exports = {
       max: 10,
     },
     migrations: {
-      directory: path.join(__dirname, '/db/migrations'),
+      directory: path.join(__dirname, '/server/db/migrations'),
     },
     seeds: {
-      directory: path.join(__dirname, '/db/seeds'),
+      directory: path.join(__dirname, '/server/db/seeds'),
     },
   },
 
