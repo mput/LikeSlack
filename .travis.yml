@@ -24,7 +24,7 @@ script:
   - make compose-test-prepare
   - make compose-test-coverage
 after_script:
-  - la
+  - ls
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 deploy:
   provider: heroku

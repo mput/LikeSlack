@@ -47,7 +47,7 @@ compose-test-coverage:
 	COMPOSE_PROJECT_NAME=lstest docker-compose -f ./docker-compose-test.yml run --rm web_test make test-coverage
 
 compose-test-watch:
-	COMPOSE_PROJECT_NAME=lstest docker-compose -f ./docker-compose-test.yml run --rm web_test make test-watch
+	COMPOSE_PROJECT_NAME=lstest docker-compose -f ./docker-compose-test.yml run --rm web_test cd /code && make test-watch
 
 compose-bash:
 	docker-compose exec web bash
