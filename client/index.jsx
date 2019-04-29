@@ -13,7 +13,7 @@ import _ from 'lodash';
 import reducers from './reducers';
 import ChatApp from './components/ChatApp';
 import messageTypesActions from './messageTypesActions';
-import logger from '../lib/logger';
+import logger from '../server/lib/logger';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/application.css';

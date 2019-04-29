@@ -1,7 +1,7 @@
 import { createAction } from 'redux-actions';
 import axios from 'axios';
 import * as routes from '../routes';
-import logger from '../../lib/logger';
+import logger from '../../server/lib/logger';
 
 const log = logger('actions');
 

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import io from 'socket.io-client';
-import db from '../../db';
+import db from '../db';
 
 import getApp from '..';
 

@@ -23,9 +23,10 @@ before_script:
 script:
   - make compose-test-prepare
   - make compose-test-coverage
-after_script:
-  - ls
+before_deploy:
+  - ls -la
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - sudo git stash --all
 deploy:
   provider: heroku
   api_key:

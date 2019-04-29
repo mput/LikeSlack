@@ -10,7 +10,7 @@ import koaLogger from 'koa-logger';
 import koaWebpack from 'koa-webpack';
 import bodyParser from 'koa-bodyparser';
 import session from 'koa-generic-session';
-import logger from '../lib/logger';
+import logger from './lib/logger';
 import addRoutes from './routes';
 
 import webpackConfig from '../webpack.config';

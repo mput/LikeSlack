@@ -4,8 +4,8 @@ import Router from 'koa-router';
 import JSONAPISerializer from 'json-api-serializer';
 import { ValidationError } from "yup";
 
-import db from '../../db';
-import { channelSchema, messageSchema } from '../../lib/schemas';
+import db from '../db';
+import { channelSchema, messageSchema } from '../lib/schemas';
 
 const Serializer = new JSONAPISerializer();
 Serializer.register('channels');
