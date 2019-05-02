@@ -47,3 +47,9 @@ npx knex seed:run
 npx knex seed:run
 npx knex seed:run
 exit
+npm i dotenv
+npm install passport passport-github2
+npm install koa-passport
+exit
+npm install uuid
+exit

@@ -9,9 +9,12 @@ import Router from 'koa-router';
 import koaLogger from 'koa-logger';
 import koaWebpack from 'koa-webpack';
 import bodyParser from 'koa-bodyparser';
-import session from 'koa-generic-session';
+// import session from 'koa-generic-session';
+import passport from 'koa-passport';
+
 import logger from './lib/logger';
 import addRoutes from './routes';
+import authInit from './lib/authInit';
 
 import webpackConfig from '../webpack.config';
 import errorMiddleware from './middlewares/errorMiddleware';
@@ -22,9 +25,9 @@ const isTest = process.env.NODE_ENV === 'test';
 
 export default () => {
   const app = new Koa();
-  app.keys = ['some secret hurr'];
+  // app.keys = ['some secret hurr'];
   app.use(errorMiddleware);
-  app.use(session(app));
+  // app.use(session(app));
   app.use(bodyParser());
 
   if (isDevelopment) {
@@ -57,6 +60,8 @@ export default () => {
     basedir: path.join(__dirname, 'views'),
   });
   pug.use(app);
+  authInit();
+  app.use(passport.initialize());
 
   const server = http.createServer(app.callback());
   const io = socket(server);

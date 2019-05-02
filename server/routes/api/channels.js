@@ -1,23 +1,22 @@
 /* eslint-disable */
-
 import Router from 'koa-router';
 import JSONAPISerializer from 'json-api-serializer';
 import { ValidationError } from "yup";
 
-import db from '../db';
-import { channelSchema, messageSchema } from '../lib/schemas';
+import db from '../../db';
+import { channelSchema, messageSchema } from '../../lib/schemas';
 
 const Serializer = new JSONAPISerializer();
 Serializer.register('channels');
 Serializer.register('messages');
 
-export default (router, deps) => {
-  const apiRouter = new Router();
+export default (deps) => {
+  const router = new Router();
 
   const { io, logger } = deps;
-  const log = logger('router');
+  const log = logger('channels-router');
 
-  apiRouter
+  router
     .get('/channels', (ctx) => {
     })
     .post('/channels', async (ctx) => {
@@ -72,5 +71,5 @@ export default (router, deps) => {
 	  ctx.body = responseData;
     });
 
-  router.use('/api/v1', apiRouter.routes(), apiRouter.allowedMethods());
+  return router;
 };
