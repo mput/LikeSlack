@@ -1,7 +1,9 @@
 import { createAction } from 'redux-actions';
 import axios from 'axios';
+
 import * as routes from '../routes';
 import logger from '../../server/lib/logger';
+import handleTokens from '../lib/handleTokens';
 
 const log = logger('actions');
 
@@ -73,4 +75,38 @@ export const renameChannelRequest = (id, name) => async (dispatch) => {
     dispatch(failureModalAction());
     throw err;
   }
+};
+
+export const logIn = createAction('AUTH_LOGIN');
+export const logOut = createAction('AUTH_LOGUOT');
+
+export const authenticate = () => async (dispatch) => {
+  const successAuthCallback = (tokens) => {
+    log('Tokens recived %O', tokens);
+    handleTokens.saveTokens(tokens);
+    dispatch(logIn());
+  };
+
+  window.successAuthCallback = successAuthCallback;
+  window.open(routes.login('github'));
+};
+
+export const logOutRequest = () => async (dispatch) => {
+  try {
+    await axios.get(routes.logout(), {
+      withAccessToken: false,
+      withRefreshToken: true,
+    });
+  } finally {
+    handleTokens.removeTokens();
+    dispatch(logOut());
+  }
+};
+
+export const checkAuth = () => async (dispatch) => {
+  if (handleTokens.getTokens()) {
+    dispatch(logIn());
+    return;
+  }
+  dispatch(logOut());
 };

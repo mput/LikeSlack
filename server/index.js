@@ -9,7 +9,6 @@ import Router from 'koa-router';
 import koaLogger from 'koa-logger';
 import koaWebpack from 'koa-webpack';
 import bodyParser from 'koa-bodyparser';
-// import session from 'koa-generic-session';
 import passport from 'koa-passport';
 
 import logger from './lib/logger';
@@ -25,8 +24,11 @@ const isTest = process.env.NODE_ENV === 'test';
 
 export default () => {
   const app = new Koa();
-  // app.keys = ['some secret hurr'];
+  if (!isTest) {
+    app.use(koaLogger());
+  }
   app.use(errorMiddleware);
+  // app.keys = ['some secret hurr'];
   // app.use(session(app));
   app.use(bodyParser());
 
@@ -47,9 +49,6 @@ export default () => {
     app.use(mount(urlPrefix, serve(assetsPath)));
   }
 
-  if (!isTest) {
-    app.use(koaLogger());
-  }
 
   const pug = new Pug({
     viewPath: path.join(__dirname, '..', 'views'),

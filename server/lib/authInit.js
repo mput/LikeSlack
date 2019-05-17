@@ -6,7 +6,6 @@ export default () => {
     clientID: process.env.GH_CLIENT_ID,
     clientSecret: process.env.GH_CLIENT_SECRET,
   }, (accessToken, refreshToken, profile, done) => {
-    // console.log('Profiles', accessToken, refreshToken);
     done(null, profile);
   }));
 };

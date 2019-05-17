@@ -53,3 +53,25 @@ npm install koa-passport
 exit
 npm install uuid
 exit
+make migrate-rollback
+make migrate
+make migrate-rollback
+make migrate
+npm install jsonwebtoken
+make migrate
+make migrate-rollback
+make migrate
+make migrate
+make migrate-rollback
+make migrate
+make migrate-rollback
+make migrate-rollback
+make migrate-rollback
+make migrate
+make migrate-rollback
+make migrate
+exit
+make migrate-rollback
+exit
+make migrate
+exit

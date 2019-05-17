@@ -4,3 +4,4 @@ coverage
 .env
 postgres-data
 *__routes.js
+.bash_history

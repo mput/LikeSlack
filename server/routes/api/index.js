@@ -1,7 +1,7 @@
 /* eslint-disable */
 import channels from './channels';
-import users from './users';
-const routes = [channels, users];
+import auth from './auth';
+const routes = [channels, auth];
 
 export default (router, deps) => {
   routes.forEach(getRouter => {

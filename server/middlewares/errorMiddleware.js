@@ -1,12 +1,13 @@
 import logger from '../lib/logger';
+// import errors from '../lib/errors';
 
-const log = logger('error');
+const log = logger('ErrorMiddleware');
 
 export default async (ctx, next) => {
   try {
     await next();
   } catch (err) {
-    log(err, err.status);
+    // log(err);
     // console.log(err, err.status);
     let errors;
     switch (true) {
@@ -32,15 +33,25 @@ export default async (ctx, next) => {
         }];
         break;
       }
-      default: {
-        ctx.status = err.status || 500;
+      case !!err.statusCode: {
+        ctx.status = err.statusCode;
         errors = {
           status: String(ctx.status),
-          title: 'UnknownError',
+          title: err.name || 'Unknown error',
+        };
+        break;
+      }
+      default: {
+        log('Unknown err', err);
+        ctx.status = 500;
+        errors = {
+          status: String(ctx.status),
+          title: 'Unknown error',
         };
         break;
       }
     }
+    log('%O', errors);
     ctx.body = { errors };
   }
 };

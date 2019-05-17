@@ -101,11 +101,20 @@ const isAddChannelFormShown = handleActions(
   false,
 );
 
+const isAuthenticated = handleActions(
+  {
+    [actions.logIn]: () => true,
+    [actions.logOut]: () => false,
+  },
+  false,
+);
+
 export default combineReducers({
   channels,
   messages,
   activeChannelId,
   modal,
   isAddChannelFormShown,
+  isAuthenticated,
   form: formReducer,
 });
