@@ -19,12 +19,13 @@ const findOrCreateUser = async (authProvider, profile) => {
     return userRequest[0];
   }
   const userData = {
-    user_name: profile.displayName,
+    user_name: profile.username,
+    full_name: profile.displayName,
     validation_key: profile.id,
     profile_url: profile.profileUrl,
     auth_provider: authProvider,
   };
-  const user = await db('users').returning('*').insert(userData);
+  const [user] = await db('users').returning('*').insert(userData);
   log('User created');
   return user;
 };
@@ -104,6 +105,7 @@ export default () => {
     .get('/auth/github', passport.authenticate('github', { session: false }))
     .get('/auth/github/callback', passport.authenticate('github', { session: false }), async (ctx) => {
       const profile = _.omit(ctx.req.user, ['_raw', '_json']);
+      log('GH profile: %O', profile);
       const user = await findOrCreateUser('github', profile);
       log('User: %O', user);
       const refreshToken = await updateOrCreateRefreshToken(user.id);

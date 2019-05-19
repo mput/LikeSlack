@@ -14,8 +14,8 @@ const mapStateToProps = state => ({
 @connect(mapStateToProps)
 class ChannelsPanel extends Component {
   handleChannelChange = id => () => {
-    const { setActiveCahnnel } = this.props;
-    setActiveCahnnel(id);
+    const { setActiveChannel } = this.props;
+    setActiveChannel(id);
   }
 
   render() {

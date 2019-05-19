@@ -1,6 +1,5 @@
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
-  devtool: 'source-map',
   entry: [
     `${__dirname}/client/index.jsx`,
   ],
@@ -21,10 +20,6 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-            cacheCompression: false,
-          },
         },
       },
       {

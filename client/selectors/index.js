@@ -11,7 +11,7 @@ export const channelsSelector = createSelector(
 
 const allMessagesIds = state => state.messages.allIds;
 const messagesById = state => state.messages.byId;
-export const activeChannelIdSelector = state => state.activeChannelId.activeId;
+export const activeChannelIdSelector = state => state.ui.activeChannelId.activeId;
 
 export const activeChannelMessages = createSelector(
   [allMessagesIds, messagesById, activeChannelIdSelector],
@@ -22,5 +22,12 @@ export const activeChannelMessages = createSelector(
 
 export const activeChannel = createSelector(
   [channelsById, activeChannelIdSelector],
+  (byId, id) => byId[id],
+);
+
+const usersById = state => state.users.byId;
+const userMeId = state => state.ui.userMeId;
+export const userMeSelector = createSelector(
+  [usersById, userMeId],
   (byId, id) => byId[id],
 );

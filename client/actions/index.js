@@ -17,7 +17,7 @@ export const sendMessageRequest = (message, author, channelId) => async () => {
   await axios.post(url, { data });
 };
 
-export const setActiveCahnnel = createAction('ACTIVE_CHANNEL_SET');
+export const setActiveChannel = createAction('ACTIVE_CHANNEL_SET');
 
 export const toggleAddChannelFormVisibility = createAction('ADD_CHANNEL_TOGGLE_VISIBILITY');
 
@@ -77,16 +77,29 @@ export const renameChannelRequest = (id, name) => async (dispatch) => {
   }
 };
 
+export const addUser = createAction('USER_ADD');
+
 export const logIn = createAction('AUTH_LOGIN');
-export const logOut = createAction('AUTH_LOGUOT');
+export const logOut = createAction('AUTH_LOGOUT');
+
+export const addUserMeRequest = () => async (dispatch, getState) => {
+  const { data } = await axios.get(routes.userMe());
+  const { data: { id } } = data;
+  log(data, id);
+  log('Login as a user with ID %s', id);
+  if (!getState().users.byId[id]) {
+    dispatch(addUser(data));
+    log('Added new user to store');
+  }
+  dispatch(logIn(id));
+};
 
 export const authenticate = () => async (dispatch) => {
   const successAuthCallback = (tokens) => {
     log('Tokens recived %O', tokens);
     handleTokens.saveTokens(tokens);
-    dispatch(logIn());
+    dispatch(addUserMeRequest());
   };
-
   window.successAuthCallback = successAuthCallback;
   window.open(routes.login('github'));
 };
@@ -103,9 +116,9 @@ export const logOutRequest = () => async (dispatch) => {
   }
 };
 
-export const checkAuth = () => async (dispatch) => {
+export const initState = () => async (dispatch) => {
   if (handleTokens.getTokens()) {
-    dispatch(logIn());
+    dispatch(addUserMeRequest());
     return;
   }
   dispatch(logOut());

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import path from 'path';
 import Koa from 'koa';
 import Pug from 'koa-pug';
@@ -28,8 +29,6 @@ export default () => {
     app.use(koaLogger());
   }
   app.use(errorMiddleware);
-  // app.keys = ['some secret hurr'];
-  // app.use(session(app));
   app.use(bodyParser());
 
   if (isDevelopment) {
@@ -52,11 +51,8 @@ export default () => {
 
   const pug = new Pug({
     viewPath: path.join(__dirname, '..', 'views'),
-    debug: true,
-    pretty: true,
-    compileDebug: true,
-    noCache: process.env.NODE_ENV !== 'production',
     basedir: path.join(__dirname, 'views'),
+    pretty: true,
   });
   pug.use(app);
   authInit();

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Alert, Button } from 'react-bootstrap';
 import { channelView, userNameView } from '../lib/valuesView';
 
 import MessageForm from './MessageForm';
+import Auth from './Auth';
 import Contexts from '../contexts';
 import connect from '../connect';
 import { activeChannelMessages, activeChannel } from '../selectors';
@@ -98,10 +99,7 @@ class MessagesPanel extends Component {
             </div>
           </div>
           <p className="ml-auto mr-4 my-0">
-            <FontAwesomeIcon icon={faUser} />
-            <span className="ml-1 font-weight-bold">
-              {userName}
-            </span>
+            <Auth />
           </p>
         </div>
         <div className="flex-column mt-auto px-4 overflow-auto">

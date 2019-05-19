@@ -11,7 +11,7 @@ const typesToBodyComponents = {
 };
 
 const mapStateToProps = state => ({
-  modal: state.modal,
+  modal: state.ui.modal,
 });
 
 @connect(mapStateToProps)

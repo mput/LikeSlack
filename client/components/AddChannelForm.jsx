@@ -13,7 +13,7 @@ import channelNameNormolize from '../lib/normilizers';
   form: 'addChannel',
 })
 @connect(state => ({
-  isAddChannelFormShown: state.isAddChannelFormShown,
+  isAddChannelFormShown: state.ui.isAddChannelFormShown,
 }))
 class AddChannelForm extends Component {
   handleFormVisibility = () => {

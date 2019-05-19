@@ -1,13 +1,14 @@
 const apiUrl = '/api/v1';
-// eslint-disable-next-line
-export const messages = channelId => `${apiUrl}/channels/${channelId}/messages`;
+
+// channels
 export const channels = () => `${apiUrl}/channels`;
 export const channel = id => `${apiUrl}/channels/${id}`;
-
-
+// messages
+export const messages = channelId => `${apiUrl}/channels/${channelId}/messages`;
 // auth
 export const login = provider => `${apiUrl}/auth/${provider}`;
 export const logout = () => `${apiUrl}/auth/logout`;
 export const tokensRefresh = () => `${apiUrl}/auth/refresh`;
-
-export const test = () => `${apiUrl}/test`;
+// user
+export const user = id => `${apiUrl}/user/${id}`;
+export const userMe = () => user('me');

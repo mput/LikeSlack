@@ -3,7 +3,8 @@ exports.up = knex => (
     .createTable('users', (t) => {
       t.increments('id');
       t.string('auth_provider').notNullable();
-      t.string('user_name');
+      t.string('user_name').notNullable();
+      t.string('full_name');
       t.string('validation_key');
       t.string('profile_url');
       t.timestamps(true, true);
