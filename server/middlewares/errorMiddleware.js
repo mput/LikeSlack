@@ -13,7 +13,7 @@ export default async (ctx, next) => {
     switch (true) {
       case err.name === 'ValidationError': {
         ctx.status = 422;
-        const errSource = err.inner.length ? err.inner : [err];
+        const errSource = err.inner ? err.inner : [err];
         errors = errSource.map(errItem => ({
           status: String(422),
           title: errItem.name,

@@ -3,7 +3,8 @@ import passport from 'koa-passport';
 import _ from 'lodash';
 import jwt from 'jsonwebtoken';
 
-import db from '../../db';
+import { User, RefreshToken } from '../../models';
+
 import { basicAuth } from '../../middlewares/jwtAuthorizationMiddleware';
 import { AuthorizationError, ValidationError } from '../../lib/errors';
 import { extractRefreshJwt, dateToSecFromEpoch, secFromEpochToDate } from '../../lib/helpers';
@@ -12,37 +13,41 @@ import logger from '../../lib/logger';
 const log = logger('auth-router');
 const tokenSecret = process.env.TOKEN_SECRET;
 
+
 const findOrCreateUser = async (authProvider, profile) => {
-  const userRequest = await db('users').select().where({ auth_provider: authProvider, validation_key: profile.id });
-  if (userRequest.length === 1) {
+  const user = await User
+    .query()
+    .findOne({ auth_provider: authProvider, validation_key: profile.id });
+  if (user) {
     log('User exist');
-    return userRequest[0];
+    return user;
   }
   const userData = {
-    user_name: profile.username,
-    full_name: profile.displayName,
-    validation_key: profile.id,
-    profile_url: profile.profileUrl,
-    auth_provider: authProvider,
+    userName: profile.username,
+    fullName: profile.displayName,
+    validationKey: profile.id,
+    profileUrl: profile.profileUrl,
+    authProvider,
   };
-  const [user] = await db('users').returning('*').insert(userData);
+  const newUser = await User.query().returning('*').insert(userData);
   log('User created');
-  return user;
+  return newUser;
 };
 
 const cleanTokens = async (userId, lastTokenId) => {
   const maxIssuedTokensAmount = 3;
-  const expiredTokensAmount = await db('refresh_tokens')
+  const expiredTokensAmount = await RefreshToken
+    .query()
     .delete()
     .where({ user_id: userId })
     .andWhere('expire_at', '<', new Date());
   log('Deleted %d expired tokens', expiredTokensAmount);
   // delete all tokens if amount exceed.
-  const tokensAmountRes = await db('refresh_tokens').count({ user_id: userId });
+  const tokensAmountRes = await RefreshToken.query().count({ user_id: userId });
   const tokensAmount = Number(tokensAmountRes[0].user_id);
   log('User has %d tokens', tokensAmount);
   if (tokensAmount > maxIssuedTokensAmount) {
-    const deletedTokens = await db('refresh_tokens')
+    const deletedTokens = await RefreshToken
       .delete()
       .where({ user_id: userId })
       .andWhere('id', '!=', lastTokenId);
@@ -51,18 +56,23 @@ const cleanTokens = async (userId, lastTokenId) => {
 };
 
 const updateOrCreateRefreshToken = async (userId, tokenId) => {
+  log('I m in update');
   const tokenExpirationInDays = 60;
   const exp = dateToSecFromEpoch(Date.now()) + (86400 * tokenExpirationInDays);
   let id;
   if (tokenId) {
     id = tokenId;
-    await db('refresh_tokens')
-      .where({ id })
+    RefreshToken
+      .query()
+      .findById(id)
       .update({ expire_at: secFromEpochToDate(exp) });
     log('Refresh token updated, expire at: %s', secFromEpochToDate(exp));
   } else {
-    const tokenEntry = await db('refresh_tokens').returning('*').insert({ user_id: userId, expire_at: secFromEpochToDate(exp) });
-    [{ id }] = tokenEntry;
+    const tokenEntry = RefreshToken
+      .query()
+      .returning('*')
+      .insert({ user_id: userId, expire_at: secFromEpochToDate(exp) });
+    ({ id } = tokenEntry);
     log('Refresh token created, expire at: %s', secFromEpochToDate(exp));
   }
   const token = jwt.sign({ id, exp }, tokenSecret);
@@ -72,28 +82,29 @@ const updateOrCreateRefreshToken = async (userId, tokenId) => {
 
 const validateRefreshToken = async (token) => {
   let payload;
+
   try {
     payload = jwt.verify(token, tokenSecret);
   } catch (err) {
     log('RefreshJWT was\'t verified: %s', err);
     throw new AuthorizationError();
   }
-  const tokenRequest = await db('refresh_tokens').select().where({ id: payload.id });
-  if (tokenRequest.length !== 1) {
+  const tokenRequest = await RefreshToken.query().findById(payload.id);
+  if (!tokenRequest) {
     log('Token was recalled');
     throw new AuthorizationError();
   }
-  const [{ expire_at: expireAt }] = tokenRequest;
+  const { expire_at: expireAt } = tokenRequest;
   const storedExp = dateToSecFromEpoch(expireAt);
   if (storedExp !== payload.exp) {
     log('date in token and in record not equal: token was stolen and used to update access token');
-    await db('refresh_tokens').delete().where({ id: payload.id });
+    await RefreshToken.query().where(payload.id);
     throw new AuthorizationError('Token experation time is wrong');
   }
   return payload;
 };
 
-export const createAccessToken = (payload, tokenExpirationInSeconds = 60) => {
+export const createAccessToken = (payload, tokenExpirationInSeconds = 60**10) => {
   const exp = Math.floor(Date.now() / 1000) + tokenExpirationInSeconds;
   const tokenPayload = { ...payload, exp };
   return jwt.sign(tokenPayload, tokenSecret);
@@ -133,10 +144,14 @@ export default () => {
       const newAccessToken = createAccessToken(accessTokenPayload);
       ctx.body = { accessToken: newAccessToken, refreshToken: newRefreshToken };
     })
-    .get('/test', basicAuth(), (ctx) => {
-      log('I\'m in /test', ctx.jwtPayload);
-      ctx.status = 200;
-      ctx.body = 'You are work!';
+    .get('/users/:id', basicAuth(), async (ctx) => {
+      const id = ctx.params.id === 'me' ? ctx.jwtPayload.userId : ctx.params.id;
+      log('Get user with ID: %d', id);
+      const user = await User.query().findById(id);
+      log('User: %O', user);
+      ctx.assert(user, 422, new ValidationError(['User doesn\'t exist'], '', 'id'));
+      ctx.status = 201;
+      ctx.body = user;
     });
   return router;
 };

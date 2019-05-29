@@ -1,5 +1,5 @@
 import http from 'http';
-import { ValidationError } from 'yup';
+import { ValidationError } from 'objection';
 
 export { ValidationError };
 

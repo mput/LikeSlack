@@ -1,25 +1,29 @@
 ---
 version: '3.7'
 services:
-  web_test:
-    build: .
-    command: make test-coverage
-    depends_on:
-      - db_test
-    tty: true
-    volumes:
-      - .:/code
-    container_name: ls_test
-    environment:
-    - GH_CLIENT_ID
-    - GH_CLIENT_SECRET
-    - HOST
-    - TOKEN_SECRET
+  # web_test:
+  #   build: .
+  #   command: make test-coverage
+  #   depends_on:
+  #     - db_test
+  #   tty: true
+  #   volumes:
+  #     - .:/code
+  #   container_name: ls_test
+  #   environment:
+  #   - GH_CLIENT_ID
+  #   - GH_CLIENT_SECRET
+  #   - HOST
+  #   - TOKEN_SECRET
 
   db_test:
     image: postgres:latest
+    ports:
+      - "5763:5432"
     environment:
       - POSTGRES_USER=test
       - POSTGRES_DB=test
       - POSTGRES_PASSWORD=password
+    # volumes:
+    #   - pg-test-data:/var/lib/postgresql/data
     container_name: db_test

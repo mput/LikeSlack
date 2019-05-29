@@ -1,62 +1,49 @@
 const path = require('path');
+const { knexSnakeCaseMappers } = require('objection');
+
+const commonSettings = {
+  client: 'pg',
+  pool: {
+    min: 2,
+    max: 10,
+  },
+  migrations: {
+    directory: path.join(__dirname, '/server/db/migrations'),
+  },
+  seeds: {
+    directory: path.join(__dirname, '/server/db/seeds'),
+  },
+  ...knexSnakeCaseMappers(),
+}
 
 module.exports = {
   development: {
-    client: 'pg',
+    ...commonSettings,
     connection: {
-      host: 'db',
+      host: 'localhost',
+      port: 5762,
       database: 'test',
       user: 'test',
-      password: 'password',
-    },
-    pool: {
-      min: 2,
-      max: 10,
-    },
-    migrations: {
-      directory: path.join(__dirname, '/server/db/migrations'),
-    },
-    seeds: {
-      directory: path.join(__dirname, '/server/db/seeds'),
+      password: 'pass',
     },
   },
 
   test: {
-    client: 'pg',
+    ...commonSettings,
     connection: {
-      host: 'db_test',
+      host: 'localhost',
+      port: 5763,
       database: 'test',
       user: 'test',
       password: 'password',
     },
-    pool: {
-      min: 1,
-      max: 1,
-    },
-    migrations: {
-      directory: path.join(__dirname, '/server/db/migrations'),
-    },
-    seeds: {
-      directory: path.join(__dirname, '/server/db/seeds'),
-    },
   },
 
   production: {
-    client: 'pg',
+    ...commonSettings,
     connection: {
       connectionString: process.env.DATABASE_URL,
       ssl: true,
     },
-    pool: {
-      min: 2,
-      max: 10,
-    },
-    migrations: {
-      directory: path.join(__dirname, '/server/db/migrations'),
-    },
-    seeds: {
-      directory: path.join(__dirname, '/server/db/seeds'),
-    },
   },
-
 };

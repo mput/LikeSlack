@@ -12,6 +12,7 @@ import koaWebpack from 'koa-webpack';
 import bodyParser from 'koa-bodyparser';
 import passport from 'koa-passport';
 
+import initDb from './db';
 import logger from './lib/logger';
 import addRoutes from './routes';
 import authInit from './lib/authInit';
@@ -24,6 +25,7 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 const isTest = process.env.NODE_ENV === 'test';
 
 export default () => {
+  initDb();
   const app = new Koa();
   if (!isTest) {
     app.use(koaLogger());

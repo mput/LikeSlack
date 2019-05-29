@@ -1,6 +1,6 @@
 import request from 'supertest';
 import io from 'socket.io-client';
-import db from '../db';
+// import db from '../db';
 
 import getApp from '..';
 
@@ -10,7 +10,7 @@ const apiUrl = '/api/v1';
 let socket;
 
 beforeAll(async (done) => {
-  await db.migrate.latest();
+  // await db.migrate.latest();
   app.listen(0, () => {
     const httpServerAddr = app.address();
     socket = io(
@@ -25,14 +25,14 @@ beforeAll(async (done) => {
 
 afterAll(async (done) => {
   socket.close();
-  await db.destroy();
+  // await db.destroy();
   app.close(() => {
     done();
   });
 });
 
 beforeEach(async () => {
-  await db.seed.run();
+  // await db.seed.run();
 });
 
 describe('Get root page', () => {
