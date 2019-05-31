@@ -1,11 +1,11 @@
 import User from './User';
 import Message from './Message';
 import Channel from './Channel';
-import RefreshToken from './RefreshToken';
+import Session from './Session';
 
 export {
   User,
   Message,
   Channel,
-  RefreshToken,
+  Session,
 };

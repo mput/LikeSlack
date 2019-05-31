@@ -272,7 +272,7 @@ describe('Messages CRUD', () => {
   test('Get all with both from and before', async () => {
     await request(app)
       .get(getAllMessagesUrl())
-      .query({ from: '2019-05-29T18:24:59.900Z', before: '2019-05-29T18:16:59.900Z'})
+      .query({ from: '2019-05-29T18:24:59.900Z', before: '2019-05-29T18:16:59.900Z' })
       .expect(422);
   });
 
@@ -358,5 +358,23 @@ describe('Messages CRUD', () => {
       .post(getMessagesUrl(channelId))
       .send(dataFromClient)
       .expect(403);
+  });
+});
+
+describe('Auth', () => {
+  const authUrl = provider => `${apiUrl}/auth/${provider}`;
+  const userUrl = (userId = 'me') => `${apiUrl}/users/${userId}`;
+
+  test('Auth request should redirect', async () => {
+    await request(app).get(authUrl('github')).expect(302);
+  });
+
+  test('Get user Me', async () => {
+    const expectedResponse = await getResponseFromJson('get_user.json');
+    const { statusCode, body } = await request(app)
+      .get(userUrl())
+      .set('Authorization', accessToken);
+    expect(statusCode).toBe(200);
+    expect(body).toEqual(expectedResponse);
   });
 });

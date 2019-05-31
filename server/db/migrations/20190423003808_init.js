@@ -31,7 +31,7 @@ exports.up = knex => (
         .onDelete('CASCADE');
       table.timestamps(true, true);
     })
-    .createTable('refresh_tokens', (t) => {
+    .createTable('sessions', (t) => {
       t.increments('id');
       t.integer('user_id')
         .notNullable()
@@ -47,6 +47,6 @@ exports.down = knex => (
   knex.schema
     .dropTable('messages')
     .dropTable('channels')
-    .dropTable('refresh_tokens')
+    .dropTable('sessions')
     .dropTable('users')
 );

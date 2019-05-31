@@ -3,7 +3,7 @@ import passport from 'koa-passport';
 import _ from 'lodash';
 import jwt from 'jsonwebtoken';
 
-import { User, RefreshToken } from '../../models';
+import { User, Session } from '../../models';
 
 import { basicAuth } from '../../middlewares/jwtAuthorizationMiddleware';
 import { AuthorizationError, ValidationError } from '../../lib/errors';
@@ -34,49 +34,56 @@ const findOrCreateUser = async (authProvider, profile) => {
   return newUser;
 };
 
-const cleanTokens = async (userId, lastTokenId) => {
+const cleanSession = async (userId, lastTokenId) => {
   const maxIssuedTokensAmount = 3;
-  const expiredTokensAmount = await RefreshToken
+  const expiredTokensAmount = await Session
     .query()
     .delete()
-    .where({ user_id: userId })
-    .andWhere('expire_at', '<', new Date());
-  log('Deleted %d expired tokens', expiredTokensAmount);
-  // delete all tokens if amount exceed.
-  const tokensAmountRes = await RefreshToken.query().count({ user_id: userId });
-  const tokensAmount = Number(tokensAmountRes[0].user_id);
-  log('User has %d tokens', tokensAmount);
+    .where({ userId })
+    .andWhere('expireAt', '<', new Date());
+  log('Deleted %d expired sessions', expiredTokensAmount);
+  // delete all tokens if amount exceeds max.
+  const tokensAmount = await Session.query().where({ userId }).resultSize();
+  log('User has %d sessions', tokensAmount);
   if (tokensAmount > maxIssuedTokensAmount) {
-    const deletedTokens = await RefreshToken
+    const deletedTokens = await Session
+      .query()
       .delete()
-      .where({ user_id: userId })
+      .where({ userId })
       .andWhere('id', '!=', lastTokenId);
-    log('Deleted all (%d) tokens, except last one', deletedTokens);
+    log('Deleted all (%d) sessions, except last one', deletedTokens);
   }
 };
 
+const updateSessionExpTime = async (sessionId, exp) => {
+  await Session
+    .query()
+    .findById(sessionId)
+    .update({ expireAt: secFromEpochToDate(exp) });
+  log('Session updated, expire at: %s', secFromEpochToDate(exp));
+};
+
+const createSession = async (userId, exp) => {
+  const { id } = await Session
+    .query()
+    .returning('*')
+    .insert({ userId, expireAt: secFromEpochToDate(exp) });
+  log('Session created, expire at: %s', secFromEpochToDate(exp));
+  return id;
+};
+
 const updateOrCreateRefreshToken = async (userId, tokenId) => {
-  log('I m in update');
   const tokenExpirationInDays = 60;
   const exp = dateToSecFromEpoch(Date.now()) + (86400 * tokenExpirationInDays);
   let id;
   if (tokenId) {
+    await updateSessionExpTime(tokenId, exp);
     id = tokenId;
-    RefreshToken
-      .query()
-      .findById(id)
-      .update({ expire_at: secFromEpochToDate(exp) });
-    log('Refresh token updated, expire at: %s', secFromEpochToDate(exp));
   } else {
-    const tokenEntry = RefreshToken
-      .query()
-      .returning('*')
-      .insert({ user_id: userId, expire_at: secFromEpochToDate(exp) });
-    ({ id } = tokenEntry);
-    log('Refresh token created, expire at: %s', secFromEpochToDate(exp));
+    id = await createSession(userId, exp);
   }
   const token = jwt.sign({ id, exp }, tokenSecret);
-  setTimeout(() => cleanTokens(userId, id).catch(err => log('Token cleaning error: %s', err)), 0);
+  setTimeout(() => cleanSession(userId, id).catch(err => log('Token cleaning error: %s', err)), 0);
   return token;
 };
 
@@ -86,20 +93,20 @@ const validateRefreshToken = async (token) => {
   try {
     payload = jwt.verify(token, tokenSecret);
   } catch (err) {
-    log('RefreshJWT was\'t verified: %s', err);
+    log('RefreshJWT wasn\'t verified: %s', err);
     throw new AuthorizationError();
   }
-  const tokenRequest = await RefreshToken.query().findById(payload.id);
+  const tokenRequest = await Session.query().findById(payload.id);
   if (!tokenRequest) {
     log('Token was recalled');
-    throw new AuthorizationError();
+    throw new AuthorizationError('Refresh token isn\'t valid');
   }
-  const { expire_at: expireAt } = tokenRequest;
+  const { expireAt } = tokenRequest;
   const storedExp = dateToSecFromEpoch(expireAt);
   if (storedExp !== payload.exp) {
-    log('date in token and in record not equal: token was stolen and used to update access token');
-    await RefreshToken.query().where(payload.id);
-    throw new AuthorizationError('Token experation time is wrong');
+    log('Expiration time in token and in session record not equal: token was stolen and used to update access token');
+    await Session.query().delete().findById(payload.id);
+    throw new AuthorizationError('Refresh token isn\'t valid');
   }
   return payload;
 };
@@ -126,7 +133,7 @@ export default () => {
     .get('/auth/logout', async (ctx) => {
       const refreshToken = extractRefreshJwt(ctx);
       const { id } = jwt.verify(refreshToken, tokenSecret);
-      const deletedTokensAmount = await db('refresh_tokens')
+      const deletedTokensAmount = await Session
         .delete()
         .where({ id });
       ctx.assert(deletedTokensAmount === 1, 422, new ValidationError(['Token doesn\'t exist'], '', ''));
@@ -150,7 +157,7 @@ export default () => {
       const user = await User.query().findById(id);
       log('User: %O', user);
       ctx.assert(user, 422, new ValidationError(['User doesn\'t exist'], '', 'id'));
-      ctx.status = 201;
+      ctx.status = 200;
       ctx.body = user;
     });
   return router;

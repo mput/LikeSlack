@@ -14,7 +14,7 @@ const commonSettings = {
     directory: path.join(__dirname, '/server/db/seeds'),
   },
   ...knexSnakeCaseMappers(),
-}
+};
 
 module.exports = {
   development: {

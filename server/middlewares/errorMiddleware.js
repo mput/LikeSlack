@@ -7,7 +7,7 @@ export default async (ctx, next) => {
   try {
     await next();
   } catch (err) {
-    // log(err);
+    log(err);
     // console.log(err, err.status);
     let errors;
     switch (true) {
@@ -51,7 +51,7 @@ export default async (ctx, next) => {
         break;
       }
     }
-    log('%O', errors);
+    // log('%O', errors);
     ctx.body = { errors };
   }
 };

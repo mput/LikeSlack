@@ -22,4 +22,4 @@ export const extractRefreshJwt = (ctx) => {
 };
 
 export const dateToSecFromEpoch = date => Math.floor(date / 1000);
-export const secFromEpochToDate = sec => new Date(sec * 1000);
+export const secFromEpochToDate = sec => (new Date(sec * 1000)).toISOString();
