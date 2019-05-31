@@ -3,10 +3,10 @@ import { Model } from 'objection';
 
 import configs from '../../knexfile';
 
+const environment = process.env.NODE_ENV || 'development';
+const config = configs[environment];
+export const knex = Knex(config);
+
 export default () => {
-  const environment = process.env.NODE_ENV || 'development';
-  const config = configs[environment];
-  const knex = Knex(config);
   Model.knex(knex);
 };
-

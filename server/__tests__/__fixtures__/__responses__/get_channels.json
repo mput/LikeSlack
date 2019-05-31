@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "general",
+    "removable": false,
+    "default": true,
+    "createdAt": "2019-05-19T18:14:59.900Z",
+    "updatedAt": "2019-05-19T18:14:59.900Z"
+  },
+  {
+    "id": 2,
+    "name": "random",
+    "removable": false,
+    "default": false,
+    "createdAt": "2019-05-19T18:14:59.900Z",
+    "updatedAt": "2019-05-19T18:14:59.900Z"
+  },
+  {
+    "id": 3,
+    "name": "compsci",
+    "removable": true,
+    "default": false,
+    "createdAt": "2019-05-19T18:25:30.900Z",
+    "updatedAt": "2019-05-19T18:42:12.900Z"
+  }
+]

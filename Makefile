@@ -9,7 +9,7 @@ build:
 	npm run build
 
 run:
-	node dist/bin/slack.js
+	DEBUG='chat*' node dist/bin/slack.js
 
 test:
 	npx jest

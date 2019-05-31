@@ -1,5 +1,6 @@
 import path from 'path';
 import { Model } from 'objection';
+import _ from 'lodash';
 
 export default class Message extends Model {
   static tableName = 'messages';
@@ -27,5 +28,21 @@ export default class Message extends Model {
         to: 'channels.id',
       },
     },
+
+    author: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: path.join(__dirname, 'User'),
+      join: {
+        from: 'messages.authorId',
+        to: 'users.id',
+      },
+    },
   };
+
+  $formatJson(internalJson) {
+    // Remember to call the super class's implementation.
+    const json = super.$formatJson(internalJson);
+    // Do your conversion here.
+    return _.omit(json, 'authorId');
+  }
 }

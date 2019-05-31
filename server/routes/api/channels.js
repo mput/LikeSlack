@@ -7,17 +7,6 @@ import logger from '../../lib/logger';
 
 const log = logger('auth-router');
 
-// import JSONAPISerializer from 'json-api-serializer';
-// import { ValidationError } from "yup";
-
-// import db from '../../db';
-// import { channelSchema, messageSchema } from '../../lib/schemas';
-// const Serializer = new JSONAPISerializer();
-// Serializer.register('channels');
-// Serializer.register('messages');
-
-
-
 export default (deps) => {
   const router = new Router();
 
@@ -64,29 +53,6 @@ export default (deps) => {
       io.emit('renameChannel', responseData);
       ctx.status = 204;
     })
-    .get('/channels/:channelId/messages', async (ctx) => {
-      const { channelId } = ctx.params;
-      const channel = await Channel.query().findById(channelId);
-      ctx.assert(channel, 404);
-      const messages = await channel.$relatedQuery('messages');
-      ctx.body = messages;
-    })
-    .post('/channels/:channelId/messages', async (ctx) => {
-      const { channelId } = ctx.params;
-      const { body } = ctx.request;
-      const channel = await Channel.query().findById(channelId);
-      
-      const requestData = Serializer.deserialize('messages', body);
-      console.log(channelId);
-      await messageSchema.validate(requestData);
-      const newMessage = await db('messages').returning('*').insert(requestData);
-      console.log(newMessage);
-      const responseData = Serializer
-        .serialize('messages', { ...newMessage[0], channelId: String(newMessage[0].channelId) });
-      io.emit('newMessage', responseData);
-      ctx.status = 201;
-      ctx.body = responseData;
-    });
 
   return router;
 };

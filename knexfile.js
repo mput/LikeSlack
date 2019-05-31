@@ -37,6 +37,9 @@ module.exports = {
       user: 'test',
       password: 'password',
     },
+    seeds: {
+      directory: path.join(__dirname, '/server/db/test_seeds'),
+    },
   },
 
   production: {

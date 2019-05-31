@@ -17,4 +17,6 @@ module.exports = {
     '/node_modules/',
     '/dist/',
   ],
+  modulePathIgnorePatterns: ['__utils__'],
+  // testEnvironment: './testEnv.js',
 };

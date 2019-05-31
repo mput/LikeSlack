@@ -104,8 +104,8 @@ const validateRefreshToken = async (token) => {
   return payload;
 };
 
-export const createAccessToken = (payload, tokenExpirationInSeconds = 60**10) => {
-  const exp = Math.floor(Date.now() / 1000) + tokenExpirationInSeconds;
+export const createAccessToken = (payload, tokenExpirationInMinutes = 1) => {
+  const exp = Math.floor(Date.now() / 1000) + tokenExpirationInMinutes;
   const tokenPayload = { ...payload, exp };
   return jwt.sign(tokenPayload, tokenSecret);
 };
