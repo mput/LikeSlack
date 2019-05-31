@@ -348,4 +348,15 @@ describe('Messages CRUD', () => {
     expect(statusCode).toBe(201);
     expect(body).toMatchObject(expectedResponse);
   });
+
+  test('Create UnAuthorized attempt', async () => {
+    const dataFromClient = {
+      message: 'oh my message',
+    };
+    const channelId = 3;
+    await request(app)
+      .post(getMessagesUrl(channelId))
+      .send(dataFromClient)
+      .expect(403);
+  });
 });
