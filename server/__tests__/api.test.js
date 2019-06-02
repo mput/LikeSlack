@@ -64,69 +64,53 @@ describe('Channels CRUD', () => {
   });
 
   test('Create', async (done) => {
-    const dataFromClient = {
-      data: {
-        type: 'channel',
-        attributes: {
-          name: 'ChannelName1',
-        },
-      },
-    };
+    const dataFromClient = { name: 'ChannelNameTestCreate' };
     const expectedResponse = {
-      data: {
-        type: 'channels',
-        id: expect.any(String),
-        attributes: {
-          name: 'ChannelName1',
-          removable: true,
-        },
-      },
+      id: expect.any(Number),
+      name: dataFromClient.name,
+      removable: true,
     };
     socket.on('newChannel', (payload) => {
-      if (payload.data.attributes.name === dataFromClient.data.attributes.name) {
+      if (payload.name === dataFromClient.name) {
         expect(payload).toMatchObject(expectedResponse);
         done();
       }
     });
-    const { statusCode, body } = await request(app).post(getChannelsUrl()).send(dataFromClient);
+    const { statusCode, body } = await request(app)
+      .post(getChannelsUrl())
+      .set('Authorization', accessToken)
+      .send(dataFromClient);
     expect(statusCode).toBe(201);
     expect(body).toMatchObject(expectedResponse);
   });
 
   test('Create w/ ValidationError', async () => {
     const dataFromClient = {
-      data: {
-        type: 'channel',
-        attributes: {
-          name: 'c',
-        },
-      },
+      name: '5'.repeat(50),
     };
     const expectedResponse = {
       errors: [
         {
           status: '422',
-          source: {
-            pointer: 'name',
-          },
+          // source: {
+          //   pointer: 'name',
+          // },
           title: 'ValidationError',
-          detail: 'name must be at least 2 characters',
+          detail: 'name: should NOT be longer than 40 characters',
         },
       ],
     };
-    const { statusCode, body } = await request(app).post(getChannelsUrl()).send(dataFromClient);
+    const { statusCode, body } = await request(app)
+      .post(getChannelsUrl())
+      .set('Authorization', accessToken)
+      .send(dataFromClient);
     expect(statusCode).toBe(422);
     expect(body).toMatchObject(expectedResponse);
   });
 
   test('Create w/ DuplicationError', async () => {
     const dataFromClient = {
-      data: {
-        type: 'channel',
-        attributes: {
-          name: 'awesomeChannel',
-        },
-      },
+      name: 'awesomeChannel',
     };
     const expectedResponse = {
       errors: [
@@ -137,122 +121,70 @@ describe('Channels CRUD', () => {
         },
       ],
     };
-    await request(app).post(getChannelsUrl()).send(dataFromClient).expect(201);
-    const { statusCode, body } = await request(app).post(getChannelsUrl()).send(dataFromClient);
+    await request(app)
+      .post(getChannelsUrl())
+      .send(dataFromClient)
+      .set('Authorization', accessToken)
+      .expect(201);
+    const { statusCode, body } = await request(app)
+      .post(getChannelsUrl())
+      .set('Authorization', accessToken)
+      .send(dataFromClient);
     expect(statusCode).toBe(422);
     expect(body).toMatchObject(expectedResponse);
   });
 
   test('Delete', async (done) => {
-    const newChannelData = {
-      data: {
-        type: 'channel',
-        attributes: {
-          name: 'ChannelName',
-        },
-      },
-    };
-    const {
-      body: {
-        data: { id: channelId },
-      },
-    } = await request(app).post(getChannelsUrl()).send(newChannelData);
+    const channelId = 1;
     const expectedResponse = {
-      data: {
-        type: 'channels',
-        id: channelId,
-      },
+      id: channelId,
     };
-    socket.on('removeChannel', (payload) => {
+
+    socket.on('removeChannel', async (payload) => {
       if (payload.id === expectedResponse.id) {
         expect(payload).toMatchObject(expectedResponse);
+        await request(app).get(getChannelUrl(channelId)).expect(404);
         done();
       }
     });
-    await request(app).delete(getChannelUrl(channelId)).expect(204);
-  });
-
-  test('Delete w/ not existing id', async () => {
-    const expectedResponse = {
-      errors: [
-        {
-          status: '422',
-          source: {
-            pointer: 'id',
-          },
-          title: 'ValidationError',
-          detail: 'id doesn\'t exist',
-        },
-      ],
-    };
-    const { statusCode, body } = await request(app).delete(getChannelUrl(1381));
-    expect(statusCode).toBe(422);
-    expect(body).toMatchObject(expectedResponse);
+    await request(app).get(getChannelUrl(channelId)).expect(200);
+    await request(app).delete(getChannelUrl(channelId))
+      .set('Authorization', accessToken).expect(204);
   });
 
   test('Update', async (done) => {
-    const newChannelData = {
-      data: {
-        type: 'channel',
-        attributes: {
-          name: 'ChannelName',
-        },
-      },
-    };
+    const channelId = 3;
+    const newName = 'NewChannelName17830';
     const renameChannelData = {
-      data: {
-        attributes: {
-          name: 'NewChannelName17830',
-        },
-      },
+      name: newName,
     };
-    const {
-      body: {
-        data: { id: channelId },
-      },
-    } = await request(app).post(getChannelsUrl()).send(newChannelData);
     const expectedResponse = {
-      data: {
-        type: 'channels',
-        id: channelId,
-        attributes: {
-          name: 'NewChannelName17830',
-        },
-      },
+      id: channelId,
+      name: newName,
     };
     socket.on('renameChannel', (payload) => {
-      if (payload.data.attributes.name === expectedResponse.data.attributes.name) {
+      if (payload.name === newName) {
         expect(payload).toMatchObject(expectedResponse);
         done();
       }
     });
-    await request(app).patch(getChannelUrl(channelId)).send(renameChannelData).expect(204);
+    await request(app)
+      .patch(getChannelUrl(channelId))
+      .send(renameChannelData)
+      .expect(204);
   });
 
   test('Update w/ not existing id', async () => {
     const renameChannelData = {
-      data: {
-        attributes: {
-          name: 'NewChannelName17830',
-        },
-      },
+      name: 'NewChannelName17830',
     };
 
     const expectedResponse = {
-      errors: [
-        {
-          status: '422',
-          source: {
-            pointer: 'id',
-          },
-          title: 'ValidationError',
-          detail: 'id doesn\'t exist',
-        },
-      ],
+      errors: { status: '404', title: 'NotFoundError'},
     };
     const { statusCode, body } = await request(app)
-      .patch(getChannelUrl(1912)).send(renameChannelData);
-    expect(statusCode).toBe(422);
+      .patch(getChannelUrl(5)).send(renameChannelData);
+    expect(statusCode).toBe(404);
     expect(body).toMatchObject(expectedResponse);
   });
 });

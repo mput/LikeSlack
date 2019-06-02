@@ -6,13 +6,10 @@ export default class Channel extends Model {
 
   static jsonSchema = {
     type: 'object',
-    required: ['authProvider', 'userName'],
+    required: ['name'],
     additionalProperties: false,
     properties: {
-      id: { type: 'integer' },
-      authProvider: { type: 'string', enum: ['github', 'anonymous'] },
-      validationKey: { type: 'string' },
-      profileUrl: { type: 'string' },
+      name: { type: 'string', minLength: 1, maxLength: 40 },
     },
   };
 

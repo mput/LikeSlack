@@ -15,7 +15,7 @@ test:
 	npx jest
 
 test-watch:
-	npx jest --watch
+	DEBUG='chat:*' npx jest --watch
 
 test-coverage:
 	npx jest --coverage

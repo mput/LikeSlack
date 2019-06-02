@@ -1,6 +1,5 @@
-/* eslint-disable */
 import Router from 'koa-router';
-import { Channel, Message } from '../../models';
+import { Channel } from '../../models';
 
 import { basicAuth } from '../../middlewares/jwtAuthorizationMiddleware';
 import logger from '../../lib/logger';
@@ -9,50 +8,46 @@ const log = logger('auth-router');
 
 export default (deps) => {
   const router = new Router();
-
-  const { io, logger } = deps;
-  const log = logger('channels-router');
+  const { io } = deps;
 
   router
-    .get('/channels', async (ctx) => {
+    .get('/channels/:id?', async (ctx) => {
+      const { id } = ctx.params;
+      if (id) {
+        const channel = await Channel.query().findById(id);
+        ctx.assert(channel, 404);
+        ctx.body = channel;
+        return;
+      }
       const channels = await Channel.query();
       ctx.body = channels;
     })
-    .post('/channels', async (ctx) => {
+    .post('/channels', basicAuth(), async (ctx) => {
       const { body } = ctx.request;
-      const channelReq = Serializer.deserialize('channels', body);
-      await channelSchema.validate(channelReq, { abortEarly: false});
-      const newChannel = await db('channels')
+      log(body);
+      const newChannel = await Channel
+        .query()
         .returning('*')
-        .insert(channelReq);
-      const channelRes = Serializer.serialize('channels', newChannel[0]);
-      io.emit('newChannel', channelRes);
+        .insert(body);
+      io.emit('newChannel', newChannel);
       ctx.status = 201;
-      ctx.body = channelRes;
-
+      ctx.body = newChannel;
     })
     .delete('/channels/:id', async (ctx) => {
-	  const { id } = ctx.params;
-	  const deletedAmoutnt = await db('channels').delete().where({ id });
-	  ctx.assert(deletedAmoutnt === 1, 422, new ValidationError(['id doesn\'t exist'], '', 'id'));
-      const channelRes = Serializer.serialize('channels', { id });
-      io.emit('removeChannel', channelRes);
+      const { id } = ctx.params;
+      const deletedAmount = await Channel.query().findById(id).delete();
+      ctx.assert(deletedAmount === 1, 404);
+      io.emit('removeChannel', { id: Number(id) });
       ctx.status = 204;
-
     })
     .patch('/channels/:id', async (ctx) => {
       const { id } = ctx.params;
       const { body } = ctx.request;
-      const requestData = Serializer.deserialize('channels', body);
-      await channelSchema.validate(requestData, { abortEarly: false });
-      const updatedData = await db('channels')
-        .where({ id })
-        .update(requestData, ['*']);
-      ctx.assert(updatedData.length === 1, 422, new ValidationError(['id doesn\'t exist'], '', 'id'));
-      const responseData = Serializer.serialize('channels', updatedData[0]);
-      io.emit('renameChannel', responseData);
+      const patchedChannel = await Channel.query().patchAndFetchById(id, body);
+      ctx.assert(patchedChannel, 404);
+      io.emit('renameChannel', patchedChannel);
       ctx.status = 204;
-    })
+    });
 
   return router;
 };
