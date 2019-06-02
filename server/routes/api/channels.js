@@ -33,14 +33,14 @@ export default (deps) => {
       ctx.status = 201;
       ctx.body = newChannel;
     })
-    .delete('/channels/:id', async (ctx) => {
+    .delete('/channels/:id', basicAuth(), async (ctx) => {
       const { id } = ctx.params;
       const deletedAmount = await Channel.query().findById(id).delete();
       ctx.assert(deletedAmount === 1, 404);
       io.emit('removeChannel', { id: Number(id) });
       ctx.status = 204;
     })
-    .patch('/channels/:id', async (ctx) => {
+    .patch('/channels/:id', basicAuth(), async (ctx) => {
       const { id } = ctx.params;
       const { body } = ctx.request;
       const patchedChannel = await Channel.query().patchAndFetchById(id, body);

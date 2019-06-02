@@ -170,6 +170,7 @@ describe('Channels CRUD', () => {
     });
     await request(app)
       .patch(getChannelUrl(channelId))
+      .set('Authorization', accessToken)
       .send(renameChannelData)
       .expect(204);
   });
@@ -183,7 +184,9 @@ describe('Channels CRUD', () => {
       errors: { status: '404', title: 'NotFoundError' },
     };
     const { statusCode, body } = await request(app)
-      .patch(getChannelUrl(5)).send(renameChannelData);
+      .patch(getChannelUrl(5))
+      .set('Authorization', accessToken)
+      .send(renameChannelData);
     expect(statusCode).toBe(404);
     expect(body).toMatchObject(expectedResponse);
   });
@@ -201,7 +204,7 @@ describe('Messages CRUD', () => {
     expect(body).toEqual(expectedResponse);
   });
 
-  test('Get all with both from and before', async () => {
+  test('Get all with both from and before error', async () => {
     await request(app)
       .get(getAllMessagesUrl())
       .query({ from: '2019-05-29T18:24:59.900Z', before: '2019-05-29T18:16:59.900Z' })
