@@ -22,19 +22,14 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - make compose-test-up
-  - make test
+  - make test-coverage
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-before_deploy:
-  # - ls -la
-  # - sudo sed -i "s|SF:/code|SF:$(pwd)|g" coverage/lcov.info
-  # - sudo git stash --all
 deploy:
   provider: heroku
   api_key:
     secure: rYa585QCjcsCNg0Lw+LcLCCfnjb1L/O5DJ56Ry4qKm/AdiqhoXlsSk+SvvG5PORih9WdE4XCUVwkUZ5S+BsGbkoWZpxkzMLqmmw+qb0TAn2v9k8OHVP2gCjAqcBJNz22dN1u1DV/c9cm9jreL6FQNmL+aSUqFR7tWVKWZBhSBxzVdZTf/WdKHtIQxqYv9jof5b1OY7ot9GAvi5kY039CqQ8kTats8rZGFMBnsVfakikeO3n66LMnfBHN5C3D/SPb/z8uxjIApZHUgQPc8PEvCF5Q9USI01xL5z42V6+zuynr7PKFvUYa8ysfLAJEiy22u5Ffrk3guOQDT8+96N5erStVJKUUC9B4YXlAEurzYmSug92pFGxK4rhC/GyVzvyaYVzFk+y9eMVzM59/obE1t6JYgPqd/RyVnfzi8tTGSuWjw4VL6cTW6njVo0gd46nAUsvLg3XepQfSkGyD7YJNdCkPfy2VPXIuYpBfKW6WqzK8tBLlRBIK7MnQSAgi6nSNfxtUbtccpeUmltKZaQvP/PFbV0O+4joE888Rj9oA+b2r6mLt8r78ga2AsFjUax9i5l0hS4FQqqyKXnQwp8qIgqftzlloFJhu0CCPpNpMZlZvUgs3K+7yGvdaZxhAtEbkqqwqwiw1YVGKVcuOHI0z9jhgX3DFToi0z3qdRkiDUxc=
   app: like-slack
-  # skip_cleanup: true
   run:
-  - make migrate
+    - make migrate
   on:
     repo: mput/LikeSlack
