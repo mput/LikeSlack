@@ -23,10 +23,10 @@ before_script:
 script:
   - make compose-test-up
   - make test
-before_deploy:
-  - ls -la
-  # - sudo sed -i "s|SF:/code|SF:$(pwd)|g" coverage/lcov.info
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+before_deploy:
+  # - ls -la
+  # - sudo sed -i "s|SF:/code|SF:$(pwd)|g" coverage/lcov.info
   # - sudo git stash --all
 deploy:
   provider: heroku

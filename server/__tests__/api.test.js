@@ -180,7 +180,7 @@ describe('Channels CRUD', () => {
     };
 
     const expectedResponse = {
-      errors: { status: '404', title: 'NotFoundError'},
+      errors: { status: '404', title: 'NotFoundError' },
     };
     const { statusCode, body } = await request(app)
       .patch(getChannelUrl(5)).send(renameChannelData);
