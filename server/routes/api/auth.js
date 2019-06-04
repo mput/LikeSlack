@@ -59,7 +59,7 @@ const updateSessionExpTime = async (sessionId, exp) => {
   await Session
     .query()
     .findById(sessionId)
-    .update({ expireAt: secFromEpochToDate(exp) });
+    .patch({ expireAt: secFromEpochToDate(exp) });
   log('Session updated, expire at: %s', secFromEpochToDate(exp));
 };
 
@@ -112,7 +112,7 @@ const validateRefreshToken = async (token) => {
 };
 
 export const createAccessToken = (payload, tokenExpirationInMinutes = 1) => {
-  const exp = Math.floor(Date.now() / 1000) + tokenExpirationInMinutes;
+  const exp = Math.floor(Date.now() / 1000) + (tokenExpirationInMinutes * 60);
   const tokenPayload = { ...payload, exp };
   return jwt.sign(tokenPayload, tokenSecret);
 };
@@ -151,12 +151,21 @@ export default () => {
       const newAccessToken = createAccessToken(accessTokenPayload);
       ctx.body = { accessToken: newAccessToken, refreshToken: newRefreshToken };
     })
+    .get('/me', basicAuth(), async (ctx) => {
+      const id = ctx.jwtPayload.userId;
+      log('Get own user with ID: %d', id);
+      const user = await User.query().findById(id);
+      log('User: %O', user);
+      ctx.assert(user, 403, new AuthorizationError('Access token isn\'t valid'));
+      ctx.status = 200;
+      ctx.body = user;
+    })
     .get('/users/:id', basicAuth(), async (ctx) => {
-      const id = ctx.params.id === 'me' ? ctx.jwtPayload.userId : ctx.params.id;
+      const { id } = ctx.params;
       log('Get user with ID: %d', id);
       const user = await User.query().findById(id);
       log('User: %O', user);
-      ctx.assert(user, 422, new ValidationError(['User doesn\'t exist'], '', 'id'));
+      ctx.assert(user, 404);
       ctx.status = 200;
       ctx.body = user;
     });
