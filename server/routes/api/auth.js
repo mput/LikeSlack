@@ -111,7 +111,7 @@ const validateRefreshToken = async (token) => {
   return payload;
 };
 
-export const createAccessToken = (payload, tokenExpirationInMinutes = 1) => {
+export const createAccessToken = (payload, tokenExpirationInMinutes = 30) => {
   const exp = Math.floor(Date.now() / 1000) + (tokenExpirationInMinutes * 60);
   const tokenPayload = { ...payload, exp };
   return jwt.sign(tokenPayload, tokenSecret);
@@ -134,8 +134,9 @@ export default () => {
       const refreshToken = extractRefreshJwt(ctx);
       const { id } = jwt.verify(refreshToken, tokenSecret);
       const deletedTokensAmount = await Session
+        .query()
         .delete()
-        .where({ id });
+        .findById(id);
       ctx.assert(deletedTokensAmount === 1, 422, new ValidationError(['Token doesn\'t exist'], '', ''));
       log('Session id: %d deleted, deleted %d session', id, deletedTokensAmount);
       ctx.status = 204;
