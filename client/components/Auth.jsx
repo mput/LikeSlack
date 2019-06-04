@@ -7,19 +7,20 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import connect from '../connect';
 import { userMeSelector } from '../selectors';
 
-@connect(state => ({
+const mapStateToProps = state => ({
   userMe: userMeSelector(state),
-}))
+});
+@connect(mapStateToProps)
 class Auth extends Component {
   render() {
     const {
-      userMe,
       authenticate,
-      logOutRequest,
+      userMe,
+      logOut,
     } = this.props;
 
     const logInBtn = (
-      <Button variant="dark" onClick={authenticate}>
+      <Button variant="dark" onClick={() => authenticate()}>
         <FontAwesomeIcon icon={faGithub} size="lg" />
         <span className="ml-2 font-weight-bold">
           Login
@@ -27,7 +28,7 @@ class Auth extends Component {
       </Button>
     );
     const logOutBtn = (
-      <Button className="ml-2 font-weight-bold" size="sm" variant="dark" onClick={logOutRequest}>
+      <Button className="ml-2 font-weight-bold" size="sm" variant="dark" onClick={logOut}>
         Log Out
       </Button>
     );

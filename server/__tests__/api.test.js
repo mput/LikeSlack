@@ -298,16 +298,26 @@ describe('Messages CRUD', () => {
 
 describe('Auth', () => {
   const authUrl = provider => `${apiUrl}/auth/${provider}`;
-  const userUrl = (userId = 'me') => `${apiUrl}/users/${userId}`;
+  const userUrl = userId => `${apiUrl}/users/${userId}`;
+  const userMeUrl = () => `${apiUrl}/me`;
 
   test('Auth request should redirect', async () => {
     await request(app).get(authUrl('github')).expect(302);
   });
 
+  test('Get user', async () => {
+    const expectedResponse = await getResponseFromJson('get_user.json');
+    const { statusCode, body } = await request(app)
+      .get(userUrl(1))
+      .set('Authorization', accessToken);
+    expect(statusCode).toBe(200);
+    expect(body).toEqual(expectedResponse);
+  });
+
   test('Get user Me', async () => {
     const expectedResponse = await getResponseFromJson('get_user.json');
     const { statusCode, body } = await request(app)
-      .get(userUrl())
+      .get(userMeUrl())
       .set('Authorization', accessToken);
     expect(statusCode).toBe(200);
     expect(body).toEqual(expectedResponse);

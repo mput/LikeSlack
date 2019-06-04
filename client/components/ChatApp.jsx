@@ -2,26 +2,27 @@ import React, { Component } from 'react';
 import ChannelsPanel from './ChannelsPanel';
 import MessagesPanel from './MessagesPanel';
 import Modals from './Modals';
-import Context from '../contexts';
+// import Context from '../contexts';
 import connect from '../connect';
+import Auth from './Auth';
 
 @connect()
 class ChatApp extends Component {
   componentDidMount() {
-    const { initState } = this.props;
-    initState();
+    const { initApp } = this.props;
+    initApp();
   }
 
   render() {
-    const { userName } = this.props;
     return (
-      <Context.Provider value={{ userName }}>
+      <>
         <div className="d-flex vh-100">
-          <ChannelsPanel />
-          <MessagesPanel />
+          <Auth />
+          {0 && <ChannelsPanel />}
+          {0 && <MessagesPanel />}
         </div>
         <Modals />
-      </Context.Provider>
+      </>
     );
   }
 }

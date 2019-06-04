@@ -10,5 +10,5 @@ export const login = provider => `${apiUrl}/auth/${provider}`;
 export const logout = () => `${apiUrl}/auth/logout`;
 export const tokensRefresh = () => `${apiUrl}/auth/refresh`;
 // user
-export const user = id => `${apiUrl}/user/${id}`;
-export const userMe = () => user('me');
+export const user = id => `${apiUrl}/users/${id}`;
+export const userMe = () => `${apiUrl}/me`;

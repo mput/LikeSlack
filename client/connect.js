@@ -1,4 +1,6 @@
 import { connect } from 'react-redux';
-import * as actionCreators from './actions';
+import * as actionCreators from './actions/actions';
 
-export default mapStateToProps => Component => connect(mapStateToProps, actionCreators)(Component);
+export default mapStateToProps => Component => (
+  connect(mapStateToProps, actionCreators)(Component)
+);

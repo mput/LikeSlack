@@ -18,8 +18,8 @@ export const sendMessageRequest = (message, author, channelId) => async () => {
 };
 
 export const setActiveChannel = createAction('ACTIVE_CHANNEL_SET');
-
 export const toggleAddChannelFormVisibility = createAction('ADD_CHANNEL_TOGGLE_VISIBILITY');
+
 
 export const addChannel = createAction('CHANNEL_ADD');
 export const addChannelRequset = name => async (dispatch) => {

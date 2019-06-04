@@ -1,5 +1,6 @@
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
+  devtool: 'source-map',
   entry: [
     `${__dirname}/client/index.jsx`,
   ],

@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 import FormControlWrapper from '../FormControlWrapper';
 import connect from '../../connect';
-import channelNameNormolize from '../../lib/normilizers';
+import channelNameNormolize from '../../lib/nameNormilazers';
 import { channelView } from '../../lib/valuesView';
 
 @connect((_state, ownProps) => {

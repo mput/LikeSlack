@@ -6,7 +6,7 @@ import { faPlusCircle, faTimesCircle, faCheckCircle } from '@fortawesome/free-so
 
 import connect from '../connect';
 import FormControlWrapper from './FormControlWrapper';
-import channelNameNormolize from '../lib/normilizers';
+import channelNameNormolize from '../lib/nameNormilazers';
 
 
 @reduxForm({
