@@ -2,16 +2,20 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 
 import connect from '../connect';
-import { channelsSelector, activeChannelIdSelector } from '../selectors';
+import { channelsSelector } from '../selectors';
+import { uiActions } from '../actions/actionCreators';
+
 import AddChannelForm from './AddChannelForm';
 
-const mapStateToProps = state => ({
+const mapState = state => ({
   channels: channelsSelector(state),
-  activeChannelId: activeChannelIdSelector(state),
 });
+const mapActions = {
+  setActiveChannel: uiActions.setActiveChannel,
+};
 
 
-@connect(mapStateToProps)
+@connect(mapState, mapActions)
 class ChannelsPanel extends Component {
   handleChannelChange = id => () => {
     const { setActiveChannel } = this.props;
@@ -19,14 +23,14 @@ class ChannelsPanel extends Component {
   }
 
   render() {
-    const { channels, activeChannelId } = this.props;
-    const channelsButtons = channels.map(({ name, id }) => (
+    const { channels } = this.props;
+    const channelsButtons = channels.map(({ name, id, active }) => (
       <Button
         block
         key={id}
         variant="dark"
         className="rounded-0 m-0 pl-3 text-left text-white"
-        active={id === activeChannelId}
+        active={active}
         onClick={this.handleChannelChange(id)}
       >
         <strong>{`#${name}`}</strong>

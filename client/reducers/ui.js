@@ -1,14 +1,7 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
-import * as actions from '../actions';
+import * as actions from '../actions/__index';
 
-const userMeId = handleActions(
-  {
-    [actions.logIn]: (_state, { payload: id }) => id,
-    [actions.logOut]: () => null,
-  },
-  null,
-);
 
 const activeChannelId = handleActions(
   {
@@ -56,7 +49,6 @@ const modal = handleActions(
 );
 
 export default combineReducers({
-  userMeId,
   activeChannelId,
   isAddChannelFormShown,
   modal,

@@ -3,20 +3,26 @@ import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import * as actions from '../actions/thunkActions';
 
 import connect from '../connect';
 import { userMeSelector } from '../selectors';
 
-const mapStateToProps = state => ({
+const mapState = state => ({
   userMe: userMeSelector(state),
 });
-@connect(mapStateToProps)
+const mapActions = {
+  authenticate: actions.authenticate,
+  logOut: actions.logOut,
+};
+
+@connect(mapState, mapActions)
 class Auth extends Component {
   render() {
     const {
       authenticate,
-      userMe,
       logOut,
+      userMe,
     } = this.props;
 
     const logInBtn = (
@@ -37,7 +43,7 @@ class Auth extends Component {
       <>
         <FontAwesomeIcon icon={faUser} />
         <span className="ml-1 font-weight-bold">
-          {userMe.user_name}
+          {userMe.userName}
         </span>
         {logOutBtn}
       </>

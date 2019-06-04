@@ -1,11 +1,12 @@
 import { createSelector } from 'reselect';
 
-const allChannelsIds = state => state.channels.allIds;
+const channelsAllIds = state => state.channels.allIds;
 const channelsById = state => state.channels.byId;
+const channelsUIById = state => state.channels.UIbyId;
 
 export const channelsSelector = createSelector(
-  [allChannelsIds, channelsById],
-  (ids, byId) => ids.map(id => byId[id]),
+  [channelsAllIds, channelsById, channelsUIById],
+  (ids, byId, UIbyId) => ids.map(id => ({ ...byId[id], ...UIbyId[id] })),
 );
 
 
@@ -25,9 +26,9 @@ export const activeChannel = createSelector(
   (byId, id) => byId[id],
 );
 
-const usersById = state => state.users.byId;
-const userMeId = state => state.ui.userMeId;
+const usersById = state => state.users;
+const meId = state => state.meId;
 export const userMeSelector = createSelector(
-  [usersById, userMeId],
+  [usersById, meId],
   (byId, id) => byId[id],
 );

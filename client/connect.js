@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import * as actionCreators from './actions/actions';
+// import * as actionCreators from './actions/channelActions';
 
-export default mapStateToProps => Component => (
-  connect(mapStateToProps, actionCreators)(Component)
+export default (mapState, mapActions) => Component => (
+  connect(mapState, mapActions)(Component)
 );

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { tokensRefresh } from '../routes';
 import handleTokens from './handleTokens';
 import logger from './logger';
-import { logOut } from '../actions';
+import { logOut } from '../actions/thunkActions';
 
 const log = logger('axios-intercepter');
 
@@ -47,14 +47,14 @@ const initAxiosIntercepter = (store) => {
   };
 
   const setResponseIntercepter = () => {
-    const intetcepter = axios.interceptors.response.use(
+    const intercepter = axios.interceptors.response.use(
       null,
       (error) => {
         if (error.response.status !== faultAccessTokenCode) {
           return Promise.reject(error);
         }
         log('Refreshing token...');
-        axios.interceptors.response.eject(intetcepter);
+        axios.interceptors.response.eject(intercepter);
         const refresh = refreshTokens();
         // Create interceptor that will bind all the others requests
         // until refreshTokenCall is resolved

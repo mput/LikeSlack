@@ -1,55 +1,20 @@
-import { createActions } from 'redux-actions';
 import axios from 'axios';
 import * as routes from '../routes';
 import logger from '../../server/lib/logger';
 import handleTokens from '../lib/handleTokens';
-import * as normalizers from '../lib/normalizers';
+import {
+  channelsActions,
+  authActions,
+  usersActions,
+  initAppActions,
+} from './actionCreators';
 
 const log = logger('actions');
-
-
-export const channelsActions = createActions(
-  {
-    FETCH: {
-      START: null,
-      SUCCESS: ({ data }) => normalizers.channel(data),
-      ERROR: null,
-    },
-  },
-  {
-    prefix: 'CHANNELS',
-  },
-);
-
-export const usersActions = createActions(
-  {
-    FETCH: {
-      SUCCESS: response => response.data,
-    },
-  },
-  { prefix: 'USERS' },
-);
-
-export const initAppActions = createActions(
-  'START',
-  'SUCCESS',
-  'ERROR',
-  {
-    prefix: 'INIT_APP',
-  },
-);
-
-export const authActions = createActions(
-  'LOGIN',
-  'LOGOUT',
-  { prefix: 'AUTH' },
-);
 
 export const fetchChannels = () => async (dispatch) => {
   dispatch(channelsActions.fetch.start());
   try {
-    const data = await axios.get(routes.channel(1));
-    log(data);
+    const { data } = await axios.get(routes.channels());
     dispatch(channelsActions.fetch.success(data));
   } catch (err) {
     log(err);
@@ -64,18 +29,18 @@ export const logIn = () => async (dispatch) => {
     return;
   }
   try {
-    const response = await axios.get(routes.userMe());
-    const { data: { id } } = response;
-    log('Login as a user with ID %s', id);
-    dispatch(usersActions.fetch.success(response));
+    const { data } = await axios.get(routes.userMe());
+    const { id } = data;
+    dispatch(usersActions.fetch.success(data));
     log('Added new user to store');
     dispatch(authActions.login(id));
+    log('Login as a user with ID %s', id);
   } catch (err) {
     log('Can\'t fetch self user', err);
     log('Err status is: ', err.status);
     if (err.status === 403) {
       handleTokens.removeTokens();
-      log('Invalid refresh token');
+      log('Invalid refresh token, deleting tokens from store');
       return;
     }
     throw err;
