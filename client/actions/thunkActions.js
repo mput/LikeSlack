@@ -7,10 +7,12 @@ import {
   authActions,
   usersActions,
   initAppActions,
+  modalWindowActions,
 } from './actionCreators';
 
 const log = logger('actions');
 
+// CHANNELS
 export const fetchChannels = () => async (dispatch) => {
   dispatch(channelsActions.fetch.start());
   try {
@@ -23,6 +25,48 @@ export const fetchChannels = () => async (dispatch) => {
   }
 };
 
+const removeChannel = channelId => async (dispatch) => {
+  const url = routes.channel(channelId);
+  try {
+    log('Sending delete channel request to %s', url);
+    // await axios.delete(url);
+    dispatch(channelsActions.delete.success(channelId));
+  } catch (err) {
+    log('Error while deleting channel', err);
+    throw err;
+  }
+};
+
+const renameChannel = (id, name) => async (dispatch) => {
+  const url = routes.channel(id);
+  const data = { name };
+  try {
+    log('Sending rename channel request to %s', url);
+    const { responseData } = await axios.patch(url, data);
+    // TODO change server to response with new channel.
+    log(responseData);
+    dispatch(channelsActions.update.success(responseData));
+  } catch (err) {
+    log('Error while renaming channel', err);
+    throw err;
+  }
+};
+
+// MODAL
+const modalActionWrapper = action => (...params) => async (dispatch) => {
+  dispatch(modalWindowActions.start());
+  try {
+    await dispatch(action(...params));
+    dispatch(modalWindowActions.hide());
+  } catch (err) {
+    dispatch(modalWindowActions.error());
+  }
+};
+
+export const removeChannelInModal = modalActionWrapper(removeChannel);
+export const renameChannelInModal = modalActionWrapper(renameChannel);
+
+// AUTH
 export const logIn = () => async (dispatch) => {
   if (!handleTokens.getTokens()) {
     log('No tokens in local store');
@@ -69,7 +113,7 @@ export const authenticate = (authProvider = 'github') => async (dispatch) => {
   window.open(routes.login(authProvider));
 };
 
-
+// INIT
 export const initApp = () => async (dispatch) => {
   dispatch(initAppActions.start());
   try {

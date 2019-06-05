@@ -8,7 +8,7 @@ import MessageForm from './MessageForm';
 import Auth from './Auth';
 import Contexts from '../contexts';
 import connect from '../connect';
-import { activeChannelMessages, activeChannel } from '../selectors';
+import { activeChannelMessages } from '../selectors';
 
 
 const Message = ({ message, author, ownMessage }) => (

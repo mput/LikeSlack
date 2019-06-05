@@ -6,7 +6,7 @@ import { faPlusCircle, faTimesCircle, faCheckCircle } from '@fortawesome/free-so
 
 import connect from '../connect';
 import FormControlWrapper from './FormControlWrapper';
-import channelNameNormolize from '../lib/nameNormilazers';
+import channelNameNormalize from '../lib/nameNormalizers';
 
 
 @reduxForm({
@@ -53,7 +53,7 @@ class AddChannelForm extends Component {
             isInvalid={submitFailed}
             component={FormControlWrapper}
             disabled={submitting}
-            normalize={channelNameNormolize}
+            normalize={channelNameNormalize}
           />
           <InputGroup.Append>
             <Button type="submit" variant="success" disabled={pristine}>

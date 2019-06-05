@@ -1,13 +1,30 @@
 import { createActions } from 'redux-actions';
+import { identity } from 'lodash';
+
 import * as normalizers from '../lib/normalizers';
 
 
 export const channelsActions = createActions(
   {
     FETCH: {
-      START: null,
+      START: identity,
       SUCCESS: data => normalizers.channels(data),
-      ERROR: null,
+      ERROR: identity,
+    },
+    DELETE: {
+      START: identity,
+      SUCCESS: identity,
+      ERROR: identity,
+    },
+    UPDATE: {
+      START: identity,
+      SUCCESS: identity,
+      ERROR: identity,
+    },
+    CREATE: {
+      START: identity,
+      SUCCESS: identity,
+      ERROR: identity,
     },
   },
   {
@@ -42,4 +59,12 @@ export const authActions = createActions(
 export const uiActions = createActions(
   'SET_ACTIVE_CHANNEL',
   { prefix: 'UI' },
+);
+
+export const modalWindowActions = createActions(
+  'SHOW',
+  'HIDE',
+  'START',
+  'ERROR',
+  { prefix: 'MODAL_WINDOW' },
 );

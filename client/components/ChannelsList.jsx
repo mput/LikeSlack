@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 
 import connect from '../connect';
-import { channelsSelector } from '../selectors';
+import { channelsListSelector } from '../selectors';
 import { uiActions } from '../actions/actionCreators';
 
-import AddChannelForm from './AddChannelForm';
-
 const mapState = state => ({
-  channels: channelsSelector(state),
+  channels: channelsListSelector(state),
 });
 const mapActions = {
   setActiveChannel: uiActions.setActiveChannel,
@@ -38,15 +36,8 @@ class ChannelsPanel extends Component {
     ));
 
     return (
-      <div className="d-flex flex-column px-0 bg-dark" style={{ width: '12em' }}>
-        <div className="d-flex flex-shrink-0 justify-content-center align-items-center border-bottom border-secondary" style={{ height: '60px' }}>
-          <h2 className="m-0 h4 text-light font-weight-light">LikeSlack</h2>
-        </div>
-        <h2 className="pl-3 mt-4 h6 text-white-50 text-uppercase ">Channels:</h2>
-        <div className="overflow-auto">
-          {channelsButtons.length && channelsButtons}
-        </div>
-        <AddChannelForm />
+      <div className="overflow-auto">
+        {channelsButtons}
       </div>
     );
   }

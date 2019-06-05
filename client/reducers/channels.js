@@ -27,7 +27,7 @@ const UIbyId = handleActions(
       const newUiStateById = Object.keys(channels).reduce((acc, key) => {
         const active = isInit && channels[key].default;
         const unread = 0;
-        return { ...acc, [key]: { active, unread }};
+        return { ...acc, [key]: { active, unread } };
       }, {});
       return newUiStateById;
     },

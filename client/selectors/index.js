@@ -1,18 +1,35 @@
 import { createSelector } from 'reselect';
+import _ from 'lodash';
+
 
 const channelsAllIds = state => state.channels.allIds;
 const channelsById = state => state.channels.byId;
 const channelsUIById = state => state.channels.UIbyId;
 
-export const channelsSelector = createSelector(
-  [channelsAllIds, channelsById, channelsUIById],
-  (ids, byId, UIbyId) => ids.map(id => ({ ...byId[id], ...UIbyId[id] })),
+
+const channelsByIdWithUIState = createSelector(
+  [channelsById, channelsUIById],
+  (obj1, obj2) => _.merge({}, obj1, obj2),
+);
+
+export const channelsListSelector = createSelector(
+  [channelsAllIds, channelsByIdWithUIState],
+  (ids, byId) => ids.map(id => byId[id]),
+);
+
+export const activeChannelSelector = createSelector(
+  channelsListSelector,
+  channels => _.find(channels, { active: true }),
+);
+
+export const activeChannelIdSelector = createSelector(
+  activeChannelSelector,
+  ({ id }) => id,
 );
 
 
 const allMessagesIds = state => state.messages.allIds;
 const messagesById = state => state.messages.byId;
-export const activeChannelIdSelector = state => state.ui.activeChannelId.activeId;
 
 export const activeChannelMessages = createSelector(
   [allMessagesIds, messagesById, activeChannelIdSelector],
@@ -21,10 +38,6 @@ export const activeChannelMessages = createSelector(
     .filter(message => message.channelId === activeId),
 );
 
-export const activeChannel = createSelector(
-  [channelsById, activeChannelIdSelector],
-  (byId, id) => byId[id],
-);
 
 const usersById = state => state.users;
 const meId = state => state.meId;

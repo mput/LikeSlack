@@ -41,41 +41,6 @@ export const hideModal = createAction('MODAL_HIDE');
 export const requestModalAction = createAction('MODAL_REQUEST');
 export const failureModalAction = createAction('MODAL_FAILURE');
 
-export const removeChannel = createAction('CHANNEL_REMOVE');
-export const removeChannelRequest = channelId => async (dispatch) => {
-  const url = routes.channel(channelId);
-  dispatch(requestModalAction());
-  try {
-    log('Sending delete channel request to %s', url);
-    await axios.delete(url);
-    dispatch(hideModal());
-  } catch (err) {
-    dispatch(failureModalAction());
-    throw err;
-  }
-};
-
-
-export const renameChannel = createAction('CHANNEL_RENAME');
-export const renameChannelRequest = (id, name) => async (dispatch) => {
-  const url = routes.channel(id);
-  const data = {
-    data: {
-      attributes: {
-        name,
-      },
-    },
-  };
-  dispatch(requestModalAction());
-  try {
-    log('Sending rename channel request to %s', url);
-    await axios.patch(url, data);
-    dispatch(hideModal());
-  } catch (err) {
-    dispatch(failureModalAction());
-    throw err;
-  }
-};
 
 export const addUser = createAction('USER_ADD');
 

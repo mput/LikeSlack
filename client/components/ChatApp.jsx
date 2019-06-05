@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import ChannelsPanel from './ChannelsPanel';
+
+import ChannelsList from './ChannelsList';
+import AddChannelForm from './AddChannelForm';
 import MessagesPanel from './MessagesPanel';
+import ActiveChannelPanel from './ActiveChannelPanel';
 import Modals from './Modals';
 import connect from '../connect';
 import Auth from './Auth';
+
 import * as actions from '../actions/thunkActions';
 
 const mapActions = { initApp: actions.initApp };
@@ -18,17 +22,18 @@ class ChatApp extends Component {
     return (
       <>
         <div className="d-flex vh-100">
-          {1 && <ChannelsPanel />}
+          <div className="d-flex flex-column px-0 bg-dark" style={{ width: '12em' }}>
+            <div className="d-flex flex-shrink-0 justify-content-center align-items-center border-bottom border-secondary" style={{ height: '60px' }}>
+              <h2 className="m-0 h4 text-light font-weight-light">LikeSlack</h2>
+            </div>
+            <h2 className="pl-3 mt-4 h6 text-white-50 text-uppercase ">Channels:</h2>
+            <ChannelsList />
+            <AddChannelForm />
+          </div>
           <div className="bg-light flex-fill h-100 p-0 d-flex flex-column">
             <div className="border-bottom d-flex align-items-center" style={{ minHeight: '60px' }}>
-              <div className="ml-3 d-flex flex-column">
-                <h2 className="my-0 h5 font-weight-bold">{/* channelView(channel.name) */}</h2>
-                <div className="ml-n1">
-                  { 
-/*                   {removeChannelModalBtn}
-                  {renameChannelModalBtn} */
-                  }
-                </div>
+              <div className="ml-3">
+                <ActiveChannelPanel />
               </div>
               <p className="ml-auto mr-4 my-0">
                 <Auth />

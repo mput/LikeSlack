@@ -8,23 +8,29 @@ import {
 } from 'react-bootstrap';
 import FormControlWrapper from '../FormControlWrapper';
 import connect from '../../connect';
-import channelNameNormolize from '../../lib/nameNormilazers';
+import channelNameNormalize from '../../lib/nameNormalizers';
 import { channelView } from '../../lib/valuesView';
+import { renameChannelInModal } from '../../actions/thunkActions';
 
-@connect((_state, ownProps) => {
+const mapState = (_state, ownProps) => {
   const channelName = ownProps.data.channel.name;
   return { initialValues: { channelName } };
-})
+};
+const mapActions = {
+  renameChannelInModal,
+};
+
+@connect(mapState, mapActions)
 @reduxForm({
   form: 'renameChannel',
 })
 class RenameChannel extends Component {
   onSubmit = async ({ channelName }) => {
     const {
-      renameChannelRequest,
-      data: { channel: { id } },
+      renameChannelInModal: renameChannel,
+      data: { channel },
     } = this.props;
-    await renameChannelRequest(id, channelName);
+    await renameChannel(channel.id, channelName);
   }
 
   render() {
@@ -61,7 +67,7 @@ class RenameChannel extends Component {
               isInvalid={failed}
               component={FormControlWrapper}
               disabled={requested}
-              normalize={channelNameNormolize}
+              normalize={channelNameNormalize}
             />
             <Form.Control.Feedback type="invalid">
               Something wrong happened, try again please!
