@@ -8,7 +8,10 @@ exports.seed = async (knex) => {
     .insert([
       { name: 'general', removable: false, default: true },
       { name: 'random', removable: false },
-      { name: 'compsci' },
+      { name: 'compScience' },
+      { name: 'nodeJs' },
+      { name: 'frontend' },
+      { name: 'backend' },
     ]);
   const usersIds = await knex('users')
     .returning('id')

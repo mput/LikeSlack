@@ -1,12 +1,20 @@
 import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux';
 import _ from 'lodash';
-import { addEntitiesById, addEntitiesAllIds } from '../lib/reducerBuilder';
 import { channelsActions, uiActions } from '../actions/actionCreators';
+import {
+  addEntitiesById,
+  addEntitiesAllIds,
+  deleteEntityById,
+  deleteEntityAllId,
+  updateEntityById,
+} from '../lib/reducerBuilder';
 
 const byId = handleActions(
   {
     [channelsActions.fetch.success]: addEntitiesById('channels'),
+    [channelsActions.delete.success]: deleteEntityById(),
+    [channelsActions.update.success]: updateEntityById('channels'),
   },
   {},
 );
@@ -14,6 +22,7 @@ const byId = handleActions(
 const allIds = handleActions(
   {
     [channelsActions.fetch.success]: addEntitiesAllIds(),
+    [channelsActions.delete.success]: deleteEntityAllId(),
   },
   [],
 );
@@ -25,9 +34,10 @@ const UIbyId = handleActions(
       const { payload: { entities } } = action;
       const { channels } = entities;
       const newUiStateById = Object.keys(channels).reduce((acc, key) => {
-        const active = isInit && channels[key].default;
+        const defaultActive = channels[key].default;
+        const active = isInit && defaultActive;
         const unread = 0;
-        return { ...acc, [key]: { active, unread } };
+        return { ...acc, [key]: { active, unread, defaultActive } };
       }, {});
       return newUiStateById;
     },
@@ -39,6 +49,18 @@ const UIbyId = handleActions(
         [nextActiveId]: { ...state[nextActiveId], active: true },
       };
     },
+    [channelsActions.delete.success]: (state, { payload: idToDel }) => {
+      const omittedState = _.omit(state, String(idToDel));
+      if (!state[idToDel].active) {
+        return omittedState;
+      }
+      const defaultActiveId = _.findKey(state, ({ defaultActive }) => !!defaultActive);
+      const activatedDefaultChannel = { ...state[defaultActiveId], active: true };
+      return {
+        ...omittedState,
+        [defaultActiveId]: activatedDefaultChannel,
+      };
+    },
   },
   {},
 );
@@ -48,21 +70,3 @@ export default combineReducers({
   allIds,
   UIbyId,
 });
-
-//   [actions.removeChannel]: (state, { payload }) => {
-//     const { data: { id } } = payload;
-//     const { byId, allIds } = state;
-//     return {
-//       byId: _.omitBy(byId, id),
-//       allIds: allIds.filter(currentId => currentId !== id),
-//     };
-//   },
-//   [actions.renameChannel]: (state, { payload }) => {
-//     const { byId, allIds } = state;
-//     const { data: { id, attributes: { name } } } = payload;
-//     const changedChannel = { ...byId[id], name };
-//     return {
-//       byId: { ...byId, [id]: changedChannel },
-//       allIds,
-//     };
-//   },

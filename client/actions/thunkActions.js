@@ -29,7 +29,7 @@ const removeChannel = channelId => async (dispatch) => {
   const url = routes.channel(channelId);
   try {
     log('Sending delete channel request to %s', url);
-    // await axios.delete(url);
+    await axios.delete(url);
     dispatch(channelsActions.delete.success(channelId));
   } catch (err) {
     log('Error while deleting channel', err);
@@ -42,9 +42,7 @@ const renameChannel = (id, name) => async (dispatch) => {
   const data = { name };
   try {
     log('Sending rename channel request to %s', url);
-    const { responseData } = await axios.patch(url, data);
-    // TODO change server to response with new channel.
-    log(responseData);
+    const { data: responseData } = await axios.patch(url, data);
     dispatch(channelsActions.update.success(responseData));
   } catch (err) {
     log('Error while renaming channel', err);

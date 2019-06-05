@@ -18,7 +18,7 @@ export const channelsActions = createActions(
     },
     UPDATE: {
       START: identity,
-      SUCCESS: identity,
+      SUCCESS: data => normalizers.channels(data),
       ERROR: identity,
     },
     CREATE: {

@@ -46,7 +46,7 @@ export default (deps) => {
       const patchedChannel = await Channel.query().patchAndFetchById(id, body);
       ctx.assert(patchedChannel, 404);
       io.emit('renameChannel', patchedChannel);
-      ctx.status = 204;
+      ctx.body = patchedChannel;
     });
 
   return router;
