@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 import ChannelsList from './ChannelsList';
-import AddChannelForm from './AddChannelForm';
-import MessagesPanel from './MessagesPanel';
+import ShowAddChannelModalBtn from './ShowAddChannelModalBtn';
+// import MessagesPanel from './MessagesPanel';
 import ActiveChannelPanel from './ActiveChannelPanel';
 import Modals from './Modals';
 import connect from '../connect';
@@ -28,7 +28,7 @@ class ChatApp extends Component {
             </div>
             <h2 className="pl-3 mt-4 h6 text-white-50 text-uppercase ">Channels:</h2>
             <ChannelsList />
-            <AddChannelForm />
+            <ShowAddChannelModalBtn />
           </div>
           <div className="bg-light flex-fill h-100 p-0 d-flex flex-column">
             <div className="border-bottom d-flex align-items-center" style={{ minHeight: '60px' }}>

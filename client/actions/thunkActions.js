@@ -14,13 +14,13 @@ const log = logger('actions');
 
 // CHANNELS
 export const fetchChannels = () => async (dispatch) => {
-  dispatch(channelsActions.fetch.start());
+  dispatch(channelsActions.add.start());
   try {
     const { data } = await axios.get(routes.channels());
-    dispatch(channelsActions.fetch.success(data));
+    dispatch(channelsActions.add.success(data));
   } catch (err) {
     log(err);
-    dispatch(channelsActions.fetch.error());
+    dispatch(channelsActions.add.error());
     throw err;
   }
 };
@@ -50,6 +50,19 @@ const renameChannel = (id, name) => async (dispatch) => {
   }
 };
 
+const addChannel = name => async (dispatch) => {
+  const url = routes.channels();
+  const data = { name };
+  try {
+    log('Sending crate channel request to %s', url);
+    const { data: newChannel } = await axios.post(url, data);
+    dispatch(channelsActions.add.success(newChannel));
+  } catch (err) {
+    log('Error while renaming channel', err);
+    throw err;
+  }
+};
+
 // MODAL
 const modalActionWrapper = action => (...params) => async (dispatch) => {
   dispatch(modalWindowActions.start());
@@ -63,6 +76,7 @@ const modalActionWrapper = action => (...params) => async (dispatch) => {
 
 export const removeChannelInModal = modalActionWrapper(removeChannel);
 export const renameChannelInModal = modalActionWrapper(renameChannel);
+export const addChannelInModal = modalActionWrapper(addChannel);
 
 // AUTH
 export const logIn = () => async (dispatch) => {
@@ -73,7 +87,7 @@ export const logIn = () => async (dispatch) => {
   try {
     const { data } = await axios.get(routes.userMe());
     const { id } = data;
-    dispatch(usersActions.fetch.success(data));
+    dispatch(usersActions.add.success(data));
     log('Added new user to store');
     dispatch(authActions.login(id));
     log('Login as a user with ID %s', id);

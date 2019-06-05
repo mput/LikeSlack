@@ -4,7 +4,7 @@ import { addEntitiesById } from '../lib/reducerBuilder';
 
 export default handleActions(
   {
-    [usersActions.fetch.success]: addEntitiesById('users'),
+    [usersActions.add.success]: addEntitiesById('users'),
   },
   {},
 );

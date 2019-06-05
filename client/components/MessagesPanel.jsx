@@ -24,7 +24,7 @@ const Message = ({ message, author, ownMessage }) => (
 
 const mapStateToProps = state => ({
   messages: activeChannelMessages(state),
-  channel: activeChannel(state),
+  // channel: activeChannel(state),
 });
 
 @connect(mapStateToProps)

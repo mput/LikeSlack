@@ -12,7 +12,7 @@ import {
 
 const byId = handleActions(
   {
-    [channelsActions.fetch.success]: addEntitiesById('channels'),
+    [channelsActions.add.success]: addEntitiesById('channels'),
     [channelsActions.delete.success]: deleteEntityById(),
     [channelsActions.update.success]: updateEntityById('channels'),
   },
@@ -21,7 +21,7 @@ const byId = handleActions(
 
 const allIds = handleActions(
   {
-    [channelsActions.fetch.success]: addEntitiesAllIds(),
+    [channelsActions.add.success]: addEntitiesAllIds(),
     [channelsActions.delete.success]: deleteEntityAllId(),
   },
   [],
@@ -29,7 +29,7 @@ const allIds = handleActions(
 
 const UIbyId = handleActions(
   {
-    [channelsActions.fetch.success]: (state, action) => {
+    [channelsActions.add.success]: (state, action) => {
       const isInit = _.isEmpty(state);
       const { payload: { entities } } = action;
       const { channels } = entities;
@@ -39,7 +39,7 @@ const UIbyId = handleActions(
         const unread = 0;
         return { ...acc, [key]: { active, unread, defaultActive } };
       }, {});
-      return newUiStateById;
+      return { ...state, ...newUiStateById };
     },
     [uiActions.setActiveChannel]: (state, { payload: nextActiveId }) => {
       const nowActiveId = _.findKey(state, ({ active }) => !!active);

@@ -43,7 +43,7 @@ const RemoveChannel = (props) => {
         </Button>
         <Button variant="secondary" onClick={handleHideModal} disabled={requested}>
           Cancel
-          </Button>
+        </Button>
       </Modal.Footer>
     </>
   );

@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import { modalWindowActions } from '../../actions/actionCreators';
 import RemoveChannel from './RemoveChannel';
 import RenameChannel from './RenameChannel';
+import AddChannel from './AddChannel';
 
 const typesToBodyComponents = {
   RemoveChannel,
   RenameChannel,
+  AddChannel,
 };
 
 const mapState = state => ({
@@ -37,6 +39,7 @@ const Modals = (props) => {
       show={modal.isShown}
       onHide={hideModal}
       backdrop={!requested}
+      autoFocus={false}
     >
       {modal.isShown && getModalBody()}
     </Modal>

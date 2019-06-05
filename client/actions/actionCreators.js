@@ -6,7 +6,7 @@ import * as normalizers from '../lib/normalizers';
 
 export const channelsActions = createActions(
   {
-    FETCH: {
+    ADD: {
       START: identity,
       SUCCESS: data => normalizers.channels(data),
       ERROR: identity,
@@ -21,11 +21,6 @@ export const channelsActions = createActions(
       SUCCESS: data => normalizers.channels(data),
       ERROR: identity,
     },
-    CREATE: {
-      START: identity,
-      SUCCESS: identity,
-      ERROR: identity,
-    },
   },
   {
     prefix: 'CHANNELS',
@@ -34,7 +29,7 @@ export const channelsActions = createActions(
 
 export const usersActions = createActions(
   {
-    FETCH: {
+    ADD: {
       SUCCESS: data => normalizers.users(data),
     },
   },

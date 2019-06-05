@@ -9,22 +9,17 @@ import {
 } from 'react-bootstrap';
 import FormControlWrapper from '../FormControlWrapper';
 import channelNameNormalize from '../../lib/nameNormalizers';
-import { channelView } from '../../lib/valuesView';
-import { renameChannelInModal } from '../../actions/thunkActions';
+import { addChannelInModal } from '../../actions/thunkActions';
 
-const mapState = (_state, ownProps) => {
-  const channelName = ownProps.data.channel.name;
-  return { initialValues: { channelName } };
-};
 const mapActions = {
-  renameChannelInModal,
+  addChannelInModal,
 };
 
-@connect(mapState, mapActions)
+@connect(null, mapActions)
 @reduxForm({
   form: 'renameChannel',
 })
-class RenameChannel extends Component {
+class AddChannel extends Component {
   constructor(props) {
     super(props);
     this.textInput = React.createRef();
@@ -36,10 +31,9 @@ class RenameChannel extends Component {
 
   onSubmit = async ({ channelName }) => {
     const {
-      renameChannelInModal: renameChannel,
-      data: { channel },
+      addChannelInModal: addChannel,
     } = this.props;
-    await renameChannel(channel.id, channelName);
+    await addChannel(channelName);
   }
 
   render() {
@@ -49,21 +43,17 @@ class RenameChannel extends Component {
       handleHideModal,
       requested,
       failed,
-      data: { channel },
     } = this.props;
 
     return (
       <Form onSubmit={handleSubmit(this.onSubmit)} className="mt-0 mb-2 bg-light">
         <Modal.Header closeButton={!requested}>
           <Modal.Title>
-            Rename channel
-            <strong>
-              {` ${channelView(channel.name)}`}
-            </strong>
+            Add Channel.
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="px-4">
-          <Form.Label>New name:</Form.Label>
+          <Form.Label>Channel name:</Form.Label>
           <InputGroup>
             <InputGroup.Prepend>
               <InputGroup.Text>#</InputGroup.Text>
@@ -71,7 +61,6 @@ class RenameChannel extends Component {
             <Field
               name="channelName"
               as="input"
-              autoFocus
               placeholder="Channel name:"
               inputRef={this.textInput}
               isInvalid={failed}
@@ -86,7 +75,7 @@ class RenameChannel extends Component {
         </Modal.Body>
         <Modal.Footer>
           <Button type="submit" variant="danger" disabled={requested || pristine}>
-            Rename
+            Add
           </Button>
           <Button variant="secondary" onClick={handleHideModal} disabled={requested}>
             Cancel
@@ -97,4 +86,4 @@ class RenameChannel extends Component {
   }
 }
 
-export default RenameChannel;
+export default AddChannel;

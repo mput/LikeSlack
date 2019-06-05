@@ -5,7 +5,6 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import _ from 'lodash';
 
 import reducers from './reducers';
 import ChatApp from './components/ChatApp';
@@ -36,9 +35,7 @@ Object.keys(messageTypesActions).forEach((type) => {
 
 ReactDOM.render(
   <Provider store={store}>
-    {
-      <ChatApp />
-    }
+    <ChatApp />
   </Provider>,
   document.getElementById('chatApp'),
 );

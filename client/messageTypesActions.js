@@ -1,4 +1,4 @@
-import * as actions from './actions/thunkActions';
+// import * as actions from './actions/thunkActions';
 
 export default {
   // newMessage: actions.addMessage,
