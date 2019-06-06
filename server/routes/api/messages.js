@@ -12,7 +12,7 @@ export default (deps) => {
   const { io } = deps;
 
   router
-    .get('/messages', async (ctx) => {
+    .get('messages', '/messages', async (ctx) => {
       const { before, from, limit = 10 } = ctx.query;
       ctx.assert(!(before && from), 422, new ValidationError(['Only "from" or "before" filter'], '', ''));
       const messages = await Message

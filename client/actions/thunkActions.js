@@ -63,6 +63,13 @@ const addChannel = name => async (dispatch) => {
   }
 };
 
+
+// MESSAGES
+
+export const loadNextMessagesAction = channelId => async (dispatch) => {
+  log('loadiiiiiiiiiiiiiiiiiiing');
+};
+
 // MODAL
 const modalActionWrapper = action => (...params) => async (dispatch) => {
   dispatch(modalWindowActions.start());

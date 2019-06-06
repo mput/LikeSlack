@@ -31,13 +31,28 @@ const UIbyId = handleActions(
   {
     [channelsActions.add.success]: (state, action) => {
       const isInit = _.isEmpty(state);
+      const initUIState = {
+        active: false,
+        defaultActive: false,
+        unread: 0,
+        noMoreHistory: false,
+        scrollPos: 0,
+      };
+
       const { payload: { entities } } = action;
       const { channels } = entities;
+
       const newUiStateById = Object.keys(channels).reduce((acc, key) => {
         const defaultActive = channels[key].default;
         const active = isInit && defaultActive;
         const unread = 0;
-        return { ...acc, [key]: { active, unread, defaultActive } };
+        const channelUIState = {
+          ...initUIState,
+          active,
+          unread,
+          defaultActive,
+        };
+        return { ...acc, [key]: channelUIState };
       }, {});
       return { ...state, ...newUiStateById };
     },

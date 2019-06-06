@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Alert, Button } from 'react-bootstrap';
@@ -7,7 +8,6 @@ import { channelView, userNameView } from '../lib/valuesView';
 import MessageForm from './MessageForm';
 import Auth from './Auth';
 import Contexts from '../contexts';
-import connect from '../connect';
 import { activeChannelMessages } from '../selectors';
 
 

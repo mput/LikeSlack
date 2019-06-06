@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import ChannelsList from './ChannelsList';
 import ShowAddChannelModalBtn from './ShowAddChannelModalBtn';
-// import MessagesPanel from './MessagesPanel';
+import MessagesList from './MessagesList';
 import ActiveChannelPanel from './ActiveChannelPanel';
 import Modals from './Modals';
-import connect from '../connect';
 import Auth from './Auth';
 
 import * as actions from '../actions/thunkActions';
@@ -39,7 +39,7 @@ class ChatApp extends Component {
                 <Auth />
               </p>
             </div>
-
+            <MessagesList />
           </div>
         </div>
         <Modals />

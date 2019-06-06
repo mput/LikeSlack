@@ -27,6 +27,29 @@ export const channelsActions = createActions(
   },
 );
 
+export const messagesActions = createActions(
+  {
+    ADD: {
+      START: identity,
+      SUCCESS: data => normalizers.channels(data),
+      ERROR: identity,
+    },
+    DELETE: {
+      START: identity,
+      SUCCESS: identity,
+      ERROR: identity,
+    },
+    UPDATE: {
+      START: identity,
+      SUCCESS: data => normalizers.channels(data),
+      ERROR: identity,
+    },
+  },
+  {
+    prefix: 'CHANNELS',
+  },
+);
+
 export const usersActions = createActions(
   {
     ADD: {

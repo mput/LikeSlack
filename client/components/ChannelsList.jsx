@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
-import connect from '../connect';
 import { channelsListSelector } from '../selectors';
 import { uiActions } from '../actions/actionCreators';
 
