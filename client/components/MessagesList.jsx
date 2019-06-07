@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Alert, Button } from 'react-bootstrap';
 import { userNameView } from '../lib/valuesView';
 
-import { activeChannelSelector } from '../selectors';
+import { activeChannelSelector, activeChannelMessages } from '../selectors';
 import { loadNextMessagesAction } from '../actions/thunkActions';
 
 
@@ -19,7 +19,7 @@ const Message = ({ message, author, ownMessage }) => (
 );
 
 const mapStateToProps = state => ({
-  // messages: activeChannelMessages(state),
+  messages: activeChannelMessages(state),
   activeChannel: activeChannelSelector(state),
 });
 
@@ -48,19 +48,10 @@ class MessagesLits extends Component {
   }
 
   render() {
-    // const { messages } = this.props;
-    const messages = [];
+    const { messages } = this.props;
 
     return (
       <div className="flex-column mt-auto px-4 overflow-auto">
-        {messages.map(({ message, id }, index) => (
-          <Message
-            message={message}
-            first={index === 0}
-            key={id}
-          />
-        ))}
-        <div ref={this.scrolTo} />
         <Button
           block
           variant="dark"
@@ -69,6 +60,14 @@ class MessagesLits extends Component {
         >
           LoadMessages
         </Button>
+        {messages.map(({ message, id }, index) => (
+          <Message
+            message={message}
+            first={index === 0}
+            key={id}
+          />
+        ))}
+        <div ref={this.scrolTo} />
       </div>
     );
   }

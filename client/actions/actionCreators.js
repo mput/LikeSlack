@@ -36,12 +36,12 @@ export const messagesActions = createActions(
   {
     ADD: {
       START: identity,
-      SUCCESS: identity,
+      SUCCESS: data => normalizers.message(data),
       ERROR: identity,
     },
-    FETCH_HISTORY: {
+    FETCH: {
       START: identity,
-      SUCCESS: data => normalizers.messages(data),
+      SUCCESS: data => normalizers.messageList(data),
       ERROR: identity,
     },
   },

@@ -4,20 +4,21 @@ import { messagesActions } from '../actions/actionCreators';
 import {
   addEntitiesById,
   addEntitiesAllIds,
+  addEntityAllIds,
 } from '../lib/reducerBuilder';
 
 const byId = handleActions(
   {
-    [messagesActions.add.success]: addEntitiesById('channels'),
-    // [messagesActions.fetchHistory.success]: addEntitiesById('channels'),
+    [messagesActions.add.success]: addEntitiesById('messages'),
+    [messagesActions.fetch.success]: addEntitiesById('messages'),
   },
   {},
 );
 
 const allIds = handleActions(
   {
-    [messagesActions.add.success]: addEntitiesAllIds(),
-    // [messagesActions.fetchHistory.success]: addEntitiesAllIds(),
+    [messagesActions.add.success]: addEntityAllIds(),
+    [messagesActions.fetch.success]: addEntitiesAllIds(),
   },
   [],
 );

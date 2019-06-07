@@ -17,6 +17,7 @@ export default (deps) => {
       ctx.assert(!(before && from), 422, new ValidationError(['Only "from" or "before" filter'], '', ''));
       const messages = await Message
         .query()
+        .orderBy('createdAt', 'desc')
         .eager('author')
         .limit(limit)
         .skipUndefined()
@@ -30,14 +31,15 @@ export default (deps) => {
       const { channelId } = ctx.params;
       const channel = await Channel.query().findById(channelId);
       ctx.assert(channel, 404);
-      const message = await channel
+      const messages = await channel
         .$relatedQuery('messages')
+        .orderBy('createdAt', 'desc')
         .eager('author')
         .limit(limit)
         .skipUndefined()
         .where('createdAt', '>=', from)
         .where('createdAt', '<=', before);
-      ctx.body = message;
+      ctx.body = messages.reverse();
     })
     .post('/channels/:channelId/messages', basicAuth(), async (ctx) => {
       const { channelId } = ctx.params;

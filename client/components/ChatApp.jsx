@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import ChannelsList from './ChannelsList';
 import ShowAddChannelModalBtn from './ShowAddChannelModalBtn';
 import MessagesList from './MessagesList';
+import MessageForm from './MessageForm';
 import ActiveChannelPanel from './ActiveChannelPanel';
 import Modals from './Modals';
 import Auth from './Auth';
@@ -40,6 +41,7 @@ class ChatApp extends Component {
               </p>
             </div>
             <MessagesList />
+            <MessageForm />
           </div>
         </div>
         <Modals />

@@ -70,16 +70,25 @@ const addChannel = name => async (dispatch) => {
 // MESSAGES
 
 export const loadNextMessagesAction = channelId => async (dispatch) => {
-  dispatch(messagesActions.fetchHistory.start(channelId));
+  dispatch(messagesActions.fetch.start(channelId));
   const url = routes.messages(channelId);
   try {
     const { data } = await axios.get(url);
     log('Messages received: ', data);
-    dispatch(messagesActions.fetchHistory.success(data));
+    dispatch(messagesActions.fetch.success(data));
   } catch (err) {
     log('Error while loading messages frm %s', url, err);
+    dispatch(messagesActions.error.success(data));
     throw err;
   }
+};
+
+export const sendMessageAction = (message, channelId) => async (dispatch) => {
+  const url = routes.messages(channelId);
+  const data = { message };
+  log('Sending message to %s', url);
+  const { data: responseData } = await axios.post(url, data);
+  dispatch(messagesActions.add.success(responseData));
 };
 
 // MODAL

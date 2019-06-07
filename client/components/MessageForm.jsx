@@ -4,12 +4,20 @@ import { Field, reduxForm } from 'redux-form';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentMedical } from '@fortawesome/free-solid-svg-icons';
+import { sendMessageAction } from '../actions/thunkActions';
 
 import FormControlWrapper from './FormControlWrapper';
+import { activeChannelIdSelector } from '../selectors';
 
+const mapState = state => ({
+  activeChannelId: activeChannelIdSelector(state),
+});
+const mapAction = {
+  sendMessage: sendMessageAction,
+};
 
 @reduxForm({ form: 'sendMessage' })
-@connect()
+@connect(mapState, mapAction)
 class MessageForm extends Component {
   constructor(props) {
     super(props);
@@ -18,12 +26,11 @@ class MessageForm extends Component {
 
   onSubmit = async ({ msgText }) => {
     const {
-      userName,
-      channelId,
-      sendMessageRequest,
+      activeChannelId,
+      sendMessage,
       reset,
     } = this.props;
-    await sendMessageRequest(msgText, userName, channelId);
+    await sendMessage(msgText, activeChannelId);
     reset();
     this.msgInput.current.focus();
   };

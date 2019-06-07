@@ -24,7 +24,7 @@ export const activeChannelSelector = createSelector(
 
 export const activeChannelIdSelector = createSelector(
   activeChannelSelector,
-  ({ id }) => id,
+  activeChannel => (activeChannel ? activeChannel.id : null),
 );
 
 
