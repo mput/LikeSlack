@@ -5,6 +5,7 @@ export const channels = () => `${apiUrl}/channels`;
 export const channel = id => `${apiUrl}/channels/${id}`;
 // messages
 export const messages = channelId => `${apiUrl}/channels/${channelId}/messages`;
+export const allMessages = () => `${apiUrl}/messages`;
 // auth
 export const login = provider => `${apiUrl}/auth/${provider}`;
 export const logout = () => `${apiUrl}/auth/logout`;

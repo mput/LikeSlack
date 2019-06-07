@@ -5,6 +5,7 @@ import { channelsActions, uiActions } from '../actions/actionCreators';
 import {
   addEntitiesById,
   addEntitiesAllIds,
+  addEntityAllIds,
   deleteEntityById,
   deleteEntityAllId,
   updateEntityById,
@@ -12,6 +13,7 @@ import {
 
 const byId = handleActions(
   {
+    [channelsActions.fetch.success]: addEntitiesById('channels'),
     [channelsActions.add.success]: addEntitiesById('channels'),
     [channelsActions.delete.success]: deleteEntityById(),
     [channelsActions.update.success]: updateEntityById('channels'),
@@ -21,27 +23,26 @@ const byId = handleActions(
 
 const allIds = handleActions(
   {
-    [channelsActions.add.success]: addEntitiesAllIds(),
+    [channelsActions.fetch.success]: addEntitiesAllIds(),
+    [channelsActions.add.success]: addEntityAllIds(),
     [channelsActions.delete.success]: deleteEntityAllId(),
   },
   [],
 );
 
+const initUIState = {
+  active: false,
+  defaultActive: false,
+  unread: 0,
+  noMoreHistory: false,
+  scrollPos: 0,
+};
 const UIbyId = handleActions(
   {
-    [channelsActions.add.success]: (state, action) => {
+    [channelsActions.fetch.success]: (state, action) => {
       const isInit = _.isEmpty(state);
-      const initUIState = {
-        active: false,
-        defaultActive: false,
-        unread: 0,
-        noMoreHistory: false,
-        scrollPos: 0,
-      };
-
       const { payload: { entities } } = action;
       const { channels } = entities;
-
       const newUiStateById = Object.keys(channels).reduce((acc, key) => {
         const defaultActive = channels[key].default;
         const active = isInit && defaultActive;

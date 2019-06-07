@@ -3,19 +3,31 @@ import { normalize, schema } from 'normalizr';
 const channelSchema = new schema.Entity('channels');
 const channelListSchema = [channelSchema];
 
-export const channels = (data) => {
-  if (data instanceof Array) {
-    return normalize(data, channelListSchema);
-  }
-  return normalize([data], channelListSchema);
-};
-
 const userSchema = new schema.Entity('users');
 const userListSchema = [userSchema];
 
-export const users = (data) => {
-  if (data instanceof Array) {
-    return normalize(data, userListSchema);
-  }
-  return normalize([data], userListSchema);
+const messageSchema = new schema.Entity('messages', {
+  author: userSchema,
+});
+
+const messageListSchema = [messageSchema];
+
+
+const schemas = {
+  channelSchema,
+  channelListSchema,
+  userSchema,
+  userListSchema,
+  messageSchema,
+  messageListSchema,
 };
+
+const normalizers = Object.keys(schemas).reduce((result, schemaName) => {
+  const [name] = schemaName.split('Schema');
+  return {
+    ...result,
+    [name]: data => normalize(data, schemas[schemaName]),
+  }
+}, {});
+
+export default normalizers;

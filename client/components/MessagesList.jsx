@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Alert, Button } from 'react-bootstrap';
 import { userNameView } from '../lib/valuesView';
 
-import { activeChannelMessages, activeChannelSelector } from '../selectors';
+import { activeChannelSelector } from '../selectors';
 import { loadNextMessagesAction } from '../actions/thunkActions';
 
 
@@ -42,7 +42,7 @@ class MessagesLits extends Component {
     this.scrolTo.current.scrollIntoView();
   }
 
-  handleLoadNextMessages() {
+  handleLoadNextMessages = () => {
     const { loadNextMessages, activeChannel } = this.props;
     loadNextMessages(activeChannel.id);
   }

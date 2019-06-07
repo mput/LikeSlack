@@ -8,19 +8,21 @@ import {
   usersActions,
   initAppActions,
   modalWindowActions,
+  messagesActions,
+  uiActions,
 } from './actionCreators';
 
-const log = logger('actions');
+const log = logger('thunkActions');
 
 // CHANNELS
 export const fetchChannels = () => async (dispatch) => {
-  dispatch(channelsActions.add.start());
+  dispatch(channelsActions.fetch.start());
   try {
     const { data } = await axios.get(routes.channels());
-    dispatch(channelsActions.add.success(data));
+    dispatch(channelsActions.fetch.success(data));
   } catch (err) {
     log(err);
-    dispatch(channelsActions.add.error());
+    dispatch(channelsActions.fetch.error());
     throw err;
   }
 };
@@ -57,6 +59,7 @@ const addChannel = name => async (dispatch) => {
     log('Sending crate channel request to %s', url);
     const { data: newChannel } = await axios.post(url, data);
     dispatch(channelsActions.add.success(newChannel));
+    dispatch(uiActions.setActiveChannel(newChannel.id));
   } catch (err) {
     log('Error while renaming channel', err);
     throw err;
@@ -67,7 +70,16 @@ const addChannel = name => async (dispatch) => {
 // MESSAGES
 
 export const loadNextMessagesAction = channelId => async (dispatch) => {
-  log('loadiiiiiiiiiiiiiiiiiiing');
+  dispatch(messagesActions.fetchHistory.start(channelId));
+  const url = routes.messages(channelId);
+  try {
+    const { data } = await axios.get(url);
+    log('Messages received: ', data);
+    dispatch(messagesActions.fetchHistory.success(data));
+  } catch (err) {
+    log('Error while loading messages frm %s', url, err);
+    throw err;
+  }
 };
 
 // MODAL

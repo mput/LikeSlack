@@ -9,6 +9,7 @@ import {
 const byId = handleActions(
   {
     [messagesActions.add.success]: addEntitiesById('channels'),
+    // [messagesActions.fetchHistory.success]: addEntitiesById('channels'),
   },
   {},
 );
@@ -16,6 +17,7 @@ const byId = handleActions(
 const allIds = handleActions(
   {
     [messagesActions.add.success]: addEntitiesAllIds(),
+    // [messagesActions.fetchHistory.success]: addEntitiesAllIds(),
   },
   [],
 );

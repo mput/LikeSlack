@@ -1,14 +1,19 @@
 import { createActions } from 'redux-actions';
 import { identity } from 'lodash';
 
-import * as normalizers from '../lib/normalizers';
+import normalizers from '../lib/normalizers';
 
 
 export const channelsActions = createActions(
   {
     ADD: {
       START: identity,
-      SUCCESS: data => normalizers.channels(data),
+      SUCCESS: data => normalizers.channel(data),
+      ERROR: identity,
+    },
+    FETCH: {
+      START: identity,
+      SUCCESS: data => normalizers.channelList(data),
       ERROR: identity,
     },
     DELETE: {
@@ -18,7 +23,7 @@ export const channelsActions = createActions(
     },
     UPDATE: {
       START: identity,
-      SUCCESS: data => normalizers.channels(data),
+      SUCCESS: data => normalizers.channel(data),
       ERROR: identity,
     },
   },
@@ -31,29 +36,24 @@ export const messagesActions = createActions(
   {
     ADD: {
       START: identity,
-      SUCCESS: data => normalizers.channels(data),
-      ERROR: identity,
-    },
-    DELETE: {
-      START: identity,
       SUCCESS: identity,
       ERROR: identity,
     },
-    UPDATE: {
+    FETCH_HISTORY: {
       START: identity,
-      SUCCESS: data => normalizers.channels(data),
+      SUCCESS: data => normalizers.messages(data),
       ERROR: identity,
     },
   },
   {
-    prefix: 'CHANNELS',
+    prefix: 'MESSAGES',
   },
 );
 
 export const usersActions = createActions(
   {
     ADD: {
-      SUCCESS: data => normalizers.users(data),
+      SUCCESS: data => normalizers.user(data),
     },
   },
   { prefix: 'USERS' },
