@@ -4,16 +4,15 @@ import { connect } from 'react-redux';
 import { Alert, Button } from 'react-bootstrap';
 import { userNameView } from '../lib/valuesView';
 
-import { activeChannelSelector, activeChannelMessages } from '../selectors';
+import { activeChannelSelector, activeChannelMessages, usersByIdSelector } from '../selectors';
 import { loadNextMessagesAction } from '../actions/thunkActions';
-
 
 const Message = ({ message, author, ownMessage }) => (
   <Alert
     variant={ownMessage ? 'warning' : 'info'}
     className="mt-0 mb-4 px-3 shadow-sm"
   >
-    <h3 className="h6 mb-1 alert-heading font-weight-bold">{userNameView(author)}</h3>
+    <h3 className="h6 mb-1 alert-heading font-weight-bold">{userNameView(author.userName)}</h3>
     <p className="font-weight-normal mb-0">{message}</p>
   </Alert>
 );
@@ -21,6 +20,7 @@ const Message = ({ message, author, ownMessage }) => (
 const mapStateToProps = state => ({
   messages: activeChannelMessages(state),
   activeChannel: activeChannelSelector(state),
+  usersById: usersByIdSelector(state),
 });
 
 const mapActions = {
@@ -48,7 +48,7 @@ class MessagesLits extends Component {
   }
 
   render() {
-    const { messages } = this.props;
+    const { messages, usersById } = this.props;
 
     return (
       <div className="flex-column mt-auto px-4 overflow-auto">
@@ -60,10 +60,11 @@ class MessagesLits extends Component {
         >
           LoadMessages
         </Button>
-        {messages.map(({ message, id }, index) => (
+        {messages.map(({ message, id, author }, index) => (
           <Message
             message={message}
             first={index === 0}
+            author={usersById[author]}
             key={id}
           />
         ))}

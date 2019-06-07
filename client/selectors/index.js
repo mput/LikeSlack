@@ -39,9 +39,10 @@ export const activeChannelMessages = createSelector(
 );
 
 
-const usersById = state => state.users;
+export const usersByIdSelector = state => state.users;
 const meId = state => state.meId;
 export const userMeSelector = createSelector(
-  [usersById, meId],
+  [usersByIdSelector, meId],
   (byId, id) => byId[id],
 );
+

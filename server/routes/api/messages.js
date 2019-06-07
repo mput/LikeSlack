@@ -13,7 +13,7 @@ export default (deps) => {
 
   router
     .get('messages', '/messages', async (ctx) => {
-      const { before, from, limit = 10 } = ctx.query;
+      const { before, from, limit = 100 } = ctx.query;
       ctx.assert(!(before && from), 422, new ValidationError(['Only "from" or "before" filter'], '', ''));
       const messages = await Message
         .query()
@@ -23,10 +23,10 @@ export default (deps) => {
         .skipUndefined()
         .where('createdAt', '>=', from)
         .where('createdAt', '<=', before);
-      ctx.body = messages;
+      ctx.body = messages.reverse();
     })
     .get('/channels/:channelId/messages', async (ctx) => {
-      const { before, from, limit = 10 } = ctx.query;
+      const { before, from, limit = 100 } = ctx.query;
       ctx.assert(!(before && from), 422, new ValidationError(['Only "from" or "before" filter'], '', ''));
       const { channelId } = ctx.params;
       const channel = await Channel.query().findById(channelId);

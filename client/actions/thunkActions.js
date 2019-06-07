@@ -78,7 +78,7 @@ export const loadNextMessagesAction = channelId => async (dispatch) => {
     dispatch(messagesActions.fetch.success(data));
   } catch (err) {
     log('Error while loading messages frm %s', url, err);
-    dispatch(messagesActions.error.success(data));
+    dispatch(messagesActions.error.success(err));
     throw err;
   }
 };
