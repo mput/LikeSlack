@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
-
 import { Alert, Button } from 'react-bootstrap';
-import { userNameView } from '../lib/valuesView';
 
-import { activeChannelSelector, activeChannelMessages, usersByIdSelector } from '../selectors';
+import { userNameView } from '../lib/valuesView';
+import {
+  activeChannelSelector,
+  activeChannelMessagesSelector,
+  oldestActiveChannelMessageSelector,
+  usersByIdSelector,
+} from '../selectors';
 import { loadMessagesHistoryAction } from '../actions/thunkActions';
 
 const Message = ({ message, author, ownMessage }) => (
@@ -19,7 +23,8 @@ const Message = ({ message, author, ownMessage }) => (
 );
 
 const mapStateToProps = state => ({
-  messages: activeChannelMessages(state),
+  messages: activeChannelMessagesSelector(state),
+  oldestMessage: oldestActiveChannelMessageSelector(state),
   activeChannel: activeChannelSelector(state),
   usersById: usersByIdSelector(state),
 });
@@ -51,13 +56,13 @@ class MessagesLits extends Component {
   }
 
   render() {
-    const { messages, usersById, activeChannel } = this.props;
+    const { messages, oldestMessage, usersById, activeChannel } = this.props;
     if (!activeChannel) {
       return (
         <h1>Loading channel</h1>
       );
     }
-
+    const waypointKey = `${activeChannel.id}${oldestMessage ? oldestMessage.id : 0}`
     return (
       <div
         className="d-flex px-4 overflow-auto"
@@ -84,7 +89,7 @@ class MessagesLits extends Component {
           LoadMessages
         </Button>
         <Waypoint
-          key={activeChannel.id}
+          key={waypointKey}
           onEnter={(data) => {
             console.log('enter', data);
             this.handleLoadHistory();

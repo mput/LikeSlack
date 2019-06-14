@@ -31,11 +31,21 @@ export const activeChannelIdSelector = createSelector(
 const allMessagesIds = state => state.messages.allIds;
 const messagesById = state => state.messages.byId;
 
-export const activeChannelMessages = createSelector(
+export const activeChannelMessagesSelector = createSelector(
   [allMessagesIds, messagesById, activeChannelIdSelector],
   (ids, byId, activeId) => ids
     .map(id => byId[id])
     .filter(message => message.channelId === activeId),
+);
+
+export const oldestActiveChannelMessageSelector = createSelector(
+  activeChannelMessagesSelector,
+  (messages) => {
+    if (messages.length === 0) {
+      return null;
+    }
+    return messages[messages.length - 1];
+  },
 );
 
 

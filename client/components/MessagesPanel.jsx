@@ -8,7 +8,7 @@ import { channelView, userNameView } from '../lib/valuesView';
 import MessageForm from './MessageForm';
 import Auth from './Auth';
 import Contexts from '../contexts';
-import { activeChannelMessages } from '../selectors';
+import { activeChannelMessagesSelector } from '../selectors';
 
 
 const Message = ({ message, author, ownMessage }) => (
@@ -23,7 +23,7 @@ const Message = ({ message, author, ownMessage }) => (
 
 
 const mapStateToProps = state => ({
-  messages: activeChannelMessages(state),
+  messages: activeChannelMessagesSelector(state),
   // channel: activeChannel(state),
 });
 
