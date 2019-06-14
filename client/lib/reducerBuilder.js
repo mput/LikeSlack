@@ -15,6 +15,11 @@ export const addEntityAllIds = () => (state, action) => {
   return state.includes(id) ? state : [...state, id];
 };
 
+export const addEntityAtBeginAllIds = () => (state, action) => {
+  const { payload: { result: id } } = action;
+  return state.includes(id) ? state : [id, ...state];
+};
+
 export const deleteEntityById = () => (state, { payload: id }) => _.omit(state, String(id));
 
 export const deleteEntityAllId = () => (state, { payload: idToDel }) => state

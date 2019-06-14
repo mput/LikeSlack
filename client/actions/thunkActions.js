@@ -68,11 +68,12 @@ const addChannel = name => async (dispatch) => {
 
 
 // MESSAGES
-
-export const loadNextMessagesAction = channelId => async (dispatch) => {
+export const loadMessagesHistoryAction = channelId => async (dispatch, state) => {
+  log('Loading history for channel %d', channelId);
   dispatch(messagesActions.fetch.start(channelId));
   const url = routes.messages(channelId);
   try {
+    log('Start loading');
     const { data } = await axios.get(url);
     log('Messages received: ', data);
     dispatch(messagesActions.fetch.success(data));
@@ -168,3 +169,7 @@ export const initApp = () => async (dispatch) => {
   }
   dispatch(initAppActions.success());
 };
+
+// UI
+// export const setActiveChannel = (id) => async (dispatch) => {
+// };

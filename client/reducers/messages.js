@@ -4,7 +4,7 @@ import { messagesActions } from '../actions/actionCreators';
 import {
   addEntitiesById,
   addEntitiesAllIds,
-  addEntityAllIds,
+  addEntityAtBeginAllIds,
 } from '../lib/reducerBuilder';
 
 const byId = handleActions(
@@ -17,7 +17,7 @@ const byId = handleActions(
 
 const allIds = handleActions(
   {
-    [messagesActions.add.success]: addEntityAllIds(),
+    [messagesActions.add.success]: addEntityAtBeginAllIds(),
     [messagesActions.fetch.success]: addEntitiesAllIds(),
   },
   [],

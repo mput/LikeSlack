@@ -5,3 +5,4 @@ coverage
 postgres-data
 *__routes.js
 .bash_history
+.vscode

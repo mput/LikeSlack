@@ -35,6 +35,7 @@ const initUIState = {
   defaultActive: false,
   unread: 0,
   noMoreHistory: false,
+  // historyState: 'unknown', // 'has-history' , 'no-history'
   scrollPos: 0,
 };
 const UIbyId = handleActions(

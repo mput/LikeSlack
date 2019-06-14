@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Waypoint } from 'react-waypoint';
 
 import { Alert, Button } from 'react-bootstrap';
 import { userNameView } from '../lib/valuesView';
 
 import { activeChannelSelector, activeChannelMessages, usersByIdSelector } from '../selectors';
-import { loadNextMessagesAction } from '../actions/thunkActions';
+import { loadMessagesHistoryAction } from '../actions/thunkActions';
 
 const Message = ({ message, author, ownMessage }) => (
   <Alert
@@ -24,7 +25,7 @@ const mapStateToProps = state => ({
 });
 
 const mapActions = {
-  loadNextMessages: loadNextMessagesAction,
+  loadMessagesHistory: loadMessagesHistoryAction,
 };
 
 @connect(mapStateToProps, mapActions)
@@ -32,34 +33,40 @@ class MessagesLits extends Component {
   constructor(props) {
     super(props);
     this.scrolTo = React.createRef();
+    this.listNewest = React.createRef();
+    this.listOldest = React.createRef();
   }
 
   componentDidMount() {
-    this.scrolTo.current.scrollIntoView();
+    // this.scrolTo.current.scrollIntoView();
   }
 
   componentDidUpdate() {
-    this.scrolTo.current.scrollIntoView();
+    // this.scrolTo.current.scrollIntoView();
   }
 
-  handleLoadNextMessages = () => {
-    const { loadNextMessages, activeChannel } = this.props;
-    loadNextMessages(activeChannel.id);
+  handleLoadHistory = () => {
+    const { loadMessagesHistory, activeChannel } = this.props;
+    loadMessagesHistory(activeChannel.id);
   }
 
   render() {
-    const { messages, usersById } = this.props;
+    const { messages, usersById, activeChannel } = this.props;
+    if (!activeChannel) {
+      return (
+        <h1>Loading channel</h1>
+      );
+    }
 
     return (
-      <div className="flex-column mt-auto px-4 overflow-auto">
-        <Button
-          block
-          variant="dark"
-          className="w-75 mx-auto my-3 p-0"
-          onClick={this.handleLoadNextMessages}
-        >
-          LoadMessages
-        </Button>
+      <div
+        className="d-flex px-4 overflow-auto"
+        style={{
+          flexDirection: 'column-reverse',
+          height: '100%',
+        }}
+      >
+        <div ref={this.listNewest} />
         {messages.map(({ message, id, author }, index) => (
           <Message
             message={message}
@@ -68,7 +75,27 @@ class MessagesLits extends Component {
             key={id}
           />
         ))}
-        <div ref={this.scrolTo} />
+        <Button
+          block
+          variant="dark"
+          className="w-75 mx-auto my-3 p-0"
+          onClick={this.handleLoadHistory}
+        >
+          LoadMessages
+        </Button>
+        <Waypoint
+          key={activeChannel.id}
+          onEnter={(data) => {
+            console.log('enter', data);
+            this.handleLoadHistory();
+          }}
+          onLeave={(data) => console.log('leave', data)}
+        >
+          <div>
+            Some content here
+          </div>
+        </Waypoint>
+        <div ref={this.listOldest} />
       </div>
     );
   }

@@ -13,21 +13,21 @@ export default (deps) => {
 
   router
     .get('messages', '/messages', async (ctx) => {
-      const { before, from, limit = 100 } = ctx.query;
-      ctx.assert(!(before && from), 422, new ValidationError(['Only "from" or "before" filter'], '', ''));
+      const { before, after, limit = 10 } = ctx.query;
+      ctx.assert(!(before && after), 422, new ValidationError(['Only "from" or "before" filter'], '', ''));
       const messages = await Message
         .query()
         .orderBy('createdAt', 'desc')
         .eager('author')
         .limit(limit)
         .skipUndefined()
-        .where('createdAt', '>=', from)
+        .where('createdAt', '>=', after)
         .where('createdAt', '<=', before);
-      ctx.body = messages.reverse();
+      ctx.body = messages;
     })
     .get('/channels/:channelId/messages', async (ctx) => {
-      const { before, from, limit = 100 } = ctx.query;
-      ctx.assert(!(before && from), 422, new ValidationError(['Only "from" or "before" filter'], '', ''));
+      const { before, after, limit = 10 } = ctx.query;
+      ctx.assert(!(before && after), 422, new ValidationError(['Only "from" or "before" filter'], '', ''));
       const { channelId } = ctx.params;
       const channel = await Channel.query().findById(channelId);
       ctx.assert(channel, 404);
@@ -37,9 +37,9 @@ export default (deps) => {
         .eager('author')
         .limit(limit)
         .skipUndefined()
-        .where('createdAt', '>=', from)
+        .where('createdAt', '>=', after)
         .where('createdAt', '<=', before);
-      ctx.body = messages.reverse();
+      ctx.body = messages;
     })
     .post('/channels/:channelId/messages', basicAuth(), async (ctx) => {
       const { channelId } = ctx.params;
