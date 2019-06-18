@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux';
 import _ from 'lodash';
-import { channelsActions, uiActions } from '../actions/actionCreators';
+import { channelsActions, uiActions, messagesActions } from '../actions/actionCreators';
 import {
   addEntitiesById,
   addEntitiesAllIds,
@@ -34,8 +34,8 @@ const initUIState = {
   active: false,
   defaultActive: false,
   unread: 0,
-  noMoreHistory: false,
-  // historyState: 'unknown', // 'has-history' , 'no-history'
+  loadingHistoryState: 'notLoading', // 'loading', 'failure'
+  hasHistory: true,
   scrollPos: 0,
 };
 const UIbyId = handleActions(
@@ -58,6 +58,18 @@ const UIbyId = handleActions(
       }, {});
       return { ...state, ...newUiStateById };
     },
+    [messagesActions.fetch.start]: (state, { payload: { channelId } }) => (
+      {
+        ...state,
+        [channelId]: { ...state[channelId], loadingHistoryState: 'loading' },
+      }
+    ),
+    [messagesActions.fetch.success]: (state, { payload: { channelId } }) => (
+      {
+        ...state,
+        [channelId]: { ...state[channelId], loadingHistoryState: 'notLoading' },
+      }
+    ),
     [uiActions.setActiveChannel]: (state, { payload: nextActiveId }) => {
       const nowActiveId = _.findKey(state, ({ active }) => !!active);
       return {
@@ -66,6 +78,12 @@ const UIbyId = handleActions(
         [nextActiveId]: { ...state[nextActiveId], active: true },
       };
     },
+    [uiActions.setNoMoreHistoryChannel]: (state, { payload: channelId }) => (
+      {
+        ...state,
+        [channelId]: { ...state[channelId], hasHistory: false },
+      }
+    ),
     [channelsActions.delete.success]: (state, { payload: idToDel }) => {
       const omittedState = _.omit(state, String(idToDel));
       if (!state[idToDel].active) {

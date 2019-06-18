@@ -11,11 +11,14 @@ import {
   usersByIdSelector,
 } from '../selectors';
 import { loadMessagesHistoryAction } from '../actions/thunkActions';
+// import logger from '../../server/lib/logger';
+
+// const log = logger('messagesListComponent');
 
 const Message = ({ message, author, ownMessage }) => (
   <Alert
     variant={ownMessage ? 'warning' : 'info'}
-    className="mt-0 mb-4 px-3 shadow-sm"
+    className="d-block mt-0 mb-4 px-3 shadow-sm"
   >
     <h3 className="h6 mb-1 alert-heading font-weight-bold">{userNameView(author.userName)}</h3>
     <p className="font-weight-normal mb-0">{message}</p>
@@ -37,17 +40,43 @@ const mapActions = {
 class MessagesLits extends Component {
   constructor(props) {
     super(props);
-    this.scrolTo = React.createRef();
+    this.messagesLits = React.createRef();
     this.listNewest = React.createRef();
     this.listOldest = React.createRef();
+    this.infinityScrollOffset = 40;
   }
 
-  componentDidMount() {
-    // this.scrolTo.current.scrollIntoView();
+  componentDidUpdate(prevProps, prevState, snap) {
+    if (!snap) {
+      return;
+    }
+    const { scrollHeight, clientHeight } = this.messagesLits.current;
+    const { prevScrollHeight, prevScrollTop, prevClientHeight } = snap;
+    const { messages: prevMessages } = prevProps;
+    const { messages } = this.props;
+
+    const wasScrollAtBottom = prevScrollTop + prevClientHeight >= prevScrollHeight;
+    const wasNewMassageAdded = prevMessages.length && prevMessages[0].id === messages[0].id;
+
+    if (wasScrollAtBottom) {
+      this.messagesLits.current.scrollTop = scrollHeight - clientHeight;
+      return;
+    }
+    if (wasNewMassageAdded) {
+      return;
+    }
+    this.messagesLits.current.scrollTop = scrollHeight - prevScrollHeight;
   }
 
-  componentDidUpdate() {
-    // this.scrolTo.current.scrollIntoView();
+  getSnapshotBeforeUpdate() {
+    if (this.messagesLits.current) {
+      return {
+        prevScrollHeight: this.messagesLits.current.scrollHeight,
+        prevScrollTop: this.messagesLits.current.scrollTop,
+        prevClientHeight: this.messagesLits.current.clientHeight,
+      };
+    }
+    return null;
   }
 
   handleLoadHistory = () => {
@@ -56,22 +85,62 @@ class MessagesLits extends Component {
   }
 
   render() {
-    const { messages, oldestMessage, usersById, activeChannel } = this.props;
+    const {
+      messages,
+      oldestMessage,
+      usersById,
+      activeChannel,
+    } = this.props;
+
     if (!activeChannel) {
       return (
-        <h1>Loading channel</h1>
+        <h1>Loading...</h1>
       );
     }
-    const waypointKey = `${activeChannel.id}${oldestMessage ? oldestMessage.id : 0}`
+
+    const loadingMarker = (loadingState) => {
+      if (loadingState === 'loading') {
+        return (
+          <div className="position-absolute d-block justify-content-center align-items-center py-3 bg-light">
+            <span className="spinner-border spinner-border-sm mr-2" />
+            <span>Loading...</span>
+          </div>
+        );
+      }
+      if (loadingState === 'failure') {
+        return (
+          <Button
+            block
+            variant="dark"
+            className="w-75 mx-auto my-3 p-0"
+            onClick={this.handleLoadHistory}
+          >
+            LoadMessages
+          </Button>
+        );
+      }
+      return false;
+    };
+
+    const loadHistoryWaypoint = () => {
+      const waypointKey = `${activeChannel.id}${oldestMessage ? oldestMessage.id : 0}`;
+      return (
+        <Waypoint
+          topOffset={`-${this.infinityScrollOffset}px`}
+          key={waypointKey}
+          onEnter={() => this.handleLoadHistory()}
+        />
+      );
+    };
+
     return (
       <div
-        className="d-flex px-4 overflow-auto"
-        style={{
-          flexDirection: 'column-reverse',
-          height: '100%',
-        }}
+        className="flex-fill d-flex flex-column pt-3 overflow-auto px-4"
+        ref={this.messagesLits}
       >
-        <div ref={this.listNewest} />
+        <div className="mt-auto" />
+        {loadingMarker(activeChannel.loadingHistoryState)}
+        {activeChannel.hasHistory && loadHistoryWaypoint()}
         {messages.map(({ message, id, author }, index) => (
           <Message
             message={message}
@@ -80,27 +149,7 @@ class MessagesLits extends Component {
             key={id}
           />
         ))}
-        <Button
-          block
-          variant="dark"
-          className="w-75 mx-auto my-3 p-0"
-          onClick={this.handleLoadHistory}
-        >
-          LoadMessages
-        </Button>
-        <Waypoint
-          key={waypointKey}
-          onEnter={(data) => {
-            console.log('enter', data);
-            this.handleLoadHistory();
-          }}
-          onLeave={(data) => console.log('leave', data)}
-        >
-          <div>
-            Some content here
-          </div>
-        </Waypoint>
-        <div ref={this.listOldest} />
+        <div ref={this.listNewest} />
       </div>
     );
   }

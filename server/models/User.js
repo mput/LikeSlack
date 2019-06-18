@@ -11,7 +11,7 @@ export default class User extends Model {
       id: { type: 'integer' },
       authProvider: { type: 'string', enum: ['github', 'anonymous'] },
       userName: { type: 'string', minLength: 3, maxLength: 35 },
-      fullName: { type: 'string', minLength: 1, maxLength: 255 },
+      fullName: { type: 'string, null', minLength: 1, maxLength: 255 },
       validationKey: { type: 'string' },
       profileUrl: { type: 'string' },
     },

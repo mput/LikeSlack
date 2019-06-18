@@ -40,8 +40,8 @@ export const messagesActions = createActions(
       ERROR: identity,
     },
     FETCH: {
-      START: identity,
-      SUCCESS: data => normalizers.messageList(data),
+      START: channelId => ({ channelId }),
+      SUCCESS: (data, channelId) => ({ ...normalizers.messageList(data), channelId }),
       ERROR: identity,
     },
   },
@@ -76,6 +76,7 @@ export const authActions = createActions(
 
 export const uiActions = createActions(
   'SET_ACTIVE_CHANNEL',
+  'SET_NO_MORE_HISTORY_CHANNEL',
   { prefix: 'UI' },
 );
 

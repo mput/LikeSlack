@@ -13,7 +13,6 @@ import {
 } from './actionCreators';
 import {
   oldestActiveChannelMessageSelector,
-  activeChannelIdSelector
 } from '../selectors';
 
 const log = logger('thunkActions');
@@ -73,7 +72,7 @@ const addChannel = name => async (dispatch) => {
 
 // MESSAGES
 export const loadMessagesHistoryAction = channelId => async (dispatch, getState) => {
-  const limit = 5;
+  const limit = 15;
   log('Loading history for channel %d', channelId);
   const state = getState();
   dispatch(messagesActions.fetch.start(channelId));
@@ -83,12 +82,14 @@ export const loadMessagesHistoryAction = channelId => async (dispatch, getState)
   if (oldestMessage) {
     params.before = oldestMessage.createdAt;
   }
-
   const url = routes.messages(channelId);
   try {
     const { data } = await axios.get(url, { params });
+    if (data.length < limit) {
+      dispatch(uiActions.setNoMoreHistoryChannel(channelId));
+    }
     log('Messages received: ', data);
-    dispatch(messagesActions.fetch.success(data));
+    dispatch(messagesActions.fetch.success(data, channelId));
   } catch (err) {
     log('Error while loading messages frm %s', url, err);
     dispatch(messagesActions.error.success(err));

@@ -35,7 +35,8 @@ export const activeChannelMessagesSelector = createSelector(
   [allMessagesIds, messagesById, activeChannelIdSelector],
   (ids, byId, activeId) => ids
     .map(id => byId[id])
-    .filter(message => message.channelId === activeId),
+    .filter(message => message.channelId === activeId)
+    .reverse(),
 );
 
 export const oldestActiveChannelMessageSelector = createSelector(
@@ -44,7 +45,7 @@ export const oldestActiveChannelMessageSelector = createSelector(
     if (messages.length === 0) {
       return null;
     }
-    return messages[messages.length - 1];
+    return messages[0];
   },
 );
 
