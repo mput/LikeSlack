@@ -70,6 +70,12 @@ const UIbyId = handleActions(
         [channelId]: { ...state[channelId], loadingHistoryState: 'notLoading' },
       }
     ),
+    [messagesActions.fetch.error]: (state, { payload: { channelId } }) => (
+      {
+        ...state,
+        [channelId]: { ...state[channelId], loadingHistoryState: 'failure' },
+      }
+    ),
     [uiActions.setActiveChannel]: (state, { payload: nextActiveId }) => {
       const nowActiveId = _.findKey(state, ({ active }) => !!active);
       return {

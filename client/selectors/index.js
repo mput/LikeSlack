@@ -57,3 +57,4 @@ export const userMeSelector = createSelector(
   (byId, id) => byId[id],
 );
 
+export const meIdSelector = state => state.meId;

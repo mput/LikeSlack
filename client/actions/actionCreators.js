@@ -42,7 +42,7 @@ export const messagesActions = createActions(
     FETCH: {
       START: channelId => ({ channelId }),
       SUCCESS: (data, channelId) => ({ ...normalizers.messageList(data), channelId }),
-      ERROR: identity,
+      ERROR: channelId => ({ channelId }),
     },
   },
   {

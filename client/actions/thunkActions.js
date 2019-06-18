@@ -72,7 +72,7 @@ const addChannel = name => async (dispatch) => {
 
 // MESSAGES
 export const loadMessagesHistoryAction = channelId => async (dispatch, getState) => {
-  const limit = 15;
+  const limit = 30;
   log('Loading history for channel %d', channelId);
   const state = getState();
   dispatch(messagesActions.fetch.start(channelId));
@@ -92,7 +92,7 @@ export const loadMessagesHistoryAction = channelId => async (dispatch, getState)
     dispatch(messagesActions.fetch.success(data, channelId));
   } catch (err) {
     log('Error while loading messages frm %s', url, err);
-    dispatch(messagesActions.error.success(err));
+    dispatch(messagesActions.fetch.error(channelId));
     throw err;
   }
 };
