@@ -20,9 +20,9 @@ export const addEntityAtBeginAllIds = () => (state, action) => {
   return state.includes(id) ? state : [id, ...state];
 };
 
-export const deleteEntityById = () => (state, { payload: id }) => _.omit(state, String(id));
+export const deleteEntityById = () => (state, { payload: { id } }) => _.omit(state, String(id));
 
-export const deleteEntityAllId = () => (state, { payload: idToDel }) => state
+export const deleteEntityAllId = () => (state, { payload: { id: idToDel } }) => state
   .filter(id => idToDel !== id);
 
 export const updateEntityById = entityName => (state, action) => {

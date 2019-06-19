@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'react-bootstrap';
-import { activeChannelSelector } from '../selectors';
+import { activeChannelSelector, userMeSelector } from '../selectors';
 import { modalWindowActions } from '../actions/actionCreators';
 import { channelView } from '../lib/valuesView';
 
 
 const ActiveChannelPanel = (props) => {
-  const { channel, showModal } = props;
+  const { channel, showModal, userMe } = props;
   if (!channel) return false;
 
   const handleShowRemoveChannelModal = () => {
@@ -32,7 +32,7 @@ const ActiveChannelPanel = (props) => {
       size="sm"
       className="border-0 px-1 py-0 mr-1"
       onClick={onClick}
-      disabled={!channel.removable}
+      disabled={!channel.removable || !userMe}
     >
       <FontAwesomeIcon icon={icon} />
     </Button>
@@ -52,6 +52,7 @@ const ActiveChannelPanel = (props) => {
 
 const mapState = state => ({
   channel: activeChannelSelector(state),
+  userMe: userMeSelector(state),
 });
 const mapActions = {
   showModal: modalWindowActions.show,

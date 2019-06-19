@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
-import * as actions from '../actions/__index';
-import { modalWindowActions } from '../actions/actionCreators';
+import { modalWindowActions, authActions } from '../actions/actionCreators';
 
 
 const modalDefault = {
@@ -28,14 +27,15 @@ const modal = handleActions(
   modalDefault,
 );
 
-const isAddChannelFormShown = handleActions(
+const meId = handleActions(
   {
-    [actions.toggleAddChannelFormVisibility]: state => !state,
+    [authActions.login]: (_state, { payload: id }) => id,
+    [authActions.logout]: () => null,
   },
-  false,
+  null,
 );
 
 export default combineReducers({
-  isAddChannelFormShown,
   modal,
+  meId,
 });

@@ -10,6 +10,7 @@ import Router from 'koa-router';
 import koaLogger from 'koa-logger';
 import koaWebpack from 'koa-webpack';
 import bodyParser from 'koa-bodyparser';
+import cookie from 'koa-cookie';
 import passport from 'koa-passport';
 
 import initDb from './db';
@@ -19,6 +20,7 @@ import authInit from './lib/authInit';
 
 import webpackConfig from '../webpack.config';
 import errorMiddleware from './middlewares/errorMiddleware';
+import eventEmitter from './middlewares/eventEmitter';
 
 // const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -32,6 +34,7 @@ export default () => {
   }
   app.use(errorMiddleware);
   app.use(bodyParser());
+  app.use(cookie());
 
   if (isDevelopment) {
     koaWebpack({
@@ -62,6 +65,8 @@ export default () => {
 
   const server = http.createServer(app.callback());
   const io = socket(server);
+  app.use(eventEmitter(io));
+
   const deps = { io, logger };
 
   const router = new Router();

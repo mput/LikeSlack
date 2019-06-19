@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { tokensRefresh } from '../routes';
+import { tokensRefresh } from './routes';
 import handleTokens from './handleTokens';
 import logger from './logger';
 import { logOut } from '../actions/thunkActions';
@@ -9,7 +9,7 @@ const log = logger('axios-intercepter');
 const faultAccessTokenCode = 403;
 const faultRefreshTokenCode = 403;
 
-const initAxiosIntercepter = (store) => {
+const initAxiosIntercepter = (store, myId) => {
   const setRequestIntercepter = () => {
     axios.interceptors.request.use((userConfig) => {
       const config = {
@@ -24,6 +24,7 @@ const initAxiosIntercepter = (store) => {
       if (config.withRefreshToken) {
         config.headers.refresh = `token ${refreshToken}`;
       }
+      config.headers.id = myId;
       return config;
     });
   };

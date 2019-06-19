@@ -90,7 +90,7 @@ const UIbyId = handleActions(
         [channelId]: { ...state[channelId], hasHistory: false },
       }
     ),
-    [channelsActions.delete.success]: (state, { payload: idToDel }) => {
+    [channelsActions.delete.success]: (state, { payload: { id: idToDel } }) => {
       const omittedState = _.omit(state, String(idToDel));
       if (!state[idToDel].active) {
         return omittedState;

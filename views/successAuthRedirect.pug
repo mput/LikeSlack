@@ -5,7 +5,5 @@ html(lang="en")
   body
     h1 Success Auth!
     script.
-      setTimeout(() => {
-        window.opener.successAuthCallback({ refreshToken:'!{refreshToken}', accessToken:'!{accessToken}'})
-      }, 0)
+      window.opener.successAuthCallback({ refreshToken:'!{refreshToken}', accessToken:'!{accessToken}'})
       window.close();

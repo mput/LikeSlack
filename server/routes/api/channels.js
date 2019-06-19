@@ -29,7 +29,7 @@ export default (deps) => {
         .query()
         .returning('*')
         .insert(body);
-      io.emit('newChannel', newChannel);
+      ctx.socketEmit('newChannel', newChannel);
       ctx.status = 201;
       ctx.body = newChannel;
     })
@@ -37,7 +37,7 @@ export default (deps) => {
       const { id } = ctx.params;
       const deletedAmount = await Channel.query().findById(id).delete();
       ctx.assert(deletedAmount === 1, 404);
-      io.emit('removeChannel', { id: Number(id) });
+      ctx.socketEmit('removeChannel', { id: Number(id) });
       ctx.status = 204;
     })
     .patch('/channels/:id', basicAuth(), async (ctx) => {
@@ -45,7 +45,7 @@ export default (deps) => {
       const { body } = ctx.request;
       const patchedChannel = await Channel.query().patchAndFetchById(id, body);
       ctx.assert(patchedChannel, 404);
-      io.emit('renameChannel', patchedChannel);
+      ctx.socketEmit('renameChannel', patchedChannel);
       ctx.body = patchedChannel;
     });
 

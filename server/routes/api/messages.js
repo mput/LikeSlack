@@ -50,7 +50,7 @@ export default (deps) => {
         .$relatedQuery('messages')
         .insert({ ...body, authorId })
         .eager('author');
-      io.emit('newMessage', newMessage);
+      ctx.socketEmit('newMessage', newMessage);
       ctx.status = 201;
       ctx.body = newMessage;
     });

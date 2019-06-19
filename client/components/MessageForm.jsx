@@ -7,10 +7,11 @@ import { faCommentMedical } from '@fortawesome/free-solid-svg-icons';
 import { sendMessageAction } from '../actions/thunkActions';
 
 import FormControlWrapper from './FormControlWrapper';
-import { activeChannelIdSelector } from '../selectors';
+import { activeChannelIdSelector, userMeSelector } from '../selectors';
 
 const mapState = state => ({
   activeChannelId: activeChannelIdSelector(state),
+  userMe: userMeSelector(state),
 });
 const mapAction = {
   sendMessage: sendMessageAction,
@@ -41,6 +42,7 @@ class MessageForm extends Component {
       pristine,
       submitting,
       submitFailed,
+      userMe,
     } = this.props;
     return (
       <Form onSubmit={handleSubmit(this.onSubmit)} className="p-3 mx-3 mb-3 rounded shadow flex-shrink-0 bg-white">
@@ -52,7 +54,7 @@ class MessageForm extends Component {
             placeholder="message"
             isInvalid={submitFailed}
             component={FormControlWrapper}
-            disabled={submitting}
+            disabled={submitting || !userMe}
             inputRef={this.msgInput}
           />
           <InputGroup.Append>

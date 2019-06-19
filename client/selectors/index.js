@@ -51,10 +51,8 @@ export const oldestActiveChannelMessageSelector = createSelector(
 
 
 export const usersByIdSelector = state => state.users;
-const meId = state => state.meId;
+export const meIdSelector = state => state.ui.meId;
 export const userMeSelector = createSelector(
-  [usersByIdSelector, meId],
+  [usersByIdSelector, meIdSelector],
   (byId, id) => byId[id],
 );
-
-export const meIdSelector = state => state.meId;

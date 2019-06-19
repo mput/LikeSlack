@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as routes from '../routes';
+import * as routes from '../lib/routes';
 import logger from '../../server/lib/logger';
 import handleTokens from '../lib/handleTokens';
 import {
@@ -35,7 +35,7 @@ const removeChannel = channelId => async (dispatch) => {
   try {
     log('Sending delete channel request to %s', url);
     await axios.delete(url);
-    dispatch(channelsActions.delete.success(channelId));
+    dispatch(channelsActions.delete.success({ id: channelId }));
   } catch (err) {
     log('Error while deleting channel', err);
     throw err;
@@ -77,7 +77,6 @@ export const loadMessagesHistoryAction = channelId => async (dispatch, getState)
   const state = getState();
   dispatch(messagesActions.fetch.start(channelId));
   const oldestMessage = oldestActiveChannelMessageSelector(state);
-  log('Oldest message %o', oldestMessage);
   const params = { limit };
   if (oldestMessage) {
     params.before = oldestMessage.createdAt;
@@ -88,7 +87,7 @@ export const loadMessagesHistoryAction = channelId => async (dispatch, getState)
     if (data.length < limit) {
       dispatch(uiActions.setNoMoreHistoryChannel(channelId));
     }
-    log('Messages received: ', data);
+    log('%d messages received', data.length);
     dispatch(messagesActions.fetch.success(data, channelId));
   } catch (err) {
     log('Error while loading messages frm %s', url, err);
