@@ -1,53 +1,53 @@
 [
   {
-    "author": {
-      "authProvider": "github",
-      "createdAt": "2019-05-29T18:14:59.900Z",
-      "fullName": null,
-      "id": 1,
-      "profileUrl": null,
-      "updatedAt": "2019-05-29T18:14:59.900Z",
-      "userName": "Andrew",
-      "validationKey": null
-    },
-    "channelId": 1,
-    "createdAt": "2019-05-29T18:15:59.900Z",
-    "id": 1,
-    "message": "How are you?",
-    "updatedAt": "2019-05-29T18:15:59.900Z"
-  },
-  {
-    "author": {
-      "authProvider": "github",
-      "createdAt": "2019-05-29T18:15:59.900Z",
-      "fullName": null,
-      "id": 2,
-      "profileUrl": null,
-      "updatedAt": "2019-05-29T18:18:59.900Z",
-      "userName": "MarvelMan",
-      "validationKey": null
-    },
-    "channelId": 1,
-    "createdAt": "2019-05-29T18:22:59.900Z",
-    "id": 3,
-    "message": "Hello, i'm fine",
-    "updatedAt": "2019-05-29T18:24:59.900Z"
-  },
-  {
-    "author": {
-      "authProvider": "github",
-      "createdAt": "2019-05-29T18:15:59.900Z",
-      "fullName": null,
-      "id": 2,
-      "profileUrl": null,
-      "updatedAt": "2019-05-29T18:18:59.900Z",
-      "userName": "MarvelMan",
-      "validationKey": null
-    },
-    "channelId": 1,
-    "createdAt": "2019-05-29T18:31:59.900Z",
     "id": 4,
     "message": "Oh my message",
-    "updatedAt": "2019-05-29T18:33:59.900Z"
+    "channelId": 1,
+    "createdAt": "2019-05-29T18:31:59.900Z",
+    "updatedAt": "2019-05-29T18:33:59.900Z",
+    "author": {
+      "id": 2,
+      "authProvider": "github",
+      "userName": "MarvelMan",
+      "fullName": null,
+      "validationKey": null,
+      "profileUrl": null,
+      "createdAt": "2019-05-29T18:15:59.900Z",
+      "updatedAt": "2019-05-29T18:18:59.900Z"
+    }
+  },
+  {
+    "id": 3,
+    "message": "Hello, i'm fine",
+    "channelId": 1,
+    "createdAt": "2019-05-29T18:22:59.900Z",
+    "updatedAt": "2019-05-29T18:24:59.900Z",
+    "author": {
+      "id": 2,
+      "authProvider": "github",
+      "userName": "MarvelMan",
+      "fullName": null,
+      "validationKey": null,
+      "profileUrl": null,
+      "createdAt": "2019-05-29T18:15:59.900Z",
+      "updatedAt": "2019-05-29T18:18:59.900Z"
+    }
+  },
+  {
+    "id": 1,
+    "message": "How are you?",
+    "channelId": 1,
+    "createdAt": "2019-05-29T18:15:59.900Z",
+    "updatedAt": "2019-05-29T18:15:59.900Z",
+    "author": {
+      "id": 1,
+      "authProvider": "github",
+      "userName": "Andrew",
+      "fullName": null,
+      "validationKey": null,
+      "profileUrl": null,
+      "createdAt": "2019-05-29T18:14:59.900Z",
+      "updatedAt": "2019-05-29T18:14:59.900Z"
+    }
   }
 ]

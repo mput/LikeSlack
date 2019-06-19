@@ -21,8 +21,8 @@ export default (deps) => {
         .eager('author')
         .limit(limit)
         .skipUndefined()
-        .where('createdAt', '>=', after)
-        .where('createdAt', '<=', before);
+        .where('createdAt', '>', after)
+        .where('createdAt', '<', before);
       ctx.body = messages;
     })
     .get('/channels/:channelId/messages', async (ctx) => {
@@ -37,8 +37,8 @@ export default (deps) => {
         .eager('author')
         .limit(limit)
         .skipUndefined()
-        .where('createdAt', '>=', after)
-        .where('createdAt', '<=', before);
+        .where('createdAt', '>', after)
+        .where('createdAt', '<', before);
       ctx.body = messages;
     })
     .post('/channels/:channelId/messages', basicAuth(), async (ctx) => {

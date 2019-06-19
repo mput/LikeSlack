@@ -2,6 +2,7 @@ import request from 'supertest';
 import io from 'socket.io-client';
 import path from 'path';
 import { promises as fsPromises } from 'fs';
+import uuid from 'uuid/v4';
 
 import { knex } from '../db';
 import getApp from '..';
@@ -65,13 +66,14 @@ describe('Channels CRUD', () => {
 
   test('Create', async (done) => {
     const dataFromClient = { name: 'ChannelNameTestCreate' };
+    const id = uuid();
     const expectedResponse = {
       id: expect.any(Number),
       name: dataFromClient.name,
       removable: true,
     };
-    socket.on('newChannel', (payload) => {
-      if (payload.name === dataFromClient.name) {
+    socket.on('newChannel', ({ payload, meta }) => {
+      if (meta.senderId === id) {
         expect(payload).toMatchObject(expectedResponse);
         done();
       }
@@ -79,6 +81,7 @@ describe('Channels CRUD', () => {
     const { statusCode, body } = await request(app)
       .post(getChannelsUrl())
       .set('Authorization', accessToken)
+      .set('id', id)
       .send(dataFromClient);
     expect(statusCode).toBe(201);
     expect(body).toMatchObject(expectedResponse);
@@ -92,9 +95,6 @@ describe('Channels CRUD', () => {
       errors: [
         {
           status: '422',
-          // source: {
-          //   pointer: 'name',
-          // },
           title: 'ValidationError',
           detail: 'name: should NOT be longer than 40 characters',
         },
@@ -136,12 +136,13 @@ describe('Channels CRUD', () => {
 
   test('Delete', async (done) => {
     const channelId = 1;
+    const id = uuid();
     const expectedResponse = {
       id: channelId,
     };
 
-    socket.on('removeChannel', async (payload) => {
-      if (payload.id === expectedResponse.id) {
+    socket.on('removeChannel', async ({ payload, meta }) => {
+      if (meta.senderId === id) {
         expect(payload).toMatchObject(expectedResponse);
         await request(app).get(getChannelUrl(channelId)).expect(404);
         done();
@@ -149,11 +150,14 @@ describe('Channels CRUD', () => {
     });
     await request(app).get(getChannelUrl(channelId)).expect(200);
     await request(app).delete(getChannelUrl(channelId))
-      .set('Authorization', accessToken).expect(204);
+      .set('Authorization', accessToken)
+      .set('id', id)
+      .expect(204);
   });
 
   test('Update', async (done) => {
     const channelId = 3;
+    const id = uuid();
     const newName = 'NewChannelName17830';
     const renameChannelData = {
       name: newName,
@@ -162,8 +166,8 @@ describe('Channels CRUD', () => {
       id: channelId,
       name: newName,
     };
-    socket.on('renameChannel', (payload) => {
-      if (payload.name === newName) {
+    socket.on('renameChannel', ({ payload, meta }) => {
+      if (meta.senderId === id) {
         expect(payload).toMatchObject(expectedResponse);
         done();
       }
@@ -171,8 +175,9 @@ describe('Channels CRUD', () => {
     await request(app)
       .patch(getChannelUrl(channelId))
       .set('Authorization', accessToken)
+      .set('id', id)
       .send(renameChannelData)
-      .expect(204);
+      .expect(200);
   });
 
   test('Update w/ not existing id', async () => {
@@ -207,27 +212,8 @@ describe('Messages CRUD', () => {
   test('Get all with both from and before error', async () => {
     await request(app)
       .get(getAllMessagesUrl())
-      .query({ from: '2019-05-29T18:24:59.900Z', before: '2019-05-29T18:16:59.900Z' })
+      .query({ after: '2019-05-29T18:24:59.900Z', before: '2019-05-29T18:16:59.900Z' })
       .expect(422);
-  });
-
-  test('Get all from', async () => {
-    const { statusCode, body } = await request(app)
-      .get(getAllMessagesUrl())
-      .query({ from: '2019-05-29T18:22:59.900Z' });
-    expect(statusCode).toBe(200);
-    expect(body.length).toEqual(3);
-    expect(body[0].id).toEqual(3);
-  });
-
-  test('Get all before', async () => {
-    const { statusCode, body } = await request(app)
-      .get(getAllMessagesUrl())
-      .query({ before: '2019-05-29T18:22:59.900Z' });
-    expect(statusCode).toBe(200);
-    expect(body.length).toEqual(3);
-    expect(body[0].id).toEqual(1);
-    expect(body[2].id).toEqual(3);
   });
 
   test('Get channel messages', async () => {
@@ -243,17 +229,8 @@ describe('Messages CRUD', () => {
       .get(getMessagesUrl(1))
       .query({ before: '2019-05-29T18:22:59.900Z' })
       .expect(200);
-    expect(body.length).toEqual(2);
+    expect(body.length).toEqual(1);
     expect(body[0].id).toEqual(1);
-  });
-
-  test('Get channel messages from', async () => {
-    const { body } = await request(app)
-      .get(getMessagesUrl(1))
-      .query({ from: '2019-05-29T18:22:59.900Z' })
-      .expect(200);
-    expect(body.length).toEqual(2);
-    expect(body[0].id).toEqual(3);
   });
 
   test('Create', async (done) => {
@@ -261,6 +238,7 @@ describe('Messages CRUD', () => {
       message: 'oh my message',
     };
     const channelId = 3;
+    const id = uuid();
 
     const expectedResponse = {
       message: 'oh my message',
@@ -269,8 +247,8 @@ describe('Messages CRUD', () => {
         id: 1,
       },
     };
-    socket.on('newMessage', (payload) => {
-      if (payload.message === expectedResponse.message) {
+    socket.on('newMessage', ({ payload, meta }) => {
+      if (meta.senderId === id) {
         expect(payload).toMatchObject(expectedResponse);
         done();
       }
@@ -279,6 +257,7 @@ describe('Messages CRUD', () => {
     const { statusCode, body } = await request(app)
       .post(getMessagesUrl(channelId))
       .set('Authorization', accessToken)
+      .set('id', id)
       .send(dataFromClient);
     expect(statusCode).toBe(201);
     expect(body).toMatchObject(expectedResponse);
