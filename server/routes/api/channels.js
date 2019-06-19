@@ -6,10 +6,8 @@ import logger from '../../lib/logger';
 
 const log = logger('auth-router');
 
-export default (deps) => {
+export default () => {
   const router = new Router();
-  const { io } = deps;
-
   router
     .get('/channels/:id?', async (ctx) => {
       const { id } = ctx.params;

@@ -6,11 +6,8 @@ import { basicAuth } from '../../middlewares/jwtAuthorizationMiddleware';
 // import logger from '../../lib/logger';
 // const log = logger('messages-router');
 
-export default (deps) => {
+export default () => {
   const router = new Router();
-
-  const { io } = deps;
-
   router
     .get('messages', '/messages', async (ctx) => {
       const { before, after, limit = 10 } = ctx.query;

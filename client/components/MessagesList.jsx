@@ -92,7 +92,11 @@ class MessagesLits extends Component {
           <div
             className="h-100 d-flex flex-column pt-3 overflow-auto px-4 position-absolute"
             style={{
-              top: 0, right: 0, bottom:0, left: 0 }}
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
             ref={this.messagesLits}
           >
             <div className="mt-auto" />

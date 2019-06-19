@@ -8,7 +8,7 @@ const LoadingInfoPanel = ({ loadingState, handleLoadHistory }) => {
       <span className="spinner-border spinner-border-sm mr-2" />
       <span className="h5 m-0">Loading...</span>
     </div>
-  )
+  );
   const errorMsg = (
     <div className="d-flex align-items-center">
       <p className="m-0 text-danger h6">Error happen while loading messages.</p>

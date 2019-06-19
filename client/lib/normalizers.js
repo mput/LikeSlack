@@ -27,7 +27,7 @@ const normalizers = Object.keys(schemas).reduce((result, schemaName) => {
   return {
     ...result,
     [name]: data => normalize(data, schemas[schemaName]),
-  }
+  };
 }, {});
 
 export default normalizers;
