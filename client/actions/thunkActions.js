@@ -156,15 +156,23 @@ export const logOut = () => async (dispatch) => {
   }
 };
 
-export const authenticate = (authProvider = 'github') => async (dispatch) => {
+const authenticateAction = (authProvider, userData) => async (dispatch) => {
   const successAuthCallback = (tokens) => {
     log('Tokens received %O', tokens);
     handleTokens.saveTokens(tokens);
     dispatch(logIn());
   };
+  const url = routes.login(authProvider);
+  if (authProvider === 'anonymous') {
+    const { data: tokens } = await axios.post(url, userData);
+    successAuthCallback(tokens);
+    return Promise.resolve();
+  }
   window.successAuthCallback = successAuthCallback;
-  window.open(routes.login(authProvider));
+  window.open(url);
 };
+
+export const authenticateInModal = modalActionWrapper(authenticateAction);
 
 // INIT
 export const initApp = () => async (dispatch) => {

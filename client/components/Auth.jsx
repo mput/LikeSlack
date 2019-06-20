@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faUser, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import * as actions from '../actions/thunkActions';
+import { modalWindowActions } from '../actions/actionCreators';
 
 import { userMeSelector } from '../selectors';
 
@@ -12,43 +12,43 @@ const mapState = state => ({
   userMe: userMeSelector(state),
 });
 const mapActions = {
-  authenticate: actions.authenticate,
+  showModal: modalWindowActions.show,
   logOut: actions.logOut,
 };
 
-@connect(mapState, mapActions)
-class Auth extends Component {
-  render() {
-    const {
-      authenticate,
-      logOut,
-      userMe,
-    } = this.props;
+const Auth = (props) => {
+  const {
+    showModal,
+    logOut,
+    userMe,
+  } = props;
 
-    const logInBtn = (
-      <Button variant="dark" onClick={() => authenticate()}>
-        <FontAwesomeIcon icon={faGithub} size="lg" />
-        <span className="ml-2 font-weight-bold">
-          Login
-        </span>
-      </Button>
-    );
-    const logOutBtn = (
-      <Button className="ml-2 font-weight-bold" size="sm" variant="dark" onClick={logOut}>
-        Log Out
-      </Button>
-    );
+  const handleShowLoginModal = () => showModal({ type: 'Login' });
 
-    const getSignedInElm = () => (
-      <>
-        <FontAwesomeIcon icon={faUser} />
-        <span className="ml-1 font-weight-bold">
-          {userMe.userName}
-        </span>
-        {logOutBtn}
-      </>
-    );
-    return userMe ? getSignedInElm() : logInBtn;
-  }
-}
-export default Auth;
+  const showLoginModalBtn = (
+    <Button variant="dark" onClick={handleShowLoginModal}>
+      <FontAwesomeIcon icon={faSignInAlt} size="lg" />
+      <span className="ml-2 font-weight-bold">
+        Login
+      </span>
+    </Button>
+  );
+  const logOutBtn = (
+    <Button className="ml-2 font-weight-bold" size="sm" variant="dark" onClick={logOut}>
+      Log Out
+    </Button>
+  );
+
+  const getSignedInElm = () => (
+    <>
+      <FontAwesomeIcon icon={faUser} />
+      <span className="ml-1 font-weight-bold">
+        {userMe.userName}
+      </span>
+      {logOutBtn}
+    </>
+  );
+  return userMe ? getSignedInElm() : showLoginModalBtn;
+};
+
+export default connect(mapState, mapActions)(Auth);

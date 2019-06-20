@@ -5,11 +5,13 @@ import { modalWindowActions } from '../../actions/actionCreators';
 import RemoveChannel from './RemoveChannel';
 import RenameChannel from './RenameChannel';
 import AddChannel from './AddChannel';
+import Login from './Login';
 
 const typesToBodyComponents = {
   RemoveChannel,
   RenameChannel,
   AddChannel,
+  Login,
 };
 
 const mapState = state => ({
