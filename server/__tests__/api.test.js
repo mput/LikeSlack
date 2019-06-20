@@ -277,8 +277,31 @@ describe('Messages CRUD', () => {
 
 describe('Auth', () => {
   const authUrl = provider => `${apiUrl}/auth/${provider}`;
+  const refreshUrl = () => `${apiUrl}/auth/refresh`;
   const userUrl = userId => `${apiUrl}/users/${userId}`;
   const userMeUrl = () => `${apiUrl}/me`;
+
+  test('Anonymous auth and token refresh', async (done) => {
+    const userName = 'SuperUser';
+    const expectedResponse = { accessToken: expect.any(String), refreshToken: expect.any(String) };
+    const { statusCode: authStatusCode, body: firstTokensPair } = await request(app)
+      .post(authUrl('anonymous'))
+      .send({ userName });
+    expect(authStatusCode).toBe(200);
+    expect(firstTokensPair).toMatchObject(expectedResponse);
+
+    setTimeout(async () => {
+      const { statusCode: refreshStatusCode, body: refreshedTokensPair } = await request(app)
+        .get(refreshUrl())
+        .set('Authorization', `JWT ${firstTokensPair.accessToken}`)
+        .set('Refresh', `token ${firstTokensPair.refreshToken}`);
+
+      expect(refreshStatusCode).toBe(200);
+      expect(refreshedTokensPair).toMatchObject(refreshedTokensPair);
+      expect(firstTokensPair).not.toEqual(refreshedTokensPair);
+      done();
+    }, 1000);
+  });
 
   test('Auth request should redirect', async () => {
     await request(app).get(authUrl('github')).expect(302);

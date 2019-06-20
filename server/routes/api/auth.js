@@ -13,6 +13,11 @@ import logger from '../../lib/logger';
 const log = logger('auth-router');
 const tokenSecret = process.env.TOKEN_SECRET;
 
+const createUser = async (data) => {
+  const newUser = await User.query().returning('*').insert(data);
+  log('User created');
+  return newUser;
+};
 
 const findOrCreateUser = async (authProvider, profile) => {
   const user = await User
@@ -29,9 +34,7 @@ const findOrCreateUser = async (authProvider, profile) => {
     profileUrl: profile.profileUrl,
     authProvider,
   };
-  const newUser = await User.query().returning('*').insert(userData);
-  log('User created');
-  return newUser;
+  return createUser(userData);
 };
 
 const cleanSession = async (userId, lastTokenId) => {
@@ -120,6 +123,17 @@ export const createAccessToken = (payload, tokenExpirationInMinutes = 30) => {
 export default () => {
   const router = new Router();
   router
+    .post('/auth/anonymous', async (ctx) => {
+      const { userName } = ctx.request.body;
+      const profile = {
+        userName,
+        authProvider: 'anonymous',
+      };
+      const user = await createUser(profile);
+      const refreshToken = await updateOrCreateRefreshToken(user.id);
+      const accessToken = createAccessToken({ userId: user.id });
+      ctx.body = { refreshToken, accessToken };
+    })
     .get('/auth/github', passport.authenticate('github', { session: false }))
     .get('/auth/github/callback', passport.authenticate('github', { session: false }), async (ctx) => {
       const profile = _.omit(ctx.req.user, ['_raw', '_json']);
