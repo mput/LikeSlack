@@ -28,15 +28,14 @@ export const activeChannelIdSelector = createSelector(
 );
 
 
-const allMessagesIds = state => state.messages.allIds;
 const messagesById = state => state.messages.byId;
 
 export const activeChannelMessagesSelector = createSelector(
-  [allMessagesIds, messagesById, activeChannelIdSelector],
-  (ids, byId, activeId) => ids
+  [messagesById, activeChannelIdSelector],
+  (byId, activeId) => Object.keys(byId)
     .map(id => byId[id])
     .filter(message => message.channelId === activeId)
-    .reverse(),
+    .sort((a, b) => (new Date(a.createdAt) - new Date(b.createdAt))),
 );
 
 export const oldestActiveChannelMessageSelector = createSelector(

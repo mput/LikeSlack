@@ -123,7 +123,14 @@ class MessagesLits extends Component {
         </>
       );
     };
-    const plug = <h1>Loading...</h1>;
+    const plug = (
+      <div
+        className="spinner-border mx-auto my-auto align-self-center"
+        style={{ width: '5rem', height: '5rem' }}
+      >
+        <span className="sr-only">Loading...</span>
+      </div>
+    );
 
     return (
       <div

@@ -45,8 +45,10 @@ export default () => {
       const channel = await Channel.query().findById(channelId);
       const newMessage = await channel
         .$relatedQuery('messages')
+        .returning('*')
         .insert({ ...body, authorId })
         .eager('author');
+      console.log(newMessage);
       ctx.socketEmit('newMessage', newMessage);
       ctx.status = 201;
       ctx.body = newMessage;

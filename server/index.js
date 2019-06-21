@@ -32,9 +32,6 @@ export default () => {
   const app = new Koa();
 
   if (!(isTest || isDevelopment)) {
-    console.log('------------------------------------');
-    console.log('here');
-    console.log('------------------------------------');
     app.use(enforceHttps({ resolver }));
   }
   if (!isTest) {
