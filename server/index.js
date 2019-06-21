@@ -12,6 +12,7 @@ import koaWebpack from 'koa-webpack';
 import bodyParser from 'koa-bodyparser';
 import cookie from 'koa-cookie';
 import passport from 'koa-passport';
+import enforceHttps, { xForwardedProtoResolver as resolver  } from 'koa-sslify';
 
 import initDb from './db';
 import logger from './lib/logger';
@@ -29,6 +30,13 @@ const isTest = process.env.NODE_ENV === 'test';
 export default () => {
   initDb();
   const app = new Koa();
+
+  if (!(isTest || isDevelopment)) {
+    console.log('------------------------------------');
+    console.log('here');
+    console.log('------------------------------------');
+    app.use(enforceHttps({ resolver }));
+  }
   if (!isTest) {
     app.use(koaLogger());
   }
