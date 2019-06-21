@@ -107,12 +107,12 @@ class MessagesLits extends Component {
                 onEnter={this.handleLoadHistory}
               />
             )}
-            {messages.map(({ message, id, author }) => (
+            {messages.map(message => (
               <Message
                 message={message}
-                author={usersById[author]}
-                ownMessage={author === meId}
-                key={id}
+                author={usersById[message.author]}
+                ownMessage={message.author === meId}
+                key={message.id}
               />
             ))}
           </div>
