@@ -19,15 +19,15 @@ before_install:
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - "./cc-test-reporter before-build"
 script:
   - make compose-test-up
   - make test-coverage
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 deploy:
   provider: heroku
   api_key:
-    secure: rYa585QCjcsCNg0Lw+LcLCCfnjb1L/O5DJ56Ry4qKm/AdiqhoXlsSk+SvvG5PORih9WdE4XCUVwkUZ5S+BsGbkoWZpxkzMLqmmw+qb0TAn2v9k8OHVP2gCjAqcBJNz22dN1u1DV/c9cm9jreL6FQNmL+aSUqFR7tWVKWZBhSBxzVdZTf/WdKHtIQxqYv9jof5b1OY7ot9GAvi5kY039CqQ8kTats8rZGFMBnsVfakikeO3n66LMnfBHN5C3D/SPb/z8uxjIApZHUgQPc8PEvCF5Q9USI01xL5z42V6+zuynr7PKFvUYa8ysfLAJEiy22u5Ffrk3guOQDT8+96N5erStVJKUUC9B4YXlAEurzYmSug92pFGxK4rhC/GyVzvyaYVzFk+y9eMVzM59/obE1t6JYgPqd/RyVnfzi8tTGSuWjw4VL6cTW6njVo0gd46nAUsvLg3XepQfSkGyD7YJNdCkPfy2VPXIuYpBfKW6WqzK8tBLlRBIK7MnQSAgi6nSNfxtUbtccpeUmltKZaQvP/PFbV0O+4joE888Rj9oA+b2r6mLt8r78ga2AsFjUax9i5l0hS4FQqqyKXnQwp8qIgqftzlloFJhu0CCPpNpMZlZvUgs3K+7yGvdaZxhAtEbkqqwqwiw1YVGKVcuOHI0z9jhgX3DFToi0z3qdRkiDUxc=
+    secure: uHTCTQ9ei7dNC67YbzOVJ1NqI3Y/KcZYmk15X5QtIXmIl06grOjf9I2hAOfc71TlIY9/IvgJCWsypYTvQNTThOVyhWWsnzs8omPuuwicjqY1MhsGTrxoMIEotcc1US7iwA/SriddGvTwONyNENsCZRpGCk/78Na+uhQ4WiYtigK07Qj4RkdJAumCI/Kp1oudgcm3yPQ0LiRQ9CFr47Bk4V4OoLVGtsaLIXo4lEnfAfrUPZ+gI+q5V6uXNs3P19pwxscVpPatJ2gJCP0vYKn8OV/18pqJRLnJNY6ZV86hrIYRIpw9J7pi5pgixcdAyVzyrS6O2kBKc4bSBh/IfI5k1Js5mOc8xnmf6Dh+GSOfetX9nbTGMkUejwQgowxEEl+ccP5l9lhvQc7tSFsUwS7AgVlyPqhr6u2imq5RxxTPDOoKYYHYTTmHaFkI1Be7sFrtLnUxziiFmsjW8SlnZWjDaJ97V3BZ92xoovqSgcEPAFB2zmy3PcpWtCQYilUPR9fP2NYwP9Tf0cbA/obcj+GumA9LAUFbpRZNCyuzlrImBn5U/RssLEu0mxwNgwaHVOHRs15l9lO0y/0zEnPXi4DY758Qwl1GBVwuNFGJlJhyDBpcAwrjgmKbeXrYksZN0iuWFwrAITvVGOb0CcRLOBaFXWQ2/IUt14P/IZVhE3jySSY=
   app: like-slack
   run:
     - make migrate
